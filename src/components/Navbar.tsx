@@ -30,12 +30,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Función para manejar el clic del usuario no logueado
   const handleLoginRedirect = () => {
     router.push('/login');
   };
 
-  // useEffect para manejar la autenticación
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser();
@@ -44,7 +42,6 @@ const Navbar = () => {
 
     getUser();
 
-    // Escuchar cambios de sesión
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_, session) => {
         setUser(session?.user || null);
@@ -59,17 +56,21 @@ const Navbar = () => {
   return (
     <>
       <nav 
-        className={`fixed left-0 top-0 right-0 z-50 transition-all duration-500 ease-in-out  ${
+        className={`fixed left-0 top-0 right-0 z-[9999] transition-all duration-500 ease-in-out ${
           isScrolled 
             ? 'bg-white/90 backdrop-blur-lg shadow-lg border-b border-gray-100' 
             : 'bg-transparent'
         }`}
+        style={{ pointerEvents: 'auto' }} // Forzar pointer events
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-9">
           <div className="flex items-center justify-between py-4 lg:py-5">
             
             {/* Logo */}
-            <div className="flex items-center gap-3 group cursor-pointer">
+            <div 
+              className="flex items-center gap-3 group cursor-pointer relative z-[10000]"
+              style={{ pointerEvents: 'auto' }}
+            >
               <div className="relative">
                 <Globe className={`w-6 h-6 transition-all duration-300 group-hover:rotate-12 ${
                   isScrolled ? 'text-blue-600' : 'text-white'
@@ -84,14 +85,24 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8 relative z-[10000]">
               {navItems.map((item) => (
                 <button
                   key={item}
-                  onClick={() => setActiveItem(item)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveItem(item);
+                    console.log(`Clicked on ${item}`); // Debug
+                  }}
                   className={`cursor-pointer relative text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:scale-105 ${
                     isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white/90 hover:text-white'
                   }`}
+                  style={{ 
+                    pointerEvents: 'auto',
+                    zIndex: 10001,
+                    position: 'relative'
+                  }}
                 >
                   {item}
                   {activeItem === item && (
@@ -109,27 +120,44 @@ const Navbar = () => {
               ))}
               
               {/* Action Icons */}
-              <div className="flex items-center gap-4 ml-6 cursor-pointer">
-                <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 hover:rotate-12 ${
-                  isScrolled 
-                    ? 'hover:bg-blue-50 text-gray-700 hover:text-blue-600' 
-                    : 'hover:bg-white/10 text-white/90 hover:text-white'
-                }`}>
+              <div className="flex items-center gap-4 ml-6 relative z-[10000]">
+                <button 
+                  className={`p-2 rounded-full transition-all duration-300 hover:scale-110 hover:rotate-12 ${
+                    isScrolled 
+                      ? 'hover:bg-blue-50 text-gray-700 hover:text-blue-600' 
+                      : 'hover:bg-white/10 text-white/90 hover:text-white'
+                  }`}
+                  style={{ pointerEvents: 'auto', zIndex: 10001 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Search clicked'); // Debug
+                  }}
+                >
                   <Search className="w-5 h-5" />
                 </button>
                 
-                {/* Renderizado condicional del usuario - Desktop */}
-                <div className="relative cursor-pointer">
+                {/* User Menu */}
+                <div 
+                  className="relative"
+                  style={{ pointerEvents: 'auto', zIndex: 10001 }}
+                >
                   {user ? (
                     <UserMenu isMobile={false} />
                   ) : (
                     <button 
-                      onClick={handleLoginRedirect}
-                      className={`cursor-pointer p-2 rounded-full transition-all duration-300 hover:scale-110 hover:bg-white/50 ${
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Login button clicked'); // Debug
+                        handleLoginRedirect();
+                      }}
+                      className={`p-2 rounded-full transition-all duration-300 hover:scale-110 hover:bg-white/50 ${
                         isScrolled 
                           ? 'hover:bg-blue-50 text-gray-700 hover:text-blue-600' 
                           : 'hover:bg-white/10 text-white/90 hover:text-white'
                       }`}
+                      style={{ pointerEvents: 'auto', zIndex: 10002 }}
                     >
                       <User className="w-5 h-5" />
                     </button>
@@ -140,12 +168,18 @@ const Navbar = () => {
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-all duration-300 ${
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Mobile menu clicked'); // Debug
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+              }}
+              className={`lg:hidden p-2 rounded-lg transition-all duration-300 relative z-[10000] ${
                 isScrolled 
                   ? 'hover:bg-gray-100 text-gray-700' 
                   : 'hover:bg-white/10 text-white'
               }`}
+              style={{ pointerEvents: 'auto', zIndex: 10001 }}
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -158,7 +192,7 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div className={`lg:hidden fixed inset-0 z-40 transition-all duration-500 ${
+      <div className={`lg:hidden fixed inset-0 z-[9998] transition-all duration-500 ${
         isMobileMenuOpen 
           ? 'opacity-100 pointer-events-auto' 
           : 'opacity-0 pointer-events-none'
@@ -166,7 +200,7 @@ const Navbar = () => {
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" 
              onClick={() => setIsMobileMenuOpen(false)} />
         
-        <div className={`absolute top-0 right-0 h-full w-80 bg-white transform transition-transform duration-500 ${
+        <div className={`absolute top-0 right-0 h-full w-80 bg-white transform transition-transform duration-500 z-[9999] ${
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}>
           <div className="p-6 pt-20">
@@ -174,18 +208,22 @@ const Navbar = () => {
               {navItems.map((item, index) => (
                 <button
                   key={item}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setActiveItem(item);
                     setIsMobileMenuOpen(false);
+                    console.log(`Mobile: Clicked on ${item}`); // Debug
                   }}
-                  className={`block w-full text-left text-lg font-medium transition-all duration-300 transform hover:translate-x-2 ${
+                  className={`block w-full text-left text-lg font-medium transition-all duration-300 transform hover:translate-x-2 relative z-[10000] ${
                     activeItem === item 
                       ? 'text-blue-600 font-semibold' 
                       : 'text-gray-700 hover:text-blue-600'
                   }`}
                   style={{
                     animationDelay: `${index * 100}ms`,
-                    animation: isMobileMenuOpen ? 'slideInRight 0.6s ease-out forwards' : 'none'
+                    animation: isMobileMenuOpen ? 'slideInRight 0.6s ease-out forwards' : 'none',
+                    pointerEvents: 'auto'
                   }}
                 >
                   {item}
@@ -193,21 +231,35 @@ const Navbar = () => {
               ))}
               
               <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
-                <button className="p-3 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-300">
+                <button 
+                  className="p-3 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-300"
+                  style={{ pointerEvents: 'auto', zIndex: 10000 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Mobile search clicked'); // Debug
+                  }}
+                >
                   <Search className="w-5 h-5" />
                 </button>
                 
-                {/* Renderizado condicional en mobile - CORREGIDO */}
-                <div className="flex-1">
+                <div 
+                  className="flex-1"
+                  style={{ pointerEvents: 'auto', zIndex: 10000 }}
+                >
                   {user ? (
                     <UserMenu isMobile={true} />
                   ) : (
                     <button 
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Mobile login clicked'); // Debug
                         handleLoginRedirect();
                         setIsMobileMenuOpen(false);
                       }}
                       className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-300"
+                      style={{ pointerEvents: 'auto', zIndex: 10001 }}
                     >
                       <User className="w-5 h-5" />
                       <span className="text-sm font-medium">Iniciar Sesión</span>

@@ -99,7 +99,7 @@ const AirplaneCursor = () => {
         <div
           className={styles.cursorAirplane}
           style={{
-            transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+            transform: ` rotate(${rotation}deg)`,
           }}
         >
           <img

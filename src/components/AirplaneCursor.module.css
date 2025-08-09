@@ -1,17 +1,19 @@
 .cursorWrapper {
   position: fixed;
-  pointer-events: none;
-  z-index: 99999;
-
+  pointer-events: none; /* IMPORTANTE: Mantener esto */
+  z-index: 99; /* Reducir el z-index para que esté por debajo del navbar */
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
 }
 
 .cursorAirplane {
-  transform: translate(-50%, -50%);
   position: relative;
   width: 30px;
   height: 30px;
   transition: transform 0.1s ease-out;
-  z-index: 999999;
+  z-index: 100; /* Menor que el navbar */
+  pointer-events: none; /* IMPORTANTE: Asegurar que no bloquee clicks */
 }
 
 /* Luces comunes */
@@ -70,7 +72,8 @@
   transform: translate(-50%, -50%);
   animation: trailFade 0.8s ease-out forwards;
   box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
-  z-index: 99999;
+  z-index: 98; /* Menor z-index */
+  pointer-events: none; /* IMPORTANTE */
 }
 
 @keyframes trailFade {
@@ -84,3 +87,52 @@
   }
 }
 
+/* Estelas de viento cuando está quieto */
+.windStreak {
+  position: absolute;
+  width: 2px;
+  height: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+  border-radius: 1px;
+  opacity: 0;
+  animation: windStreakAnim 2s infinite;
+  pointer-events: none; /* IMPORTANTE */
+}
+
+.windStreak:nth-child(1) {
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.windStreak:nth-child(2) {
+  top: -10px;
+  left: 40%;
+  transform: translateX(-50%);
+}
+
+.windStreak:nth-child(3) {
+  top: -8px;
+  left: 60%;
+  transform: translateX(-50%);
+}
+
+.windStreak:nth-child(4) {
+  top: -6px;
+  left: 45%;
+  transform: translateX(-50%);
+}
+
+@keyframes windStreakAnim {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0px);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-15px);
+  }
+}
