@@ -1,17 +1,23 @@
-import {defineRouting} from 'next-intl/routing';
-import {createNavigation} from 'next-intl/navigation';
- 
-export const routing = defineRouting({
-  // A list of all locales that are supported
-  locales: ['es', 'en'],
- 
-  // Used when no locale matches
-  defaultLocale: 'es',
-  
-  // Always show the locale in the URL
-  localePrefix: 'always'
-});
+import { defineRouting } from "next-intl/routing";
 
-// Create and export the Link component and other navigation utilities
-export const {Link, redirect, usePathname, useRouter} = 
-  createNavigation(routing);
+export const routing = defineRouting({
+  locales: ["es", "en"],
+  defaultLocale: "es",
+  pathnames: {
+    "/": "/",
+
+    "/about": {
+      en: "/about",
+      es: "/acerca-de",
+    },
+    "/services": {
+      en: "/services",
+      es: "/servicios",
+    },
+    "/contact": {
+      en: "/contact",
+      es: "/contacto",
+    },
+    "/blog": "/blog",
+  },
+});
