@@ -3,9 +3,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { User, LogOut, ChevronDown } from "lucide-react";
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
-export default function UserMenu() {
-  const [user, setUser] = useState(null);
+// Definir la interfaz para las props
+interface UserMenuProps {
+  isMobile?: boolean;
+}
+
+export default function UserMenu({ isMobile = false }: UserMenuProps) {
+  const [user, setUser] = useState<SupabaseUser | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -48,7 +54,7 @@ export default function UserMenu() {
 
   const firstName = user.user_metadata?.name || "Usuario";
 
-  function obtenerPrimerNombre(fullName) {
+  function obtenerPrimerNombre(fullName: string): string {
     return fullName ? fullName.trim().split(" ")[0] : "Usuario";
   }
 
@@ -57,14 +63,21 @@ export default function UserMenu() {
       {/* Botón principal del menú */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-2 rounded-full hover:bg-white/80 transition-all duration-300 text-white/90 hover:text-white group"
+        className={`flex items-center gap-2 p-2 rounded-full transition-all duration-300 group ${
+          isMobile 
+            ? 'hover:bg-blue-100 text-blue-600' 
+            : 'hover:bg-white/80 text-white/90 hover:text-white'
+        }`}
       >
-        {/* <User className="w-5 h-5 text-blue-700" /> */}
-           <img
-                  src={user.user_metadata.avatar_url}
-                  alt={obtenerPrimerNombre(firstName)}
-                  className="w-8 h-8 rounded-full object-cover border-2 border-white/20"
-                />
+        {user.user_metadata?.avatar_url ? (
+          <img
+            src={user.user_metadata.avatar_url}
+            alt={obtenerPrimerNombre(firstName)}
+            className="w-8 h-8 rounded-full object-cover border-2 border-white/20"
+          />
+        ) : (
+          <User className="w-5 h-5" />
+        )}
         <ChevronDown
           className={`w-4 h-4 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -94,11 +107,15 @@ export default function UserMenu() {
             {/* Opciones del menú */}
             <div className="py-2">
               <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 flex items-center gap-3">
-                <img
-                  src={user.user_metadata.avatar_url}
-                  alt={obtenerPrimerNombre(firstName)}
-                  className="w-8 h-8 rounded-full object-cover border-2 border-white/20"
-                />
+                {user.user_metadata?.avatar_url ? (
+                  <img
+                    src={user.user_metadata.avatar_url}
+                    alt={obtenerPrimerNombre(firstName)}
+                    className="w-8 h-8 rounded-full object-cover border-2 border-white/20"
+                  />
+                ) : (
+                  <User className="w-8 h-8 text-gray-400" />
+                )}
                 Mi perfil
               </button>
 

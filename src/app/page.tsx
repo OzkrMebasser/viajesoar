@@ -1,16 +1,6 @@
-// import { div } from "framer-motion/client";
+import {redirect} from 'next/navigation';
 
-import Mock from "@/components/Mock";
-import TravelSlideshow from "../components/TravelSlideshow";
-
-
-export default function Home() {
-  return (
-    <div>
-    
-
-      <TravelSlideshow />
-      <Mock />
-    </div>
-  );
+// This page only renders when the app is built statically (output: 'export')
+export default function RootPage() {
+  redirect('/es');
 }

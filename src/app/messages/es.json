@@ -1,0 +1,29 @@
+{
+  "Navigation": {
+    "navigation": "Navegación",
+    "home": "Inicio",
+    "holidays": "Vacaciones",
+    "destinations": "Destinos",
+    "flights": "Vuelos",
+    "offers": "Ofertas",
+    "contact": "Contacto"
+  },
+  "Menu": {
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "Search": {
+    "searchLabel": "Buscar",
+    "placeholder": "Buscar destinos, hoteles, vuelos...",
+    "noResults": "No se encontraron resultados para \"{query}\"",
+    "tryDifferent": "Prueba con palabras diferentes",
+    "popularSearches": "Búsquedas Populares"
+  },
+  "User": {
+    "loginLabel": "Iniciar sesión",
+    "login": "Iniciar Sesión"
+  },
+  "Common": {
+    "goToHome": "Ir al inicio"
+  }
+}
