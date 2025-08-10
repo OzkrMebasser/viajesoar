@@ -1,4 +1,3 @@
-// app/[locale]/layout.tsx
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -8,7 +7,7 @@ import Navbar from "@/components/Navigation";
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -22,12 +21,14 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <>
-      <NextIntlClientProvider messages={messages}>
-        <Navbar />
-        <AirplaneCursor />
-        {children}
-      </NextIntlClientProvider>
-    </>
+    <html lang={locale}>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <Navbar />
+          <AirplaneCursor />
+          {children}
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

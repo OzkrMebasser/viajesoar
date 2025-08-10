@@ -1,6 +1,3 @@
-// Primero instala Fuse.js:
-// npm install fuse.js
-
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Globe, Search, User, Menu, X } from "lucide-react";
@@ -19,7 +16,7 @@ const Navbar = () => {
   const [activeItem, setActiveItem] = useState("Home");
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const router = useRouter();
-  const searchInputRef = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const navItems = [
     "Home",
@@ -30,7 +27,6 @@ const Navbar = () => {
     "Contact",
   ];
 
-  // Datos de ejemplo para la búsqueda (puedes reemplazar con datos reales de tu API)
   const searchData = [
     { id: 1, title: "Beach Holiday in Maldives", category: "Holidays", description: "Luxury resort with crystal clear waters" },
     { id: 2, title: "Paris City Break", category: "Destinations", description: "Explore the city of lights" },
@@ -44,15 +40,15 @@ const Navbar = () => {
     { id: 10, title: "Barcelona City Guide", category: "Destinations", description: "Art, culture and architecture" }
   ];
 
-  // Configuración de Fuse.js
   const fuseOptions = {
     keys: ['title', 'category', 'description'],
-    threshold: 0.4, // 0 = exact match, 1 = match everything
+    threshold: 0.4,
     includeScore: true,
     minMatchCharLength: 2,
   };
 
-  const fuse = new Fuse(searchData, fuseOptions);
+  // Memoizar la instancia de Fuse para evitar recrearla en cada render
+  const fuse = React.useMemo(() => new Fuse(searchData, fuseOptions), []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,7 +59,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Función de búsqueda
   useEffect(() => {
     if (searchQuery.length >= 2) {
       const results = fuse.search(searchQuery);
@@ -71,9 +66,8 @@ const Navbar = () => {
     } else {
       setSearchResults([]);
     }
-  }, [searchQuery]);
+  }, [searchQuery, fuse]);
 
-  // Focus en el input cuando se abre la búsqueda
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -92,18 +86,8 @@ const Navbar = () => {
     }
   };
 
-  const handleSearchResultClick = (result) => {
-    console.log("Selected:", result);
-    setIsSearchOpen(false);
-    setSearchQuery("");
-    setSearchResults([]);
-    // Aquí puedes navegar a la página correspondiente
-    // router.push(`/${result.category.toLowerCase()}/${result.id}`);
-  };
-
-  // Cerrar búsqueda con ESC
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsSearchOpen(false);
         setSearchQuery("");
@@ -136,9 +120,17 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleSearchResultClick = (result: typeof searchData[number]) => {
+    console.log("Selected:", result);
+    setIsSearchOpen(false);
+    setSearchQuery("");
+    setSearchResults([]);
+    // Aquí puedes navegar a la página correspondiente
+    // router.push(`/${result.category.toLowerCase()}/${result.id}`);
+  };
+
   return (
     <>
-      {/* Navbar principal */}
       <nav
         className={`fixed backdrop-blur-lg left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out ${
           isScrolled ? "bg-black/95 backdrop-blur-lg" : "bg-black/80"
@@ -148,13 +140,11 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Hamburger Menu (Izquierda) */}
             <button
               type="button"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log("Mobile menu clicked");
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
               className="p-2 rounded-lg transition-all duration-300 text-white hover:bg-white/10 relative z-[10000] pointer-events-auto"
@@ -169,7 +159,6 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* Logo (Centro) */}
             <div
               className="flex items-center gap-2 group cursor-pointer absolute left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
               role="button"
@@ -198,7 +187,6 @@ const Navbar = () => {
               </strong>
             </div>
 
-            {/* Search & User (Derecha) */}
             <div className="flex items-center gap-3 relative z-[10000]">
               <button
                 type="button"
@@ -213,7 +201,6 @@ const Navbar = () => {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* User Menu */}
               <div className="relative pointer-events-auto z-[10001]">
                 {user ? (
                   <UserMenu isMobile={false} />
@@ -223,7 +210,6 @@ const Navbar = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      console.log("Login button clicked");
                       handleLoginRedirect();
                     }}
                     className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10002]"
@@ -238,7 +224,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Search Overlay */}
       <div
         className={`fixed inset-0 z-50 transition-all duration-300 ${
           isSearchOpen
@@ -250,10 +235,9 @@ const Navbar = () => {
           className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           onClick={() => setIsSearchOpen(false)}
         />
-        
+
         <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            {/* Search Input */}
             <div className="p-6 border-b border-gray-100">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -268,7 +252,6 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Search Results */}
             {searchResults.length > 0 && (
               <div className="max-h-96 overflow-y-auto">
                 {searchResults.map((result) => (
@@ -291,7 +274,6 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* No Results */}
             {searchQuery.length >= 2 && searchResults.length === 0 && (
               <div className="p-8 text-center text-gray-500">
                 <Search className="w-12 h-12 mx-auto mb-4 text-gray-300" />
@@ -300,7 +282,6 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* Search Suggestions */}
             {searchQuery.length === 0 && (
               <div className="p-6">
                 <h3 className="font-semibold text-gray-700 mb-4">Popular Searches</h3>
@@ -321,7 +302,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       <div
         className={`fixed inset-0 z-40 transition-all duration-500 ${
           isMobileMenuOpen
@@ -349,7 +329,6 @@ const Navbar = () => {
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          {/* Header del menu con search y close */}
           <div className="flex items-center justify-between p-6 border-b border-gray-800">
             <button
               type="button"
@@ -382,7 +361,6 @@ const Navbar = () => {
               </span>
             </div>
 
-            {/* Menu items */}
             <div className="space-y-6">
               {navItems.map((item, index) => (
                 <button
@@ -393,7 +371,6 @@ const Navbar = () => {
                     e.stopPropagation();
                     setActiveItem(item);
                     setIsMobileMenuOpen(false);
-                    console.log(`Mobile: Clicked on ${item}`);
                   }}
                   className={`block w-full text-left font-medium transition-all duration-300 transform hover:translate-x-2 relative z-[10000] pointer-events-auto tracking-wider uppercase text-sm ${
                     activeItem === item
@@ -413,7 +390,6 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* User section at bottom */}
             <div className="absolute bottom-6 left-6 right-6">
               {user ? (
                 <UserMenu isMobile={true} />
@@ -423,7 +399,6 @@ const Navbar = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log("Mobile login clicked");
                     handleLoginRedirect();
                     setIsMobileMenuOpen(false);
                   }}
