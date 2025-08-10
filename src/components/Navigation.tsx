@@ -7,12 +7,19 @@ import UserMenu from "./UserMenu";
 import Fuse from "fuse.js";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
+type SearchResult = {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+};
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [activeItem, setActiveItem] = useState("Home");
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const router = useRouter();
@@ -28,20 +35,70 @@ const Navbar = () => {
   ];
 
   const searchData = [
-    { id: 1, title: "Beach Holiday in Maldives", category: "Holidays", description: "Luxury resort with crystal clear waters" },
-    { id: 2, title: "Paris City Break", category: "Destinations", description: "Explore the city of lights" },
-    { id: 3, title: "Cheap Flights to Tokyo", category: "Flights", description: "Best deals for flights to Japan" },
-    { id: 4, title: "Safari Adventure Kenya", category: "Holidays", description: "Wildlife experience in Africa" },
-    { id: 5, title: "Rome Historical Tour", category: "Destinations", description: "Ancient history and culture" },
-    { id: 6, title: "Last Minute Offers", category: "Offers", description: "Special discounts available now" },
-    { id: 7, title: "Contact Support", category: "Contact", description: "Get help with your booking" },
-    { id: 8, title: "New York Flight Deals", category: "Flights", description: "Affordable flights to NYC" },
-    { id: 9, title: "Thailand Beach Resort", category: "Holidays", description: "Tropical paradise vacation" },
-    { id: 10, title: "Barcelona City Guide", category: "Destinations", description: "Art, culture and architecture" }
+    {
+      id: 1,
+      title: "Beach Holiday in Maldives",
+      category: "Holidays",
+      description: "Luxury resort with crystal clear waters",
+    },
+    {
+      id: 2,
+      title: "Paris City Break",
+      category: "Destinations",
+      description: "Explore the city of lights",
+    },
+    {
+      id: 3,
+      title: "Cheap Flights to Tokyo",
+      category: "Flights",
+      description: "Best deals for flights to Japan",
+    },
+    {
+      id: 4,
+      title: "Safari Adventure Kenya",
+      category: "Holidays",
+      description: "Wildlife experience in Africa",
+    },
+    {
+      id: 5,
+      title: "Rome Historical Tour",
+      category: "Destinations",
+      description: "Ancient history and culture",
+    },
+    {
+      id: 6,
+      title: "Last Minute Offers",
+      category: "Offers",
+      description: "Special discounts available now",
+    },
+    {
+      id: 7,
+      title: "Contact Support",
+      category: "Contact",
+      description: "Get help with your booking",
+    },
+    {
+      id: 8,
+      title: "New York Flight Deals",
+      category: "Flights",
+      description: "Affordable flights to NYC",
+    },
+    {
+      id: 9,
+      title: "Thailand Beach Resort",
+      category: "Holidays",
+      description: "Tropical paradise vacation",
+    },
+    {
+      id: 10,
+      title: "Barcelona City Guide",
+      category: "Destinations",
+      description: "Art, culture and architecture",
+    },
   ];
 
   const fuseOptions = {
-    keys: ['title', 'category', 'description'],
+    keys: ["title", "category", "description"],
     threshold: 0.4,
     includeScore: true,
     minMatchCharLength: 2,
@@ -62,7 +119,7 @@ const Navbar = () => {
   useEffect(() => {
     if (searchQuery.length >= 2) {
       const results = fuse.search(searchQuery);
-      setSearchResults(results.map(result => result.item));
+      setSearchResults(results.map((result) => result.item));
     } else {
       setSearchResults([]);
     }
@@ -88,7 +145,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsSearchOpen(false);
         setSearchQuery("");
         setSearchResults([]);
@@ -96,8 +153,8 @@ const Navbar = () => {
     };
 
     if (isSearchOpen) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
     }
   }, [isSearchOpen]);
 
@@ -120,7 +177,7 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleSearchResultClick = (result: typeof searchData[number]) => {
+  const handleSearchResultClick = (result: (typeof searchData)[number]) => {
     console.log("Selected:", result);
     setIsSearchOpen(false);
     setSearchQuery("");
@@ -262,8 +319,12 @@ const Navbar = () => {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-semibold text-gray-900">{result.title}</h3>
-                        <p className="text-sm text-gray-600 mt-1">{result.description}</p>
+                        <h3 className="font-semibold text-gray-900">
+                          {result.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {result.description}
+                        </p>
                       </div>
                       <span className="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full">
                         {result.category}
@@ -284,17 +345,21 @@ const Navbar = () => {
 
             {searchQuery.length === 0 && (
               <div className="p-6">
-                <h3 className="font-semibold text-gray-700 mb-4">Popular Searches</h3>
+                <h3 className="font-semibold text-gray-700 mb-4">
+                  Popular Searches
+                </h3>
                 <div className="flex flex-wrap gap-2">
-                  {["Maldives", "Paris", "Tokyo", "Safari", "Flights"].map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      onClick={() => setSearchQuery(suggestion)}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
+                  {["Maldives", "Paris", "Tokyo", "Safari", "Flights"].map(
+                    (suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => setSearchQuery(suggestion)}
+                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors"
+                      >
+                        {suggestion}
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
             )}

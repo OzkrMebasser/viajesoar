@@ -36,4 +36,11 @@ export interface Messages {
   Common: {
     goToHome: string;
   };
+
+  SearchResult : {
+    id: number;
+    title: string;
+    category: string;
+    description: string;
+  };
 }
