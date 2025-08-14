@@ -110,7 +110,7 @@ const Navbar = () => {
                     setActiveItem(item);
                     console.log(`Clicked on ${item}`);
                   }}
-                  className={`cursor-pointer relative text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:scale-105 pointer-events-auto relative z-[10001] ${
+                  className={`cursor-pointer relative text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:scale-105 pointer-events-auto  z-[10001] ${
                     isScrolled
                       ? "text-gray-700 hover:text-blue-600"
                       : "text-white/90 hover:text-white"

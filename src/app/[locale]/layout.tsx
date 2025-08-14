@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/app/i18n/routing';
-import AirplaneCursor from "@/components/AirplaneCursor";
+import AirplaneCursor from "@/components/Airplane/AirplaneCursor";
 import Navbar from "@/components/Navigation";
 
 export default async function LocaleLayout({
