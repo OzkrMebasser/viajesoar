@@ -1,11 +1,16 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "@/app/i18n/navigation";
+import { useTranslations } from "next-intl";
+
 import { Globe, Search, User, Menu, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import UserMenu from "./UserMenu";
 import Fuse from "fuse.js";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { usePathname, useRouter } from "@/app/i18n/navigation"; // 👈 usa tu navegación
+import { useLocale } from "next-intl";
 
 type SearchResult = {
   id: number;
@@ -14,6 +19,16 @@ type SearchResult = {
   description: string;
 };
 
+type Locale = "es" | "en";
+
+const routes: Record<string, { [key in Locale]: string }> = {
+  home: { es: "/", en: "/" },
+  holidays: { es: "/vacaciones", en: "/holidays" },
+  destinations: { es: "/destinos", en: "/destinations" },
+  flights: { es: "/vuelos", en: "/flights" },
+  offers: { es: "/ofertas", en: "/offers" },
+  contact: { es: "/contacto", en: "/contact" },
+};
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,17 +37,52 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [activeItem, setActiveItem] = useState("Home");
   const [user, setUser] = useState<SupabaseUser | null>(null);
-  const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  const navItems = [
-    "Home",
-    "Holidays",
-    "Destinations",
-    "Flights",
-    "Offers",
-    "Contact",
-  ];
+  const t = useTranslations("Navigation");
+
+  const pathname = usePathname(); // p.ej. "/services"
+  const router = useRouter(); // router de next-intl
+  const locale = useLocale();
+const navItems = [
+  { label: t("home"), href: routes.home[locale] },
+  { label: t("holidays"), href: routes.holidays[locale] },
+  { label: t("destinations"), href: routes.destinations[locale] },
+  { label: t("flights"), href: routes.flights[locale] },
+  { label: t("offers"), href: routes.offers[locale] },
+  { label: t("contact"), href: routes.contact[locale] },
+];
+
+const toggleLanguage = () => {
+  const next = locale === "es" ? "en" : "es";
+
+  // Quitar el prefijo de idioma del pathname actual
+  const currentPathWithoutLocale = pathname.replace(/^\/(es|en)/, "") || "/";
+
+  // Buscar la ruta correspondiente en `routes`
+  const routeEntry = Object.values(routes).find((r) => {
+    if (typeof r === "string") return r === currentPathWithoutLocale;
+    return Object.values(r).includes(currentPathWithoutLocale);
+  });
+
+  // Obtener la ruta en el idioma opuesto
+  const newPath = typeof routeEntry === "string" ? routeEntry : routeEntry?.[next] || "/";
+
+  // Navegar al nuevo path con el locale correcto
+  router.replace(newPath, { locale: next });
+};
+
+
+  // const navItems = [
+  //   "Home",
+  //   "Holidays",
+  //   "Destinations",
+  //   "Flights",
+  //   "Offers",
+  //   "Contact",
+  // ];
+
+  // Dentro del componente Navbar, después de obtener locale:
 
   const searchData = [
     {
@@ -237,9 +287,9 @@ const Navbar = () => {
                 <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
               </div>
               <strong>
-                <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300">
+                <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 ">
                   VIAJE
-                  <span className="soar">SOAR</span>
+                  <span className="soar text-[#ccfb08] ">SOAR</span>
                 </span>
               </strong>
             </div>
@@ -256,6 +306,14 @@ const Navbar = () => {
                 aria-label="Buscar"
               >
                 <Search className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001]"
+                aria-label="Cambiar idioma"
+              >
+                <Globe className="w-5 h-5" />
               </button>
 
               <div className="relative pointer-events-auto z-[10001]">
@@ -428,17 +486,15 @@ const Navbar = () => {
 
             <div className="space-y-6">
               {navItems.map((item, index) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setActiveItem(item);
+                <Link
+                  key={index}
+                  href={item.href} // ✅ ya es tipado correctamente
+                  onClick={() => {
+                    setActiveItem(item.label);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`block w-full text-left font-medium transition-all duration-300 transform hover:translate-x-2 relative z-[10000] pointer-events-auto tracking-wider uppercase text-sm ${
-                    activeItem === item
+                  className={`block w-full text-left font-medium transition-all duration-300 transform hover:translate-x-2 tracking-wider uppercase text-sm ${
+                    activeItem === item.label
                       ? "text-teal-400"
                       : "text-gray-300 hover:text-white"
                   }`}
@@ -448,14 +504,22 @@ const Navbar = () => {
                       ? "slideInLeft 0.6s ease-out forwards"
                       : "none",
                   }}
-                  aria-current={activeItem === item ? "page" : undefined}
+                  aria-current={activeItem === item.label ? "page" : undefined}
                 >
-                  {item}
-                </button>
+                  {item.label}
+                </Link>
               ))}
             </div>
 
             <div className="absolute bottom-6 left-6 right-6">
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001]"
+                aria-label="Cambiar idioma"
+              >
+                <Globe className="w-5 h-5" />
+              </button>
               {user ? (
                 <UserMenu isMobile={true} />
               ) : (

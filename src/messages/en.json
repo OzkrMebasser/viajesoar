@@ -6,7 +6,13 @@
     "destinations": "Destinations",
     "flights": "Flights",
     "offers": "Offers",
-    "contact": "Contact"
+    "contact": "Contact",
+    "soar1": "We’ll ",
+    "soar2": "prise You!",
+   "discoverWorld": "Discover the World"
+
+
+   
   },
   "Menu": {
     "openMenu": "Open menu",

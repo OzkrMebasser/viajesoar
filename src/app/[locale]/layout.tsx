@@ -3,7 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/app/i18n/routing';
 import AirplaneCursor from "@/components/Airplane/AirplaneCursor";
-import Navbar from "@/components/Navigation";
+import Navigation from "@/components/Navigation";
 
 export default async function LocaleLayout({
   children,
@@ -13,6 +13,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  console.log(locale);
 
   if (!routing.locales.includes(locale as any)) {
     notFound();
@@ -24,7 +25,7 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Navbar />
+          <Navigation />
           <AirplaneCursor />
           {children}
         </NextIntlClientProvider>

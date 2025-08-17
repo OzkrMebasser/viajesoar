@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function AuthForm() {
+  const t = useTranslations("Navigation");
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +16,10 @@ export default function AuthForm() {
 
   // ✅ Actualiza la tabla profiles después del login
   const updateProfile = async () => {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
     if (error || !user) {
       console.error("❌ Error al obtener usuario:", error);
@@ -22,12 +28,15 @@ export default function AuthForm() {
 
     const { full_name, name, avatar_url, email } = user.user_metadata;
 
-    const { error: updateError } = await supabase.from("profiles").upsert({
-      id: user.id,
-      email: email,
-      username: full_name || name || "Usuario",
-      avatar_url: avatar_url || "https://example.com/default-avatar.png"
-    }, { onConflict: "id" });
+    const { error: updateError } = await supabase.from("profiles").upsert(
+      {
+        id: user.id,
+        email: email,
+        username: full_name || name || "Usuario",
+        avatar_url: avatar_url || "https://example.com/default-avatar.png",
+      },
+      { onConflict: "id" }
+    );
 
     if (updateError) {
       console.error("❌ Error actualizando perfil:", updateError);
@@ -70,21 +79,21 @@ export default function AuthForm() {
     }
 
     // Espera a que se complete el login
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "SIGNED_IN" && session?.user) {
-          await updateProfile();
-          router.push("/");
-          subscription?.unsubscribe();
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session?.user) {
+        await updateProfile();
+        router.push("/");
+        subscription?.unsubscribe();
       }
-    );
+    });
   };
 
   return (
     <div className="max-w-md mx-auto p-8 bg-white shadow rounded-lg mt-12">
       <h1 className="text-2xl font-bold mb-6 text-center">Inicia sesión</h1>
-
+      <h1 className="text-red-500">{t("discoverWorld")}</h1>
       <form onSubmit={handleLogin} className="space-y-4">
         <input
           type="email"

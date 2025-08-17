@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./AirplaneUp.module.css";
-import VerticalRunway from "./VerticalRunway";
 
 const AirplaneUp = () => {
   return (
@@ -36,10 +35,7 @@ const AirplaneUp = () => {
           }}
         />
       </div>
-      {/* Runway */}
-      {/* <div className="relative">
-        <VerticalRunway />
-      </div> */}
+     
      
 
     </div>

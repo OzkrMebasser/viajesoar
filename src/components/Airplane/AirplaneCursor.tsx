@@ -85,27 +85,26 @@ const AirplaneCursor = () => {
           }}
         >
           <img
-            src="/airplane-white.svg"
+            src="/avion.svg"
             alt="Airplane"
-            className="w-full h-full drop-shadow-[4px_5px_5px_rgba(0,0,0,.5)]"
+            className="w-full h-full drop-shadow-[3px_2px_2px_rgba(0,0,0,.5)]"
           />
           <div className={styles.cockpitWindow} />
 
-          {/* Runway cuando está quieto */}
-          {!isMoving && <div className={styles.runway}></div>}
+      
 
           {/* Luces */}
           <div
             className={`${styles.blinkRed} ${styles.light}`}
             style={{
-              top: "24px",
-              left: "3px",
+              top: "22px",
+              left: "2px",
             }}
           />
           <div
             className={`${styles.blinkGreen} ${styles.light}`}
             style={{
-              top: "4px",
+              top: "2px",
               right: "4px",
             }}
           />

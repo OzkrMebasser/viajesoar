@@ -105,7 +105,7 @@ export default function CreatePostPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-24">
       <h1 className="text-3xl font-bold mb-6">Crear nuevo post ✍️</h1>
       {/* Aquí irá el formulario para crear posts */}
       <p className="text-gray-600">Formulario próximamente...</p>

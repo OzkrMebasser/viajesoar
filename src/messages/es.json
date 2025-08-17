@@ -6,7 +6,10 @@
     "destinations": "Destinos",
     "flights": "Vuelos",
     "offers": "Ofertas",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "soar1": "¡Te vamos a ",
+    "soar2": "prender!",
+    "discoverWorld": "Descubre el Mundo"
   },
   "Menu": {
     "openMenu": "Abrir menú",

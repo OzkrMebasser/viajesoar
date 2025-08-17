@@ -16,6 +16,7 @@ export interface Messages {
     contact: string;
     navigation: string;
     trending: string;
+    login: string;
   };
   Search: {
     placeholder: string;

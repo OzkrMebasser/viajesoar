@@ -4,8 +4,10 @@ export const routing = defineRouting({
   locales: ["es", "en"],
   defaultLocale: "es",
   pathnames: {
-    "/": "/",
-
+    "/": {
+      en: "/",
+      es: "/",
+    },
     "/about": {
       en: "/about",
       es: "/acerca-de",
@@ -18,6 +20,33 @@ export const routing = defineRouting({
       en: "/contact",
       es: "/contacto",
     },
-    "/blog": "/blog",
+    "/blog": {
+      en: "/blog",
+      es: "/blog",
+    },
+    "/destinations": {
+      en: "/destinations",
+      es: "/destinos",
+    },
+    "/flights": {
+      en: "/flights",
+      es: "/vuelos",
+    },
+    "/offers": {
+      en: "/offers",
+      es: "/ofertas",
+    },
+    "/bookings": {
+      en: "/bookings",
+      es: "/reservaciones",
+    },
+    "/about-us": {
+      en: "/about-us",
+      es: "/nosotros",
+    },
+    "/faq": {
+      en: "/faq",
+      es: "/preguntas-frecuentes",
+    },
   },
 });
