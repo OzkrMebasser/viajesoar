@@ -29,6 +29,7 @@ const routes: Record<string, { [key in Locale]: string }> = {
   offers: { es: "/ofertas", en: "/offers" },
   contact: { es: "/contacto", en: "/contact" },
 };
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,35 +44,35 @@ const Navbar = () => {
 
   const pathname = usePathname(); // p.ej. "/services"
   const router = useRouter(); // router de next-intl
-  const locale = useLocale();
-const navItems = [
-  { label: t("home"), href: routes.home[locale] },
-  { label: t("holidays"), href: routes.holidays[locale] },
-  { label: t("destinations"), href: routes.destinations[locale] },
-  { label: t("flights"), href: routes.flights[locale] },
-  { label: t("offers"), href: routes.offers[locale] },
-  { label: t("contact"), href: routes.contact[locale] },
-];
+  const locale = useLocale() as Locale; // 👈 Hacer cast explícito a Locale
 
-const toggleLanguage = () => {
-  const next = locale === "es" ? "en" : "es";
+  const navItems = [
+    { label: t("home"), href: routes.home[locale] },
+    { label: t("holidays"), href: routes.holidays[locale] },
+    { label: t("destinations"), href: routes.destinations[locale] },
+    { label: t("flights"), href: routes.flights[locale] },
+    { label: t("offers"), href: routes.offers[locale] },
+    { label: t("contact"), href: routes.contact[locale] },
+  ];
 
-  // Quitar el prefijo de idioma del pathname actual
-  const currentPathWithoutLocale = pathname.replace(/^\/(es|en)/, "") || "/";
+  const toggleLanguage = () => {
+    const next: Locale = locale === "es" ? "en" : "es"; // 👈 Especificar tipo explícitamente
 
-  // Buscar la ruta correspondiente en `routes`
-  const routeEntry = Object.values(routes).find((r) => {
-    if (typeof r === "string") return r === currentPathWithoutLocale;
-    return Object.values(r).includes(currentPathWithoutLocale);
-  });
+    // Quitar el prefijo de idioma del pathname actual
+    const currentPathWithoutLocale = pathname.replace(/^\/(es|en)/, "") || "/";
 
-  // Obtener la ruta en el idioma opuesto
-  const newPath = typeof routeEntry === "string" ? routeEntry : routeEntry?.[next] || "/";
+    // Buscar la ruta correspondiente en `routes`
+    const routeEntry = Object.values(routes).find((r) => {
+      if (typeof r === "string") return r === currentPathWithoutLocale;
+      return Object.values(r).includes(currentPathWithoutLocale);
+    });
 
-  // Navegar al nuevo path con el locale correcto
-  router.replace(newPath, { locale: next });
-};
+    // Obtener la ruta en el idioma opuesto
+    const newPath = typeof routeEntry === "string" ? routeEntry : routeEntry?.[next] || "/";
 
+    // Navegar al nuevo path con el locale correcto
+    router.replace(newPath, { locale: next });
+  };
 
   // const navItems = [
   //   "Home",
