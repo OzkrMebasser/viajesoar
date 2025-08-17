@@ -31,7 +31,7 @@ const routes: Record<string, { [key in Locale]: string }> = {
   contact: { es: "/contacto", en: "/contact" },
 };
 
-const Navbar = () => {
+const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -63,12 +63,14 @@ const Navbar = () => {
     const routeMapping: Record<string, string> = {
       // Rutas en español -> inglés
       "/": "/",
-      "/servicios": "/services", // Tu "holidays" en realidad va a "/services"
+      "/iniciar-sesion": "/login",
+      "/servicios": "/services",
       "/destinos": "/destinations",
       "/vuelos": "/flights",
       "/ofertas": "/offers",
       "/contacto": "/contact",
       // Rutas en inglés -> español
+      "/login": "/iniciar-sesion",
       "/services": "/servicios",
       "/destinations": "/destinos",
       "/flights": "/vuelos",
@@ -192,7 +194,9 @@ const Navbar = () => {
   }, [isSearchOpen]);
 
   const handleLoginRedirect = () => {
-    router.push("/login");
+    // Usar la ruta de login correcta según el locale
+    const loginPath = locale === "es" ? "/iniciar-sesion" : "/login";
+    router.push(loginPath as any);
   };
 
   const handleSearchToggle = () => {
@@ -498,7 +502,7 @@ const Navbar = () => {
               {navItems.map((item, index) => (
                 <Link
                   key={index}
-                  href={item.href} // ✅ ya es tipado correctamente
+                  href={item.href as any} // Cast para evitar error de tipos estrictos
                   onClick={() => {
                     setActiveItem(item.label);
                     setIsMobileMenuOpen(false);
@@ -555,4 +559,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Navigation;
