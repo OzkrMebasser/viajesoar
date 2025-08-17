@@ -21,9 +21,10 @@ type SearchResult = {
 
 type Locale = "es" | "en";
 
+// Solo las rutas que quieres mostrar en la navegación principal
 const routes: Record<string, { [key in Locale]: string }> = {
   home: { es: "/", en: "/" },
-  holidays: { es: "/vacaciones", en: "/holidays" },
+  services: { es: "/servicios", en: "/services" }, // Cambiado de "holidays" a "services"
   destinations: { es: "/destinos", en: "/destinations" },
   flights: { es: "/vuelos", en: "/flights" },
   offers: { es: "/ofertas", en: "/offers" },
@@ -48,7 +49,7 @@ const Navbar = () => {
 
   const navItems = [
     { label: t("home"), href: routes.home[locale] },
-    { label: t("holidays"), href: routes.holidays[locale] },
+    { label: t("holidays"), href: routes.services[locale] }, // Usa "holidays" de traducción pero va a services
     { label: t("destinations"), href: routes.destinations[locale] },
     { label: t("flights"), href: routes.flights[locale] },
     { label: t("offers"), href: routes.offers[locale] },
@@ -56,22 +57,30 @@ const Navbar = () => {
   ];
 
   const toggleLanguage = () => {
-    const next: Locale = locale === "es" ? "en" : "es"; // 👈 Especificar tipo explícitamente
+    const next: Locale = locale === "es" ? "en" : "es";
 
-    // Quitar el prefijo de idioma del pathname actual
-    const currentPathWithoutLocale = pathname.replace(/^\/(es|en)/, "") || "/";
+    // Mapeo basado en tu configuración de routing real
+    const routeMapping: Record<string, string> = {
+      // Rutas en español -> inglés
+      "/": "/",
+      "/servicios": "/services", // Tu "holidays" en realidad va a "/services"
+      "/destinos": "/destinations",
+      "/vuelos": "/flights",
+      "/ofertas": "/offers",
+      "/contacto": "/contact",
+      // Rutas en inglés -> español
+      "/services": "/servicios",
+      "/destinations": "/destinos",
+      "/flights": "/vuelos",
+      "/offers": "/ofertas",
+      "/contact": "/contacto",
+    };
 
-    // Buscar la ruta correspondiente en `routes`
-    const routeEntry = Object.values(routes).find((r) => {
-      if (typeof r === "string") return r === currentPathWithoutLocale;
-      return Object.values(r).includes(currentPathWithoutLocale);
-    });
-
-    // Obtener la ruta en el idioma opuesto
-    const newPath = typeof routeEntry === "string" ? routeEntry : routeEntry?.[next] || "/";
+    // Obtener la ruta correspondiente o usar "/" como fallback
+    const newPath = routeMapping[pathname] || "/";
 
     // Navegar al nuevo path con el locale correcto
-    router.replace(newPath, { locale: next });
+    router.replace(newPath as any, { locale: next });
   };
 
   // const navItems = [
