@@ -1,0 +1,4 @@
+ GET /es/registrarse 404 in 160ms
+
+ trabajando aqui no funciona con supabase aun
+ 

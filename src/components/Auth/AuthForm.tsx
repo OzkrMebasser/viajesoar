@@ -4,6 +4,8 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Link } from "@/app/i18n/navigation";
+
 
 export default function AuthForm() {
   const t = useTranslations("Navigation");
@@ -132,6 +134,13 @@ export default function AuthForm() {
           Google
         </button>
       </div>
+
+      <p className="text-center text-sm mt-4">
+  ¿No tienes cuenta?{" "}
+  <Link href="/sign-up" className="text-blue-500 hover:underline">
+    Regístrate aquí
+  </Link>
+</p>
     </div>
   );
 }

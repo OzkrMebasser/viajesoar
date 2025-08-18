@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { Globe, Search, User, Menu, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 // import { useRouter } from "next/navigation";
-import UserMenu from "./UserMenu";
+import UserMenu from "./Auth/UserMenu";
 import Fuse from "fuse.js";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { usePathname, useRouter } from "@/app/i18n/navigation"; // 👈 usa tu navegación

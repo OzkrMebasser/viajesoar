@@ -1,4 +1,4 @@
-import AuthForm from "@/components/AuthForm";
+import AuthForm from "@/components/Auth/AuthForm";
 import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
