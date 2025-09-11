@@ -58,7 +58,7 @@ export default function Preloader() {
     <div
       ref={preloaderRef}
       aria-hidden="true"
-      className={`fixed inset-0 z-50 ${styles.cloudsBg} flex items-center justify-center bg-gradient-to-b from-sky-400 via-sky-300 to-sky-800`}
+      className={`fixed inset-0 z-50 ${styles.cloudsBg} flex items-center justify-center bg-gradient-to-b from-indigo-700 to-blue-400`}
     >
       {/* Nubes */}
       <div ref={textRef} className={styles.clouds}>

@@ -10,9 +10,9 @@ export const routing = defineRouting({
     },
      "/login": {
       en: "/login",
-      es: "/iniciar-sesion", // o simplemente "/login" si quieres mantenerlo igual
+      es: "/iniciar-sesion", 
     },
-     "/register": {
+     "/sign-up": {
       en: "/sign-up",
       es: "/registrarse",
     },
