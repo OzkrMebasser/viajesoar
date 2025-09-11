@@ -296,7 +296,12 @@ const Destinations: React.FC = () => {
             </div>
 
             {/* Category Filter */}
+            <label htmlFor="category-select" className="sr-only">
+              Categoría
+            </label>
             <select
+              id="category-select"
+              aria-label="Categoría"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={filters.category}
               onChange={(e) =>
@@ -312,7 +317,12 @@ const Destinations: React.FC = () => {
             </select>
 
             {/* Price Filter */}
+            <label htmlFor="price-select" className="sr-only">
+              Rango de precio
+            </label>
             <select
+              id="price-select"
+              aria-label="Rango de precio"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={filters.priceRange}
               onChange={(e) =>
@@ -343,6 +353,8 @@ const Destinations: React.FC = () => {
                 <button
                   onClick={() => toggleFavorite(destination.id)}
                   className="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+                  title={favorites.includes(destination.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+                  aria-label={favorites.includes(destination.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
                 >
                   <Heart
                     className={`w-5 h-5 ${
