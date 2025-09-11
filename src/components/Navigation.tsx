@@ -301,7 +301,7 @@ const Navigation = () => {
                 <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
               </div>
               <strong>
-                <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 ">
+                <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white ">
                   VIAJE
                   <span className="soar text-[#ccfb08] ">SOAR</span>
                 </span>
@@ -462,7 +462,7 @@ const Navigation = () => {
         />
 
         <div
-          className={`absolute top-0 left-0 h-full w-80 bg-black transform transition-transform duration-500 z-[999999] ${
+          className={`absolute top-0 left-0 h-full w-80 bg-[black] transform transition-transform duration-500 z-[100000] ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -498,7 +498,7 @@ const Navigation = () => {
               </span>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 relative z-[100000]">
               {navItems.map((item, index) => (
                 <Link
                   key={index}
@@ -517,6 +517,7 @@ const Navigation = () => {
                     animation: isMobileMenuOpen
                       ? "slideInLeft 0.6s ease-out forwards"
                       : "none",
+                    zIndex: 100000,
                   }}
                   aria-current={activeItem === item.label ? "page" : undefined}
                 >
@@ -536,8 +537,7 @@ const Navigation = () => {
               </button>
               {user ? (
                 <UserMenu isMobile={true} />
-              ) : 
-              (
+              ) : (
                 <button
                   type="button"
                   onClick={(e) => {
@@ -551,8 +551,7 @@ const Navigation = () => {
                   <User className="w-5 h-5" />
                   <span>Iniciar Sesión</span>
                 </button>
-              )
-              }
+              )}
             </div>
           </div>
         </div>

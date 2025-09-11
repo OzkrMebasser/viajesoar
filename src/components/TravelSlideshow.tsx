@@ -597,14 +597,14 @@ const TravelSlideshow = () => {
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
-            className="absolute left-0 top-0 bg-center bg-cover shadow-2xl"
+            className="lg:absolute left-0 top-0 bg-center bg-cover shadow-2xl"
             style={{ backgroundImage: `url(${item.image})` }}
           />
           <div
             ref={(el) => {
               cardContentRefs.current[index] = el;
             }}
-            className="absolute left-0 top-0 text-white pl-4"
+            className="lg:absolute left-0 top-0 text-red-500 pl-4"
           >
             <div className="w-8 h-1 rounded-full bg-white" />
             <div className="mt-1 text-xs font-medium">{item.place}</div>
