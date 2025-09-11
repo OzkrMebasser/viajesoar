@@ -9,8 +9,9 @@ export default function OAuthCallback() {
 
   useEffect(() => {
     const handleOAuth = async () => {
-      // Intercambiar el código por la sesión (Supabase v2)
-      const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(
+        window.location.href
+      );
 
       if (error) {
         console.error("❌ Error en OAuth callback:", error.message);
@@ -19,8 +20,8 @@ export default function OAuthCallback() {
 
       console.log("✅ Sesión iniciada:", data.session);
 
-      // Redirige al home o dashboard
-      router.push("/");
+      // 🚀 Ir directo al home
+      router.replace("/");
     };
 
     handleOAuth();
