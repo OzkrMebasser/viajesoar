@@ -311,7 +311,7 @@ const Navigation = () => {
             <div className="flex items-center gap-3 relative z-[10000]">
               <button
                 type="button"
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001]"
+                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001] hidden md:block"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -324,7 +324,7 @@ const Navigation = () => {
               <button
                 type="button"
                 onClick={toggleLanguage}
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001]"
+                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001] hidden md:block"
                 aria-label="Cambiar idioma"
               >
                 <Globe className="w-5 h-5" />
@@ -462,7 +462,7 @@ const Navigation = () => {
         />
 
         <div
-          className={`absolute top-0 left-0 h-full w-80 bg-black transform transition-transform duration-500 z-[9999] ${
+          className={`absolute top-0 left-0 h-full w-80 bg-black transform transition-transform duration-500 z-[999999] ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -536,7 +536,8 @@ const Navigation = () => {
               </button>
               {user ? (
                 <UserMenu isMobile={true} />
-              ) : (
+              ) : 
+              (
                 <button
                   type="button"
                   onClick={(e) => {
@@ -550,7 +551,8 @@ const Navigation = () => {
                   <User className="w-5 h-5" />
                   <span>Iniciar Sesión</span>
                 </button>
-              )}
+              )
+              }
             </div>
           </div>
         </div>
