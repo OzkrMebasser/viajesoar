@@ -1,2 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
+
+.nav
+{
+    z-index: 999999999999999999;
+}

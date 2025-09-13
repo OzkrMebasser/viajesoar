@@ -31,6 +31,39 @@ const routes: Record<string, { [key in Locale]: string }> = {
   contact: { es: "/contacto", en: "/contact" },
 };
 
+const LogoBig = () => (
+  <>
+    <div className="relative">
+      <img
+        src="/viajesoar-logo.png"
+        alt="ViajeSoar Logo"
+        className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
+      />
+      <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+    </div>
+    <strong>
+      <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white">
+        VIAJE
+        <span className="soar text-[#ccfb08] ">SOAR</span>
+      </span>
+    </strong>
+  </>
+);
+
+const LogoSmall = () => (
+  <>
+    <div className="relative">
+      <img
+        src="/viajesoar-logo.png"
+        alt="ViajeSoar Logo"  
+        className="w-[70px] h-[70px] lg:w-[80px] lg:h-[80px]"
+    
+      />
+      <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+    </div>
+  </>
+);
+
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -253,8 +286,8 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`fixed backdrop-blur-lg left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out ${
-          isScrolled ? "bg-black/95 backdrop-blur-lg" : "bg-black/80"
+        className={`nav fixed  left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out ${
+          isScrolled ? "backdrop-blur-sm bg-black/40 shadow-md" : ""
         }`}
         role="navigation"
         aria-label="Navegación principal"
@@ -292,20 +325,31 @@ const Navigation = () => {
                 }
               }}
             >
-              <div className="relative">
+              {/* <div className="relative">
                 <img
-                  src="/viajesoar-logo-final.png"
+                  src="/viajesoar-logo.png"
                   alt="ViajeSoar Logo"
-                  className="w-[30px] h-[30px] lg:w-[50px] lg:h-[50px]"
+                  className={
+                    isScrolled
+                      ? "w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
+                      : "w-[70px] h-[70px] lg:w-[80px] lg:h-[80px]"
+                  }
                 />
                 <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
               </div>
               <strong>
-                <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white ">
+                <span
+                  className={
+                    isScrolled
+                      ? "text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white"
+                      : "text-xl lg:text-4xl font-bold tracking-wider transition-colors duration-300 text-white"
+                  }
+                >
                   VIAJE
                   <span className="soar text-[#ccfb08] ">SOAR</span>
                 </span>
-              </strong>
+              </strong> */}
+              {isScrolled ? <LogoBig /> : <LogoSmall />}
             </div>
 
             <div className="flex items-center gap-3 relative z-[10000]">
@@ -440,13 +484,13 @@ const Navigation = () => {
       </div>
 
       <div
-        className={`fixed inset-0 z-40 transition-all duration-500 ${
+        className={`nav fixed inset-0 z-40 transition-all duration-500 ${
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
         id="mobile-menu"
-        aria-hidden={isMobileMenuOpen ? "false" : "true"}
+        aria-hidden={!!isMobileMenuOpen}
       >
         <div
           className="absolute inset-0 bg-black/70 backdrop-blur-sm"
@@ -462,7 +506,7 @@ const Navigation = () => {
         />
 
         <div
-          className={`absolute top-0 left-0 h-full w-80 bg-[black] transform transition-transform duration-500 z-[100000] ${
+          className={`absolute top-0 left-0 h-full w-80 bg-[black] transform transition-transform duration-500 z-50 ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -498,7 +542,7 @@ const Navigation = () => {
               </span>
             </div>
 
-            <div className="space-y-6 relative z-[100000]">
+            <div className="space-y-6 relative z-50">
               {navItems.map((item, index) => (
                 <Link
                   key={index}
@@ -526,11 +570,11 @@ const Navigation = () => {
               ))}
             </div>
 
-            <div className="absolute bottom-6 left-6 right-6">
+            <div className=" ">
               <button
                 type="button"
                 onClick={toggleLanguage}
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001]"
+                className="p-2 mt-4 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-50"
                 aria-label="Cambiar idioma"
               >
                 <Globe className="w-5 h-5" />
@@ -546,13 +590,16 @@ const Navigation = () => {
                     handleLoginRedirect();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center justify-center gap-2 p-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-300 pointer-events-auto z-[10001] font-medium"
+                  className="w-full flex items-center justify-center gap-2 p-3 mt-4 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-300 pointer-events-auto z-50 font-medium"
                 >
                   <User className="w-5 h-5" />
                   <span>Iniciar Sesión</span>
                 </button>
               )}
             </div>
+          </div>
+          <div className="relative mx-auto h-44 w-44 bg-gray-600">
+            <p className="text-white text-center">Logo aqui</p>
           </div>
         </div>
       </div>
