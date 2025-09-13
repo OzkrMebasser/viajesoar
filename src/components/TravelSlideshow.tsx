@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
-import Preloader from "./Airplane/Preloader";
 import { Bookmark } from "lucide-react";
 
 interface DestinationData {
@@ -22,7 +21,7 @@ const TravelSlideshow = () => {
       title: "SAINT",
       title2: "ANTONIEN",
       description:
-        "Tucked away in the Switzerland Alps, Saint Antönien offers a serene retreat for those seeking tranquility and adventure. It's a hidden gem for backcountry skiing in winter and lush trails for hiking and biking during summer.", // 276 chars
+        "Tucked away in the Switzerland Alps, Saint Antönien offers a serene retreat for those seeking tranquility and adventure. It's a hidden gem for backcountry skiing in winter and lush trails for hiking and biking during summer.",
       image: "https://assets.codepen.io/3685267/timed-cards-1.jpg",
     },
     {
@@ -31,7 +30,7 @@ const TravelSlideshow = () => {
       title: "NAGANO",
       title2: "PREFECTURE",
       description:
-        "Nagano Prefecture, in the majestic Japan Alps, is a cultural treasure with historic shrines and temples, including Zenkō-ji. The region is also a hotspot for skiing and snowboarding, offering some of the finest powder in the country.", // 278 chars
+        "Nagano Prefecture, in the majestic Japan Alps, is a cultural treasure with historic shrines and temples, including Zenkō-ji. The region is also a hotspot for skiing and snowboarding, offering some of the finest powder in the country.",
       image: "https://assets.codepen.io/3685267/timed-cards-2.jpg",
     },
     {
@@ -40,7 +39,7 @@ const TravelSlideshow = () => {
       title: "MARRAKECH",
       title2: "MERZOUGA",
       description:
-        "From the vibrant souks of Marrakech to the tranquil, starlit sands of Merzouga, Morocco showcases its diverse splendor. Camel treks and desert camps offer an unforgettable immersion into the nomadic way of life across the Sahara.", // 277 chars
+        "From the vibrant souks of Marrakech to the tranquil, starlit sands of Merzouga, Morocco showcases its diverse splendor. Camel treks and desert camps offer an unforgettable immersion into the nomadic way of life across the Sahara.",
       image: "https://assets.codepen.io/3685267/timed-cards-3.jpg",
     },
     {
@@ -49,7 +48,7 @@ const TravelSlideshow = () => {
       title: "YOSEMITE",
       title2: "NATIONAL PARK",
       description:
-        "Yosemite National Park is a showcase of the American wilderness, famed for towering granite monoliths, ancient sequoias, and thundering waterfalls. Visitors enjoy year-round activities, from rock climbing to serene valley walks in nature.", // 275 chars
+        "Yosemite National Park is a showcase of the American wilderness, famed for towering granite monoliths, ancient sequoias, and thundering waterfalls. Visitors enjoy year-round activities, from rock climbing to serene valley walks in nature.",
       image: "https://assets.codepen.io/3685267/timed-cards-4.jpg",
     },
     {
@@ -58,7 +57,7 @@ const TravelSlideshow = () => {
       title: "LOS LANCES",
       title2: "BEACH",
       description:
-        "Los Lances Beach in Tarifa is a coastal paradise with consistent winds, making it famous for kitesurfing and windsurfing. Its long sandy shores provide ample space for relaxation and sunbathing, with a lively atmosphere of beach bars and cafes.", // 278 chars
+        "Los Lances Beach in Tarifa is a coastal paradise with consistent winds, making it famous for kitesurfing and windsurfing. Its long sandy shores provide ample space for relaxation and sunbathing, with a lively atmosphere of beach bars and cafes.",
       image: "https://assets.codepen.io/3685267/timed-cards-5.jpg",
     },
     {
@@ -67,7 +66,7 @@ const TravelSlideshow = () => {
       title: "GÖREME",
       title2: "VALLEY",
       description:
-        "Göreme Valley in Cappadocia is a historical marvel against a unique geological backdrop, sculpted by centuries of wind and water. The valley is famous for open-air museums, underground cities, and the enchanting experience of hot air ballooning.", // 278 chars
+        "Göreme Valley in Cappadocia is a historical marvel against a unique geological backdrop, sculpted by centuries of wind and water. The valley is famous for open-air museums, underground cities, and the enchanting experience of hot air ballooning.",
       image: "https://assets.codepen.io/3685267/timed-cards-6.jpg",
     },
     {
@@ -76,7 +75,7 @@ const TravelSlideshow = () => {
       title: "LOS GLACIARES",
       title2: "NATIONAL PARK",
       description:
-        "Los Glaciares National Park in Patagonia is a breathtaking expanse of rugged mountains, turquoise lakes, and massive glaciers, including the iconic Perito Moreno. It’s a paradise for trekkers and nature lovers seeking pristine wilderness.", // 275 chars
+        "Los Glaciares National Park in Patagonia is a breathtaking expanse of rugged mountains, turquoise lakes, and massive glaciers, including the iconic Perito Moreno. It's a paradise for trekkers and nature lovers seeking pristine wilderness.",
       image:
         "https://images.pexels.com/photos/2516401/pexels-photo-2516401.jpeg",
     },
@@ -86,7 +85,7 @@ const TravelSlideshow = () => {
       title: "OIA",
       title2: "VILLAGE",
       description:
-        "Oia Village in Santorini is famed for its whitewashed buildings with blue domes, stunning sunsets, and panoramic views of the Aegean Sea. It’s perfect for romantic getaways and exploring the charming Cycladic architecture of the island.", // 277 chars
+        "Oia Village in Santorini is famed for its whitewashed buildings with blue domes, stunning sunsets, and panoramic views of the Aegean Sea. It's perfect for romantic getaways and exploring the charming Cycladic architecture of the island.",
       image:
         "https://images.pexels.com/photos/163864/santorini-oia-greece-travel-163864.jpeg",
     },
@@ -146,15 +145,46 @@ const TravelSlideshow = () => {
 
   const initializeAnimations = (): void => {
     const { innerHeight: height, innerWidth: width } = window;
+    const isSmallMobile = width <= 480; // iPhone 8 y similares
     const isMobile = width <= 768;
 
-    // Mobile responsive values
-    const offsetTop = isMobile ? height - 200 : height - 330;
-    const offsetLeft = isMobile ? width - 280 : width - 550;
-    const cardWidth = isMobile ? 120 : 200;
-    const cardHeight = isMobile ? 180 : 300;
-    const gap = isMobile ? 20 : 40;
-    const numberSize = isMobile ? 30 : 50;
+    // Responsive values with small mobile support
+    const offsetTop = isSmallMobile 
+      ? height - 160 
+      : isMobile 
+        ? height - 200 
+        : height - 330;
+        
+    const offsetLeft = isSmallMobile 
+      ? width - 220 
+      : isMobile 
+        ? width - 280 
+        : width - 550;
+        
+    const cardWidth = isSmallMobile 
+      ? 90 
+      : isMobile 
+        ? 120 
+        : 200;
+        
+    const cardHeight = isSmallMobile 
+      ? 140 
+      : isMobile 
+        ? 180 
+        : 300;
+        
+    const gap = isSmallMobile 
+      ? 15 
+      : isMobile 
+        ? 20 
+        : 40;
+        
+    const numberSize = isSmallMobile 
+      ? 25 
+      : isMobile 
+        ? 30 
+        : 50;
+        
     const ease = "sine.inOut";
 
     const currentOrder = orderRef.current;
@@ -169,14 +199,14 @@ const TravelSlideshow = () => {
       : detailsEvenElementRef.current;
 
     gsap.set(paginationRef.current, {
-      top: offsetTop + (isMobile ? 200 : 330),
+      top: offsetTop + (isSmallMobile ? 160 : isMobile ? 200 : 330),
       left: offsetLeft,
-      y: isMobile ? 100 : 200,
+      y: isSmallMobile ? 80 : isMobile ? 100 : 200,
       opacity: 0,
       zIndex: 30,
     });
 
-    gsap.set(navRef.current, { y: isMobile ? -100 : -200, opacity: 0 });
+    gsap.set(navRef.current, { y: isSmallMobile ? -80 : isMobile ? -100 : -200, opacity: 0 });
 
     gsap.set(cardRefs.current[active], {
       x: 0,
@@ -189,7 +219,7 @@ const TravelSlideshow = () => {
     gsap.set(detailsActive, {
       opacity: 0,
       zIndex: 22,
-      x: isMobile ? -100 : -200,
+      x: isSmallMobile ? -80 : isMobile ? -100 : -200,
     });
     gsap.set(detailsInactive, { opacity: 0, zIndex: 12 });
 
@@ -211,20 +241,27 @@ const TravelSlideshow = () => {
           ctaEvenRef,
         ];
 
-    gsap.set(inactiveRefs[0].current, { y: isMobile ? 50 : 100 });
-    gsap.set(inactiveRefs[1].current, { y: isMobile ? 50 : 100 });
-    gsap.set(inactiveRefs[2].current, { y: isMobile ? 50 : 100 });
-    gsap.set(inactiveRefs[3].current, { y: isMobile ? 30 : 50 });
-    gsap.set(inactiveRefs[4].current, { y: isMobile ? 40 : 60 });
-    gsap.set(inactiveRefs[5].current, { y: isMobile ? 40 : 60 });
+    const yOffset1 = isSmallMobile ? 40 : isMobile ? 50 : 100;
+    const yOffset2 = isSmallMobile ? 25 : isMobile ? 30 : 50;
+    const yOffset3 = isSmallMobile ? 30 : isMobile ? 40 : 60;
 
+    gsap.set(inactiveRefs[0].current, { y: yOffset1 });
+    gsap.set(inactiveRefs[1].current, { y: yOffset1 });
+    gsap.set(inactiveRefs[2].current, { y: yOffset1 });
+    gsap.set(inactiveRefs[3].current, { y: yOffset2 });
+    gsap.set(inactiveRefs[4].current, { y: yOffset3 });
+    gsap.set(inactiveRefs[5].current, { y: yOffset3 });
+
+    const progressWidth = isSmallMobile ? 250 : isMobile ? 300 : 500;
     gsap.set(progressRef.current, {
-      width: (isMobile ? 300 : 500) * (1 / currentOrder.length) * (active + 1),
+      width: progressWidth * (1 / currentOrder.length) * (active + 1),
     });
 
     rest.forEach((i, index) => {
+      const cardX = offsetLeft + (isSmallMobile ? 150 : isMobile ? 200 : 400) + index * (cardWidth + gap);
+      
       gsap.set(cardRefs.current[i], {
-        x: offsetLeft + (isMobile ? 200 : 400) + index * (cardWidth + gap),
+        x: cardX,
         y: offsetTop,
         width: cardWidth,
         height: cardHeight,
@@ -233,9 +270,9 @@ const TravelSlideshow = () => {
       });
 
       gsap.set(cardContentRefs.current[i], {
-        x: offsetLeft + (isMobile ? 200 : 400) + index * (cardWidth + gap),
+        x: cardX,
         zIndex: 30,
-        y: offsetTop + cardHeight - (isMobile ? 60 : 100),
+        y: offsetTop + cardHeight - (isSmallMobile ? 50 : isMobile ? 60 : 100),
       });
 
       if (slideNumberRefs.current[i]) {
@@ -246,9 +283,10 @@ const TravelSlideshow = () => {
     gsap.set(indicatorRef.current, { x: -width });
 
     const startDelay = 0.6;
+    const coverXOffset = isSmallMobile ? 150 : isMobile ? 200 : 400;
 
     gsap.to(coverRef.current, {
-      x: width + (isMobile ? 200 : 400),
+      x: width + coverXOffset,
       delay: 0.5,
       ease,
       onComplete: () => {
@@ -295,14 +333,45 @@ const TravelSlideshow = () => {
       setIsAnimating(true);
 
       const { innerHeight: height, innerWidth: width } = window;
+      const isSmallMobile = width <= 480;
       const isMobile = width <= 768;
 
-      const offsetTop = isMobile ? height - 200 : height - 330;
-      const offsetLeft = isMobile ? width - 280 : width - 550;
-      const cardWidth = isMobile ? 120 : 200;
-      const cardHeight = isMobile ? 180 : 300;
-      const gap = isMobile ? 20 : 40;
-      const numberSize = isMobile ? 30 : 50;
+      const offsetTop = isSmallMobile 
+        ? height - 160 
+        : isMobile 
+          ? height - 200 
+          : height - 330;
+          
+      const offsetLeft = isSmallMobile 
+        ? width - 220 
+        : isMobile 
+          ? width - 280 
+          : width - 550;
+          
+      const cardWidth = isSmallMobile 
+        ? 90 
+        : isMobile 
+          ? 120 
+          : 200;
+          
+      const cardHeight = isSmallMobile 
+        ? 140 
+        : isMobile 
+          ? 180 
+          : 300;
+          
+      const gap = isSmallMobile 
+        ? 15 
+        : isMobile 
+          ? 20 
+          : 40;
+          
+      const numberSize = isSmallMobile 
+        ? 25 
+        : isMobile 
+          ? 30 
+          : 50;
+          
       const ease = "sine.inOut";
 
       const currentOrder = [...orderRef.current];
@@ -414,7 +483,7 @@ const TravelSlideshow = () => {
       gsap.to(cardRefs.current[prv], { scale: 1.5, ease, duration: 1 });
 
       gsap.to(cardContentRefs.current[active], {
-        y: offsetTop + cardHeight - (isMobile ? 10 : 10),
+        y: offsetTop + cardHeight - (isSmallMobile ? 5 : 10),
         opacity: 0,
         duration: 0.6,
         ease,
@@ -432,8 +501,9 @@ const TravelSlideshow = () => {
         });
       }
 
+      const progressWidth = isSmallMobile ? 250 : isMobile ? 300 : 500;
       gsap.to(progressRef.current, {
-        width: (isMobile ? 300 : 500) * (1 / newOrder.length) * (active + 1),
+        width: progressWidth * (1 / newOrder.length) * (active + 1),
         ease,
         duration: 1,
       });
@@ -461,7 +531,7 @@ const TravelSlideshow = () => {
 
           gsap.set(cardContentRefs.current[prv], {
             x: xNew,
-            y: offsetTop + cardHeight - (isMobile ? 60 : 100),
+            y: offsetTop + cardHeight - (isSmallMobile ? 50 : isMobile ? 60 : 100),
             opacity: 1,
             zIndex: 40,
           });
@@ -492,12 +562,16 @@ const TravelSlideshow = () => {
                 ctaEvenRef,
               ];
 
-          gsap.set(inactiveRefs[0].current, { y: isMobile ? 50 : 100 });
-          gsap.set(inactiveRefs[1].current, { y: isMobile ? 50 : 100 });
-          gsap.set(inactiveRefs[2].current, { y: isMobile ? 50 : 100 });
-          gsap.set(inactiveRefs[3].current, { y: isMobile ? 30 : 50 });
-          gsap.set(inactiveRefs[4].current, { y: isMobile ? 40 : 60 });
-          gsap.set(inactiveRefs[5].current, { y: isMobile ? 40 : 60 });
+          const yOffset1 = isSmallMobile ? 40 : isMobile ? 50 : 100;
+          const yOffset2 = isSmallMobile ? 25 : isMobile ? 30 : 50;
+          const yOffset3 = isSmallMobile ? 30 : isMobile ? 40 : 60;
+
+          gsap.set(inactiveRefs[0].current, { y: yOffset1 });
+          gsap.set(inactiveRefs[1].current, { y: yOffset1 });
+          gsap.set(inactiveRefs[2].current, { y: yOffset1 });
+          gsap.set(inactiveRefs[3].current, { y: yOffset2 });
+          gsap.set(inactiveRefs[4].current, { y: yOffset3 });
+          gsap.set(inactiveRefs[5].current, { y: yOffset3 });
 
           setIsAnimating(false);
           resolve();
@@ -521,7 +595,7 @@ const TravelSlideshow = () => {
 
           gsap.to(cardContentRefs.current[i], {
             x: xNew,
-            y: offsetTop + cardHeight - (isMobile ? 60 : 100),
+            y: offsetTop + cardHeight - (isSmallMobile ? 50 : isMobile ? 60 : 100),
             opacity: 1,
             zIndex: 40,
             ease,
@@ -572,31 +646,31 @@ const TravelSlideshow = () => {
     }, 100);
   };
 
-  const handleNext = (): void => {
-    if (!isAnimating) {
-      if (loopTimeoutRef.current) {
-        clearTimeout(loopTimeoutRef.current);
-      }
-      step("next").then(() => {
-        loopTimeoutRef.current = setTimeout(() => {
-          loop();
-        }, 4000);
-      });
-    }
-  };
+  // const handleNext = (): void => {
+  //   if (!isAnimating) {
+  //     if (loopTimeoutRef.current) {
+  //       clearTimeout(loopTimeoutRef.current);
+  //     }
+  //     step("next").then(() => {
+  //       loopTimeoutRef.current = setTimeout(() => {
+  //         loop();
+  //       }, 4000);
+  //     });
+  //   }
+  // };
 
-  const handlePrev = (): void => {
-    if (!isAnimating) {
-      if (loopTimeoutRef.current) {
-        clearTimeout(loopTimeoutRef.current);
-      }
-      step("prev").then(() => {
-        loopTimeoutRef.current = setTimeout(() => {
-          loop();
-        }, 4000);
-      });
-    }
-  };
+  // const handlePrev = (): void => {
+  //   if (!isAnimating) {
+  //     if (loopTimeoutRef.current) {
+  //       clearTimeout(loopTimeoutRef.current);
+  //     }
+  //     step("prev").then(() => {
+  //       loopTimeoutRef.current = setTimeout(() => {
+  //         loop();
+  //       }, 4000);
+  //     });
+  //   }
+  // };
 
   return (
     <div
@@ -607,7 +681,7 @@ const TravelSlideshow = () => {
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500&display=swap"
         rel="stylesheet"
       />
-      {/* Images carsds  */}
+      {/* Images cards */}
       {data.map((item, index) => (
         <div key={index}>
           <div
@@ -618,7 +692,7 @@ const TravelSlideshow = () => {
             style={{ backgroundImage: `url(${item.image})` }}
           >
             {/* Overlay negro transparente */}
-            <div className="absolute inset-0 bg-black/30"></div>
+            <div className="absolute inset-0 bg-black/30 rounded-lg"></div>
           </div>
           <div
             ref={(el) => {
@@ -626,17 +700,17 @@ const TravelSlideshow = () => {
             }}
             className="absolute left-0 -top-8 text-white pl-2 md:pl-4"
           >
-            <div className="w-6 h-0.5 md:w-8 md:h-1 rounded-full bg-white" />
+            <div className="w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white" />
             <div className="mt-1 text-xs font-medium">{item.place}</div>
             <div className="mt-1 text-xs font-medium">{item.country}</div>
             <div
-              className="font-semibold text-sm md:text-xl"
+              className="font-semibold text-xs sm:text-sm md:text-xl"
               style={{ fontFamily: "Oswald, sans-serif" }}
             >
               {item.title}
             </div>
             <div
-              className="font-semibold text-sm md:text-xl"
+              className="font-semibold text-xs sm:text-sm md:text-xl"
               style={{ fontFamily: "Oswald, sans-serif" }}
             >
               {item.title2}
@@ -648,30 +722,30 @@ const TravelSlideshow = () => {
       {/* Images hero even */}
       <div
         ref={detailsEvenElementRef}
-        className="absolute left-4 md:left-15 top-[9rem] z-20 max-w-xs md:max-w-none py-4 "
+        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-[9rem] z-20 max-w-xs md:max-w-none py-4"
       >
-        <div className="relative  overflow-hidden ">
-          <div className="absolute top-0 left-0 w-6 h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div ref={placeTextEvenRef} className="pt-2 text-sm md:text-xl">
+        <div className="relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
+          <div ref={placeTextEvenRef} className="pt-2 text-xs sm:text-sm md:text-xl">
             {data[order[0]]?.place}
           </div>
-          <div ref={countryTextOddRef} className="pb-2 text-sm md:text-xl">
+          <div ref={countryTextOddRef} className="pb-2 text-xs sm:text-sm md:text-xl">
             {data[order[0]]?.country}
           </div>
         </div>
-        <div className="mb-1  overflow-hidden ">
+        <div className="mb-1 overflow-hidden">
           <div
             ref={title1EvenRef}
-            className="text-4xl md:text-7xl font-semibold "
+            className="text-2xl sm:text-4xl md:text-7xl font-semibold"
             style={{ fontFamily: "Oswald, sans-serif" }}
           >
             {data[order[0]]?.title}
           </div>
         </div>
-        <div className="mb-2 md:mb-4 h-16 md:h-25 overflow-hidden">
+        <div className="mb-2 md:mb-4 h-12 sm:h-16 md:h-25 overflow-hidden">
           <div
             ref={title2EvenRef}
-            className="text-4xl md:text-7xl font-semibold leading-tight"
+            className="text-2xl sm:text-4xl md:text-7xl font-semibold leading-tight"
             style={{ fontFamily: "Oswald, sans-serif" }}
           >
             {data[order[0]]?.title2}
@@ -679,7 +753,7 @@ const TravelSlideshow = () => {
         </div>
         <div
           ref={descEvenRef}
-          className=" mt-2 w-full md:w-[35rem] text-sm md:text-justify "
+          className="mt-2 w-full sm:w-80 md:w-[35rem] text-xs sm:text-sm md:text-base md:text-justify"
         >
           {data[order[0]]?.description}
         </div>
@@ -687,14 +761,13 @@ const TravelSlideshow = () => {
           ref={ctaEvenRef}
           className="relative pt-4 w-full flex items-center"
         >
-          {" "}
           <button
-            className="bg-yellow-500 w-8 h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
+            className="bg-yellow-500 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
             title="Bookmark"
           >
-            <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
+            <Bookmark className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
           </button>
-          <button className="border border-white bg-transparent h-8 md:h-9 rounded-full text-white px-4 md:px-6 text-xs ml-2 md:ml-4 uppercase">
+          <button className="border border-white bg-transparent h-7 sm:h-8 md:h-9 rounded-full text-white px-3 sm:px-4 md:px-6 text-xs ml-2 md:ml-4 uppercase">
             Discover Location
           </button>
         </div>
@@ -702,30 +775,30 @@ const TravelSlideshow = () => {
       {/* Images hero odd */}
       <div
         ref={detailsOddElementRef}
-        className="absolute left-4 md:left-15 top-[9rem] z-20 max-w-xs md:max-w-none py-4 "
+        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-[9rem] z-20 max-w-xs md:max-w-none py-4"
       >
-        <div className="relative  overflow-hidden">
-          <div className="absolute top-0 left-0 w-6 h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div ref={placeTextOddRef} className="pt-2  text-sm md:text-xl">
+        <div className="relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
+          <div ref={placeTextOddRef} className="pt-2 text-xs sm:text-sm md:text-xl">
             {data[order[0]]?.place}
           </div>
-          <div ref={countryTextOddRef} className="pb-2 text-sm md:text-xl">
+          <div ref={countryTextOddRef} className="pb-2 text-xs sm:text-sm md:text-xl">
             {data[order[0]]?.country}
           </div>
         </div>
         <div className="mb-1 overflow-hidden">
           <div
             ref={title1OddRef}
-            className="text-4xl md:text-7xl font-semibold "
+            className="text-2xl sm:text-4xl md:text-7xl font-semibold"
             style={{ fontFamily: "Oswald, sans-serif" }}
           >
             {data[order[0]]?.title}
           </div>
         </div>
-        <div className="mb-2 md:mb-4 h-16 md:h-25 overflow-hidden">
+        <div className="mb-2 md:mb-4 h-12 sm:h-16 md:h-25 overflow-hidden">
           <div
             ref={title2OddRef}
-            className="text-4xl md:text-7xl font-semibold leading-tight"
+            className="text-2xl sm:text-4xl md:text-7xl font-semibold leading-tight"
             style={{ fontFamily: "Oswald, sans-serif" }}
           >
             {data[order[0]]?.title2}
@@ -733,7 +806,7 @@ const TravelSlideshow = () => {
         </div>
         <div
           ref={descOddRef}
-          className=" mt-2 w-full md:w-[35rem] text-sm md:text-justify "
+          className="mt-2 w-full sm:w-80 md:w-[35rem] text-xs sm:text-sm md:text-base md:text-justify"
         >
           {data[order[0]]?.description}
         </div>
@@ -742,16 +815,57 @@ const TravelSlideshow = () => {
           className="relative pt-4 w-full flex items-center"
         >
           <button
-            className="bg-yellow-500 w-8 h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
+            className="bg-yellow-500 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
             title="Bookmark"
           >
-            <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
+            <Bookmark className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
           </button>
-          <button className="border border-white bg-transparent h-8 md:h-9 rounded-full text-white px-4 md:px-6 text-xs ml-2 md:ml-4 uppercase">
+          <button className="border border-white bg-transparent h-7 sm:h-8 md:h-9 rounded-full text-white px-3 sm:px-4 md:px-6 text-xs ml-2 md:ml-4 uppercase">
             Discover Location
           </button>
         </div>
       </div>
+
+      {/* Navigation buttons */}
+      {/* <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 flex gap-2">
+        <button
+          onClick={handlePrev}
+          className="bg-white/20 backdrop-blur-sm border border-white/30 w-10 h-10 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center hover:bg-white/30 transition-all duration-200"
+          disabled={isAnimating}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button
+          onClick={handleNext}
+          className="bg-white/20 backdrop-blur-sm border border-white/30 w-10 h-10 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center hover:bg-white/30 transition-all duration-200"
+          disabled={isAnimating}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div> */}
+
+      {/* Progress indicator */}
+      {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-30">
+        <div className="bg-white/20 backdrop-blur-sm rounded-full h-1 w-32 sm:w-40 md:w-60 overflow-hidden">
+          <div
+            ref={progressRef}
+            className="bg-white h-full rounded-full transition-all duration-1000 ease-out"
+          />
+        </div>
+        <div className="mt-2 text-xs text-white/80">
+          {order[0] + 1} / {data.length}
+        </div>
+      </div> */}
+
+      {/* Hidden elements for GSAP references */}
+      {/* <div ref={indicatorRef} className="absolute top-0 left-0 w-1 h-full bg-white/50 z-40" />
+      <nav ref={navRef} className="opacity-0" />
+      <div ref={paginationRef} className="opacity-0" />
+      <div ref={coverRef} className="absolute top-0 left-0 w-full h-full bg-gray-900 z-50" /> */}
     </div>
   );
 };
