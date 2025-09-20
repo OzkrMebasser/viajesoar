@@ -3,13 +3,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/app/i18n/navigation";
 import { useTranslations } from "next-intl";
 
-import { Globe, Search, User, Menu, X } from "lucide-react";
+import { Globe, Search, User, Menu, IndentIncrease,IndentDecrease, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 // import { useRouter } from "next/navigation";
 import UserMenu from "./Auth/UserMenu";
 import Fuse from "fuse.js";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
-import { usePathname, useRouter } from "@/app/i18n/navigation"; // 👈 usa tu navegación
+import { usePathname, useRouter } from "@/app/i18n/navigation";
 import { useLocale } from "next-intl";
 
 type SearchResult = {
@@ -35,7 +35,7 @@ const LogoBig = () => (
   <>
     <div className="relative">
       <img
-        src="/viajesoar-logo.png"
+        src="/VIAJES-soar-logo-blues.png"
         alt="ViajeSoar Logo"
         className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
       />
@@ -44,7 +44,7 @@ const LogoBig = () => (
     <strong>
       <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white">
         VIAJE
-        <span className="soar text-[#ccfb08] ">SOAR</span>
+        <span className="soar text-[#69d3f5] ">SOAR</span>
       </span>
     </strong>
   </>
@@ -52,14 +52,13 @@ const LogoBig = () => (
 
 const LogoSmall = () => (
   <>
-    <div className="relative">
+    <div className="relative group">
       <img
-        src="/viajesoar-logo.png"
-        alt="ViajeSoar Logo"  
-        className="w-[70px] h-[70px] lg:w-[80px] lg:h-[80px]"
-    
+        src="/VIAJES-soar-logo-blues.png"
+        alt="ViajeSoar Logo"
+        className="w-[70px] h-[70px] lg:w-[80px] lg:h-[80px] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-5"
       />
-      <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-white/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
   </>
 );
@@ -287,12 +286,12 @@ const Navigation = () => {
     <>
       <nav
         className={`nav fixed  left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out ${
-          isScrolled ? "backdrop-blur-sm bg-black/40 shadow-md" : ""
+          isScrolled ? "backdrop-blur-sm bg-black/80 shadow-md" : ""
         }`}
         role="navigation"
         aria-label="Navegación principal"
       >
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="w-full mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <button
               type="button"
@@ -307,9 +306,10 @@ const Navigation = () => {
               aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <IndentDecrease className="w-6 h-6" />
               ) : (
-                <Menu className="w-6 h-6" />
+                // <Menu className="w-6 h-6" />
+                <IndentIncrease className="w-6 h-6" />
               )}
             </button>
 
@@ -531,7 +531,7 @@ const Navigation = () => {
               className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
               aria-label="Cerrar menú"
             >
-              <X className="w-5 h-5" />
+              <IndentDecrease className="w-5 h-5" />
             </button>
           </div>
 

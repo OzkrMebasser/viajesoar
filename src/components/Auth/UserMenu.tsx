@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, LogOut, ChevronDown, Camera, X } from "lucide-react";
+import { User, LogOut, ChevronDown, Camera, X, IndentDecrease } from "lucide-react";
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 // Interfaz para el perfil del usuario
@@ -266,7 +266,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                     className="text-gray-400 hover:text-gray-600"
                     title="Cerrar panel de cambio de avatar"
                   >
-                    <X className="w-5 h-5" />
+                    <IndentDecrease className="w-5 h-5" />
                   </button>
                 </div>
 
