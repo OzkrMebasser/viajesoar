@@ -1,14 +1,16 @@
 // import { div } from "framer-motion/client";
 
-import AirplaneSoarPreloader from "@/components/Airplane/AirplaneSoarPreloader";
+// import AirplaneSoarPreloader from "@/components/Airplane/AirplaneSoarPreloader";
+import TravelDestinations from "@/components/Home/DestinationsSlide/DestinationsSlide";
 import Mock from "@/components/Mock";
 import TravelSlideshow from "@/components/TravelSlideshow";
 
 export default function Home() {
   return (
     <div>
-      <AirplaneSoarPreloader />
+      {/* <AirplaneSoarPreloader /> */}
       <TravelSlideshow />
+      <TravelDestinations />
       <Mock />
     </div>
   );

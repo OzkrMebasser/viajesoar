@@ -1,102 +1,27 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { useSlideshowDestinations } from "@/lib/hooks/useSlideshowDestinations";
+import Preloader from "@/components/Airplane/Preloader";
 
 import { Bookmark } from "lucide-react";
 
-interface DestinationData {
-  place: string;
-  country: string;
-  title: string;
-  title2: string;
-  description: string;
-  image: string;
-}
-
 const TravelSlideshow = () => {
-  const data: DestinationData[] = [
-    {
-      place: "Alps",
-      country: "Switzerland",
-      title: "SAINT",
-      title2: "ANTONIEN",
-      description:
-        "Tucked away in the Switzerland Alps, Saint Antönien offers a serene retreat for those seeking tranquility and adventure. It's a hidden gem for backcountry skiing in winter and lush trails for hiking and biking during summer.",
-      image: "https://assets.codepen.io/3685267/timed-cards-1.jpg",
-    },
-    {
-      place: "Alps",
-      country: "Japan",
-      title: "NAGANO",
-      title2: "PREFECTURE",
-      description:
-        "Nagano Prefecture, in the majestic Japan Alps, is a cultural treasure with historic shrines and temples, including Zenkō-ji. The region is also a hotspot for skiing and snowboarding, offering some of the finest powder in the country.",
-      image: "https://assets.codepen.io/3685267/timed-cards-2.jpg",
-    },
-    {
-      place: "Sahara Desert",
-      country: "Morocco",
-      title: "MARRAKECH",
-      title2: "MERZOUGA",
-      description:
-        "From the vibrant souks of Marrakech to the tranquil, starlit sands of Merzouga, Morocco showcases its diverse splendor. Camel treks and desert camps offer an unforgettable immersion into the nomadic way of life across the Sahara.",
-      image: "https://assets.codepen.io/3685267/timed-cards-3.jpg",
-    },
-    {
-      place: "Sierra Nevada",
-      country: "USA",
-      title: "YOSEMITE",
-      title2: "NATIONAL PARK",
-      description:
-        "Yosemite National Park is a showcase of the American wilderness, famed for towering granite monoliths, ancient sequoias, and thundering waterfalls. Visitors enjoy year-round activities, from rock climbing to serene valley walks in nature.",
-      image: "https://assets.codepen.io/3685267/timed-cards-4.jpg",
-    },
-    {
-      place: "Tarifa",
-      country: "Spain",
-      title: "LOS LANCES",
-      title2: "BEACH",
-      description:
-        "Los Lances Beach in Tarifa is a coastal paradise with consistent winds, making it famous for kitesurfing and windsurfing. Its long sandy shores provide ample space for relaxation and sunbathing, with a lively atmosphere of beach bars and cafes.",
-      image: "https://assets.codepen.io/3685267/timed-cards-5.jpg",
-    },
-    {
-      place: "Cappadocia",
-      country: "Turkey",
-      title: "GÖREME",
-      title2: "VALLEY",
-      description:
-        "Göreme Valley in Cappadocia is a historical marvel against a unique geological backdrop, sculpted by centuries of wind and water. The valley is famous for open-air museums, underground cities, and the enchanting experience of hot air ballooning.",
-      image: "https://assets.codepen.io/3685267/timed-cards-6.jpg",
-    },
-    {
-      place: "Patagonia",
-      country: "Argentina",
-      title: "LOS GLACIARES",
-      title2: "NATIONAL PARK",
-      description:
-        "Los Glaciares National Park in Patagonia is a breathtaking expanse of rugged mountains, turquoise lakes, and massive glaciers, including the iconic Perito Moreno. It's a paradise for trekkers and nature lovers seeking pristine wilderness.",
-      image:
-        "https://images.pexels.com/photos/2516401/pexels-photo-2516401.jpeg",
-    },
-    {
-      place: "Santorini",
-      country: "Greece",
-      title: "OIA",
-      title2: "VILLAGE",
-      description:
-        "Oia Village in Santorini is famed for its whitewashed buildings with blue domes, stunning sunsets, and panoramic views of the Aegean Sea. It's perfect for romantic getaways and exploring the charming Cycladic architecture of the island.",
-      image:
-        "https://images.pexels.com/photos/163864/santorini-oia-greece-travel-163864.jpeg",
-    },
-  ];
+  const {
+    destinations: supabaseDestinations,
+    loading,
+    error,
+  } = useSlideshowDestinations();
 
-  const [order, setOrder] = useState<number[]>([0, 1, 2, 3, 4, 5, 6, 7]);
+  const data = supabaseDestinations;
+
+  const [order, setOrder] = useState<number[]>([]);
   const [detailsEven, setDetailsEven] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const orderRef = useRef<number[]>([0, 1, 2, 3, 4, 5, 6, 7]);
+  const orderRef = useRef<number[]>([]);
+
   const detailsEvenRef = useRef<boolean>(true);
   const loopTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -125,6 +50,14 @@ const TravelSlideshow = () => {
   const ctaOddRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (data.length > 0 && order.length === 0) {
+      const initialOrder = Array.from({ length: data.length }, (_, i) => i);
+      setOrder(initialOrder);
+      orderRef.current = initialOrder;
+    }
+  }, [data.length, order.length]);
+
+  useEffect(() => {
     orderRef.current = order;
   }, [order]);
 
@@ -133,15 +66,17 @@ const TravelSlideshow = () => {
   }, [detailsEven]);
 
   useEffect(() => {
-    // initialize immediately since gsap is imported
-    initializeAnimations();
+    // Solo inicializar si tenemos datos y orden configurado
+    if (data.length > 0 && order.length > 0) {
+      initializeAnimations();
+    }
 
     return () => {
       if (loopTimeoutRef.current) {
         clearTimeout(loopTimeoutRef.current);
       }
     };
-  }, []);
+  }, [data.length, order.length]);
 
   const initializeAnimations = (): void => {
     const { innerHeight: height, innerWidth: width } = window;
@@ -149,42 +84,26 @@ const TravelSlideshow = () => {
     const isMobile = width <= 768;
 
     // Responsive values with small mobile support
-    const offsetTop = isSmallMobile 
-      ? height - 160 
-      : isMobile 
-        ? height - 200 
-        : height - 330;
-        
-    const offsetLeft = isSmallMobile 
-      ? width - 220 
-      : isMobile 
-        ? width - 280 
-        : width - 550;
-        
-    const cardWidth = isSmallMobile 
-      ? 90 
-      : isMobile 
-        ? 120 
-        : 200;
-        
-    const cardHeight = isSmallMobile 
-      ? 140 
-      : isMobile 
-        ? 180 
-        : 300;
-        
-    const gap = isSmallMobile 
-      ? 15 
-      : isMobile 
-        ? 20 
-        : 40;
-        
-    const numberSize = isSmallMobile 
-      ? 25 
-      : isMobile 
-        ? 30 
-        : 50;
-        
+    const offsetTop = isSmallMobile
+      ? height - 160
+      : isMobile
+      ? height - 200
+      : height - 330;
+
+    const offsetLeft = isSmallMobile
+      ? width - 220
+      : isMobile
+      ? width - 280
+      : width - 550;
+
+    const cardWidth = isSmallMobile ? 90 : isMobile ? 120 : 200;
+
+    const cardHeight = isSmallMobile ? 140 : isMobile ? 180 : 300;
+
+    const gap = isSmallMobile ? 15 : isMobile ? 20 : 40;
+
+    const numberSize = isSmallMobile ? 25 : isMobile ? 30 : 50;
+
     const ease = "sine.inOut";
 
     const currentOrder = orderRef.current;
@@ -206,7 +125,10 @@ const TravelSlideshow = () => {
       zIndex: 30,
     });
 
-    gsap.set(navRef.current, { y: isSmallMobile ? -80 : isMobile ? -100 : -200, opacity: 0 });
+    gsap.set(navRef.current, {
+      y: isSmallMobile ? -80 : isMobile ? -100 : -200,
+      opacity: 0,
+    });
 
     gsap.set(cardRefs.current[active], {
       x: 0,
@@ -258,8 +180,11 @@ const TravelSlideshow = () => {
     });
 
     rest.forEach((i, index) => {
-      const cardX = offsetLeft + (isSmallMobile ? 150 : isMobile ? 200 : 400) + index * (cardWidth + gap);
-      
+      const cardX =
+        offsetLeft +
+        (isSmallMobile ? 150 : isMobile ? 200 : 400) +
+        index * (cardWidth + gap);
+
       gsap.set(cardRefs.current[i], {
         x: cardX,
         y: offsetTop,
@@ -336,42 +261,26 @@ const TravelSlideshow = () => {
       const isSmallMobile = width <= 480;
       const isMobile = width <= 768;
 
-      const offsetTop = isSmallMobile 
-        ? height - 160 
-        : isMobile 
-          ? height - 200 
-          : height - 330;
-          
-      const offsetLeft = isSmallMobile 
-        ? width - 220 
-        : isMobile 
-          ? width - 280 
-          : width - 550;
-          
-      const cardWidth = isSmallMobile 
-        ? 90 
-        : isMobile 
-          ? 120 
-          : 200;
-          
-      const cardHeight = isSmallMobile 
-        ? 140 
-        : isMobile 
-          ? 180 
-          : 300;
-          
-      const gap = isSmallMobile 
-        ? 15 
-        : isMobile 
-          ? 20 
-          : 40;
-          
-      const numberSize = isSmallMobile 
-        ? 25 
-        : isMobile 
-          ? 30 
-          : 50;
-          
+      const offsetTop = isSmallMobile
+        ? height - 160
+        : isMobile
+        ? height - 200
+        : height - 330;
+
+      const offsetLeft = isSmallMobile
+        ? width - 220
+        : isMobile
+        ? width - 280
+        : width - 550;
+
+      const cardWidth = isSmallMobile ? 90 : isMobile ? 120 : 200;
+
+      const cardHeight = isSmallMobile ? 140 : isMobile ? 180 : 300;
+
+      const gap = isSmallMobile ? 15 : isMobile ? 20 : 40;
+
+      const numberSize = isSmallMobile ? 25 : isMobile ? 30 : 50;
+
       const ease = "sine.inOut";
 
       const currentOrder = [...orderRef.current];
@@ -531,7 +440,10 @@ const TravelSlideshow = () => {
 
           gsap.set(cardContentRefs.current[prv], {
             x: xNew,
-            y: offsetTop + cardHeight - (isSmallMobile ? 50 : isMobile ? 60 : 100),
+            y:
+              offsetTop +
+              cardHeight -
+              (isSmallMobile ? 50 : isMobile ? 60 : 100),
             opacity: 1,
             zIndex: 40,
           });
@@ -595,7 +507,10 @@ const TravelSlideshow = () => {
 
           gsap.to(cardContentRefs.current[i], {
             x: xNew,
-            y: offsetTop + cardHeight - (isSmallMobile ? 50 : isMobile ? 60 : 100),
+            y:
+              offsetTop +
+              cardHeight -
+              (isSmallMobile ? 50 : isMobile ? 60 : 100),
             opacity: 1,
             zIndex: 40,
             ease,
@@ -646,31 +561,22 @@ const TravelSlideshow = () => {
     }, 100);
   };
 
-  // const handleNext = (): void => {
-  //   if (!isAnimating) {
-  //     if (loopTimeoutRef.current) {
-  //       clearTimeout(loopTimeoutRef.current);
-  //     }
-  //     step("next").then(() => {
-  //       loopTimeoutRef.current = setTimeout(() => {
-  //         loop();
-  //       }, 4000);
-  //     });
-  //   }
-  // };
+  if (loading || data.length === 0) {
+    return <Preloader isLoading={isLoading} />;
+  }
 
-  // const handlePrev = (): void => {
-  //   if (!isAnimating) {
-  //     if (loopTimeoutRef.current) {
-  //       clearTimeout(loopTimeoutRef.current);
-  //     }
-  //     step("prev").then(() => {
-  //       loopTimeoutRef.current = setTimeout(() => {
-  //         loop();
-  //       }, 4000);
-  //     });
-  //   }
-  // };
+  // AGREGA esta condición de error justo después:
+  if (error) {
+    return (
+      <div className="relative w-full h-screen bg-gray-900 text-white overflow-hidden flex items-center justify-center">
+        <div className="text-center max-w-md p-6">
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
+          <p className="text-xl mb-2">Error al cargar destinos</p>
+          <p className="text-gray-400 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -726,10 +632,16 @@ const TravelSlideshow = () => {
       >
         <div className="relative overflow-hidden">
           <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div ref={placeTextEvenRef} className="pt-2 text-xs sm:text-sm md:text-xl">
+          <div
+            ref={placeTextEvenRef}
+            className="pt-2 text-xs sm:text-sm md:text-xl"
+          >
             {data[order[0]]?.place}
           </div>
-          <div ref={countryTextOddRef} className="pb-2 text-xs sm:text-sm md:text-xl">
+          <div
+            ref={countryTextOddRef}
+            className="pb-2 text-xs sm:text-sm md:text-xl"
+          >
             {data[order[0]]?.country}
           </div>
         </div>
@@ -779,10 +691,16 @@ const TravelSlideshow = () => {
       >
         <div className="relative overflow-hidden">
           <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div ref={placeTextOddRef} className="pt-2 text-xs sm:text-sm md:text-xl">
+          <div
+            ref={placeTextOddRef}
+            className="pt-2 text-xs sm:text-sm md:text-xl"
+          >
             {data[order[0]]?.place}
           </div>
-          <div ref={countryTextOddRef} className="pb-2 text-xs sm:text-sm md:text-xl">
+          <div
+            ref={countryTextOddRef}
+            className="pb-2 text-xs sm:text-sm md:text-xl"
+          >
             {data[order[0]]?.country}
           </div>
         </div>
@@ -810,10 +728,7 @@ const TravelSlideshow = () => {
         >
           {data[order[0]]?.description}
         </div>
-        <div
-          ref={ctaOddRef}
-          className="relative pt-4 w-full flex items-center"
-        >
+        <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
           <button
             className="bg-yellow-500 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
             title="Bookmark"
@@ -862,10 +777,13 @@ const TravelSlideshow = () => {
       </div> */}
 
       {/* Hidden elements for GSAP references */}
-      {/* <div ref={indicatorRef} className="absolute top-0 left-0 w-1 h-full bg-white/50 z-40" />
+      {/* <div ref={indicatorRef} className="absolute top-0 left-0 w-1 h-full bg-white/50 z-40" /> */}
       <nav ref={navRef} className="opacity-0" />
-      <div ref={paginationRef} className="opacity-0" />
-      <div ref={coverRef} className="absolute top-0 left-0 w-full h-full bg-gray-900 z-50" /> */}
+      {/* <div ref={paginationRef} className="opacity-0" /> */}
+      <div
+        ref={coverRef}
+        className="absolute top-0 left-0 w-full h-full bg-gray-900 z-50"
+      />
     </div>
   );
 };

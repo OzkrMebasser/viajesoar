@@ -1,0 +1,230 @@
+-- ============================================
+-- SCHEMA PARA DESTINOS TURÍSTICOS - SUPABASE
+-- ============================================
+
+-- Tabla para los destinos del slider (DestinationsSlide.tsx)
+CREATE TABLE destinations_regions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  icon VARCHAR(50) NOT NULL, -- Nombre del icono (ej: "FaEuroSign")
+  image TEXT NOT NULL, -- URL de la imagen
+  gradient VARCHAR(100) NOT NULL, -- Clases de gradiente (ej: "from-blue-600 to-purple-600")
+  description TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0, -- Para controlar el orden de visualización
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla para categorías de destinos
+CREATE TABLE destination_categories (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  slug VARCHAR(50) NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla para los destinos detallados (Destinations.tsx)
+CREATE TABLE destinations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  image TEXT NOT NULL,
+  price DECIMAL(10, 2) NOT NULL,
+  rating DECIMAL(3, 2) CHECK (rating >= 0 AND rating <= 5),
+  reviews INTEGER DEFAULT 0,
+  duration VARCHAR(50) NOT NULL, -- Ej: "7 días"
+  description TEXT NOT NULL,
+  category_id UUID REFERENCES destination_categories(id),
+  -- Relación opcional con región
+  region_id UUID REFERENCES destinations_regions(id),
+  is_active BOOLEAN DEFAULT true,
+  is_featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla para los highlights de cada destino
+CREATE TABLE destination_highlights (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  destination_id UUID REFERENCES destinations(id) ON DELETE CASCADE,
+  highlight TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Índices para mejorar el rendimiento
+CREATE INDEX idx_destinations_category ON destinations(category_id);
+CREATE INDEX idx_destinations_region ON destinations(region_id);
+CREATE INDEX idx_destinations_price ON destinations(price);
+CREATE INDEX idx_destinations_rating ON destinations(rating);
+CREATE INDEX idx_destinations_active ON destinations(is_active);
+CREATE INDEX idx_destination_highlights_dest ON destination_highlights(destination_id);
+
+-- Función para actualizar updated_at automáticamente
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Triggers para actualizar updated_at
+CREATE TRIGGER update_destinations_regions_updated_at
+  BEFORE UPDATE ON destinations_regions
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_destinations_updated_at
+  BEFORE UPDATE ON destinations
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- DATOS DE EJEMPLO - REGIONES
+-- ============================================
+
+INSERT INTO destinations_regions (name, icon, image, gradient, description, order_index) VALUES
+('Europa', 'FaEuroSign', 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&h=400&fit=crop', 'from-blue-600 to-purple-600', 'Historia y cultura milenaria', 1),
+('Medio Oriente', 'MdTravelExplore', 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop', 'from-amber-600 to-orange-600', 'Misterio y tradición', 2),
+('Sudamérica', 'GiEarthAmerica', 'https://images.unsplash.com/photo-1589802829985-817e51171b92?w=600&h=400&fit=crop', 'from-green-600 to-emerald-600', 'Naturaleza exuberante', 3),
+('Asia', 'FaGlobeAsia', 'https://images.unsplash.com/photo-1480796927426-f609979314bd?w=600&h=400&fit=crop', 'from-red-600 to-pink-600', 'Espiritualidad y modernidad', 4),
+('Norteamérica', 'FaGlobeAmericas', 'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=600&h=400&fit=crop', 'from-indigo-600 to-blue-600', 'Diversidad sin límites', 5),
+('Centroamérica y Caribe', 'GiPalmTree', 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop', 'from-cyan-600 to-teal-600', 'Paraísos tropicales', 6),
+('África', 'FaGlobeAfrica', 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&h=400&fit=crop', 'from-yellow-600 to-orange-600', 'Aventura salvaje', 7),
+('México', 'GiAztecCalendarSun', 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&h=400&fit=crop', 'from-rose-600 to-red-600', 'Magia y color', 8);
+
+-- ============================================
+-- DATOS DE EJEMPLO - CATEGORÍAS
+-- ============================================
+
+INSERT INTO destination_categories (name, slug) VALUES
+('Playa', 'beach'),
+('Ciudad', 'city'),
+('Naturaleza', 'nature'),
+('Cultura', 'culture'),
+('Aventura', 'adventure');
+
+-- ============================================
+-- DATOS DE EJEMPLO - DESTINOS
+-- ============================================
+
+-- Nota: Ajusta los UUIDs de category_id y region_id después de insertar
+INSERT INTO destinations (name, country, image, price, rating, reviews, duration, description, category_id, is_featured) VALUES
+('Bali', 'Indonesia', 'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop', 1200.00, 4.8, 2847, '7 días', 'Descubre la magia de Bali, donde la espiritualidad se encuentra con paisajes tropicales.', (SELECT id FROM destination_categories WHERE slug = 'culture'), true),
+('París', 'Francia', 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400&h=300&fit=crop', 1800.00, 4.9, 4521, '6 días', 'La ciudad del amor te espera con su arte, cultura y romance incomparables.', (SELECT id FROM destination_categories WHERE slug = 'city'), true),
+('Santorini', 'Grecia', 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&h=300&fit=crop', 1500.00, 4.7, 1893, '5 días', 'Vive la magia del Egeo en esta joya griega con vistas espectaculares.', (SELECT id FROM destination_categories WHERE slug = 'beach'), true),
+('Tokio', 'Japón', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop', 2200.00, 4.6, 3214, '8 días', 'Sumérgete en el contraste perfecto entre tradición y modernidad.', (SELECT id FROM destination_categories WHERE slug = 'city'), true);
+
+-- ============================================
+-- DATOS DE EJEMPLO - HIGHLIGHTS
+-- ============================================
+
+-- Highlights para Bali
+INSERT INTO destination_highlights (destination_id, highlight, order_index)
+SELECT id, highlight, order_index FROM destinations, 
+  (VALUES 
+    ('Templos sagrados', 1),
+    ('Playas paradisíacas', 2),
+    ('Cultura balinesa', 3),
+    ('Spa y wellness', 4)
+  ) AS h(highlight, order_index)
+WHERE destinations.name = 'Bali';
+
+-- Highlights para París
+INSERT INTO destination_highlights (destination_id, highlight, order_index)
+SELECT id, highlight, order_index FROM destinations,
+  (VALUES
+    ('Torre Eiffel', 1),
+    ('Louvre', 2),
+    ('Champs-Élysées', 3),
+    ('Gastronomía francesa', 4)
+  ) AS h(highlight, order_index)
+WHERE destinations.name = 'París';
+
+-- ============================================
+-- POLÍTICAS DE SEGURIDAD (RLS) - OPCIONAL
+-- ============================================
+
+-- Habilitar Row Level Security
+ALTER TABLE destinations_regions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE destination_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE destinations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE destination_highlights ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de lectura pública
+CREATE POLICY "Allow public read access on regions"
+  ON destinations_regions FOR SELECT
+  USING (is_active = true);
+
+CREATE POLICY "Allow public read access on categories"
+  ON destination_categories FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow public read access on destinations"
+  ON destinations FOR SELECT
+  USING (is_active = true);
+
+CREATE POLICY "Allow public read access on highlights"
+  ON destination_highlights FOR SELECT
+  USING (true);
+
+-- Para operaciones de escritura, restringe a usuarios autenticados con rol admin
+-- Ajusta según tus necesidades de permisos
+
+
+
+-- ============================================
+-- TABLA ADICIONAL PARA TRAVELSLIDESHOW
+-- ============================================
+
+CREATE TABLE travel_slideshow_destinations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  place VARCHAR(100) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  title2 VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL,
+  image TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Índice para orden
+CREATE INDEX idx_slideshow_order ON travel_slideshow_destinations(order_index);
+CREATE INDEX idx_slideshow_active ON travel_slideshow_destinations(is_active);
+
+-- Trigger para updated_at
+CREATE TRIGGER update_slideshow_updated_at
+  BEFORE UPDATE ON travel_slideshow_destinations
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- DATOS DE EJEMPLO
+-- ============================================
+
+INSERT INTO travel_slideshow_destinations (place, country, title, title2, description, image, order_index) VALUES
+('Alps', 'Switzerland', 'SAINT', 'ANTONIEN', 'Tucked away in the Switzerland Alps, Saint Antönien offers a serene retreat for those seeking tranquility and adventure. It''s a hidden gem for backcountry skiing in winter and lush trails for hiking and biking during summer.', 'https://assets.codepen.io/3685267/timed-cards-1.jpg', 1),
+('Alps', 'Japan', 'NAGANO', 'PREFECTURE', 'Nagano Prefecture, in the majestic Japan Alps, is a cultural treasure with historic shrines and temples, including Zenkō-ji. The region is also a hotspot for skiing and snowboarding, offering some of the finest powder in the country.', 'https://assets.codepen.io/3685267/timed-cards-2.jpg', 2),
+('Sahara Desert', 'Morocco', 'MARRAKECH', 'MERZOUGA', 'From the vibrant souks of Marrakech to the tranquil, starlit sands of Merzouga, Morocco showcases its diverse splendor. Camel treks and desert camps offer an unforgettable immersion into the nomadic way of life across the Sahara.', 'https://assets.codepen.io/3685267/timed-cards-3.jpg', 3),
+('Sierra Nevada', 'USA', 'YOSEMITE', 'NATIONAL PARK', 'Yosemite National Park is a showcase of the American wilderness, famed for towering granite monoliths, ancient sequoias, and thundering waterfalls. Visitors enjoy year-round activities, from rock climbing to serene valley walks in nature.', 'https://assets.codepen.io/3685267/timed-cards-4.jpg', 4),
+('Tarifa', 'Spain', 'LOS LANCES', 'BEACH', 'Los Lances Beach in Tarifa is a coastal paradise with consistent winds, making it famous for kitesurfing and windsurfing. Its long sandy shores provide ample space for relaxation and sunbathing, with a lively atmosphere of beach bars and cafes.', 'https://assets.codepen.io/3685267/timed-cards-5.jpg', 5),
+('Cappadocia', 'Turkey', 'GÖREME', 'VALLEY', 'Göreme Valley in Cappadocia is a historical marvel against a unique geological backdrop, sculpted by centuries of wind and water. The valley is famous for open-air museums, underground cities, and the enchanting experience of hot air ballooning.', 'https://assets.codepen.io/3685267/timed-cards-6.jpg', 6),
+('Patagonia', 'Argentina', 'LOS GLACIARES', 'NATIONAL PARK', 'Los Glaciares National Park in Patagonia is a breathtaking expanse of rugged mountains, turquoise lakes, and massive glaciers, including the iconic Perito Moreno. It''s a paradise for trekkers and nature lovers seeking pristine wilderness.', 'https://images.pexels.com/photos/2516401/pexels-photo-2516401.jpeg', 7),
+('Santorini', 'Greece', 'OIA', 'VILLAGE', 'Oia Village in Santorini is famed for its whitewashed buildings with blue domes, stunning sunsets, and panoramic views of the Aegean Sea. It''s perfect for romantic getaways and exploring the charming Cycladic architecture of the island.', 'https://images.pexels.com/photos/163864/santorini-oia-greece-travel-163864.jpeg', 8);
+
+-- ============================================
+-- RLS
+-- ============================================
+
+ALTER TABLE travel_slideshow_destinations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read access on slideshow"
+  ON travel_slideshow_destinations FOR SELECT
+  USING (is_active = true);
+
+  

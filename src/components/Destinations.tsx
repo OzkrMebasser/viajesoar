@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useDestinations } from "@/lib/hooks/useDestinations";
+import Preloader from "@/components/Airplane/Preloader";
 
 import {
   MapPin,
@@ -43,200 +45,220 @@ const Destinations: React.FC = () => {
   });
 
     const t = useTranslations("Navigation");
-  
 
-  const destinations: Destination[] = [
-    {
-      id: 1,
-      name: "Bali",
-      country: "Indonesia",
-      image:
-        "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop",
-      price: 1200,
-      rating: 4.8,
-      reviews: 2847,
-      duration: "7 días",
-      highlights: [
-        "Templos sagrados",
-        "Playas paradisíacas",
-        "Cultura balinesa",
-        "Spa y wellness",
-      ],
-      description:
-        "Descubre la magia de Bali, donde la espiritualidad se encuentra con paisajes tropicales.",
-      category: "culture",
-    },
-    {
-      id: 2,
-      name: "París",
-      country: "Francia",
-      image:
-        "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400&h=300&fit=crop",
-      price: 1800,
-      rating: 4.9,
-      reviews: 4521,
-      duration: "6 días",
-      highlights: [
-        "Torre Eiffel",
-        "Louvre",
-        "Champs-Élysées",
-        "Gastronomía francesa",
-      ],
-      description:
-        "La ciudad del amor te espera con su arte, cultura y romance incomparables.",
-      category: "city",
-    },
-    {
-      id: 3,
-      name: "Santorini",
-      country: "Grecia",
-      image:
-        "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&h=300&fit=crop",
-      price: 1500,
-      rating: 4.7,
-      reviews: 1893,
-      duration: "5 días",
-      highlights: [
-        "Puestas de sol",
-        "Arquitectura cicládica",
-        "Vinos locales",
-        "Playas volcánicas",
-      ],
-      description:
-        "Vive la magia del Egeo en esta joya griega con vistas espectaculares.",
-      category: "beach",
-    },
-    {
-      id: 4,
-      name: "Tokio",
-      country: "Japón",
-      image:
-        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop",
-      price: 2200,
-      rating: 4.6,
-      reviews: 3214,
-      duration: "8 días",
-      highlights: [
-        "Templos tradicionales",
-        "Tecnología",
-        "Sushi auténtico",
-        "Cultura pop",
-      ],
-      description:
-        "Sumérgete en el contraste perfecto entre tradición y modernidad.",
-      category: "city",
-    },
-    {
-      id: 5,
-      name: "Maldivas",
-      country: "Maldivas",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-      price: 3500,
-      rating: 4.9,
-      reviews: 1567,
-      duration: "7 días",
-      highlights: [
-        "Bungalows sobre agua",
-        "Aguas cristalinas",
-        "Snorkel",
-        "Lujo tropical",
-      ],
-      description:
-        "El paraíso tropical definitivo para una experiencia de lujo inolvidable.",
-      category: "beach",
-    },
-    {
-      id: 6,
-      name: "Nueva York",
-      country: "Estados Unidos",
-      image:
-        "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&h=300&fit=crop",
-      price: 1900,
-      rating: 4.5,
-      reviews: 5672,
-      duration: "6 días",
-      highlights: [
-        "Times Square",
-        "Central Park",
-        "Broadway",
-        "Estatua de la Libertad",
-      ],
-      description:
-        "La ciudad que nunca duerme te ofrece experiencias urbanas incomparables.",
-      category: "city",
-    },
-    {
-      id: 7,
-      name: "Machu Picchu",
-      country: "Perú",
-      image:
-        "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=400&h=300&fit=crop",
-      price: 1100,
-      rating: 4.8,
-      reviews: 2134,
-      duration: "5 días",
-      highlights: [
-        "Ciudadela inca",
-        "Trekking",
-        "Historia ancestral",
-        "Paisajes andinos",
-      ],
-      description:
-        "Descubre una de las maravillas del mundo en los Andes peruanos.",
-      category: "adventure",
-    },
-    {
-      id: 8,
-      name: "Dubái",
-      country: "Emiratos Árabes Unidos",
-      image:
-        "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop",
-      price: 2000,
-      rating: 4.6,
-      reviews: 2876,
-      duration: "6 días",
-      highlights: ["Burj Khalifa", "Mall gigantes", "Desierto", "Lujo árabe"],
-      description:
-        "Experimenta el lujo y la innovación en el corazón del desierto.",
-      category: "city",
-    },
-    {
-      id: 9,
-      name: "Islandia",
-      country: "Islandia",
-      image:
-        "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400&h=300&fit=crop",
-      price: 2400,
-      rating: 4.7,
-      reviews: 1456,
-      duration: "8 días",
-      highlights: ["Aurora boreal", "Géiseres", "Glaciares", "Aguas termales"],
-      description:
-        "Tierra de fuego y hielo que ofrece paisajes únicos en el mundo.",
-      category: "nature",
-    },
-    {
-      id: 10,
-      name: "Tailandia",
-      country: "Tailandia",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-      price: 1300,
-      rating: 4.6,
-      reviews: 3421,
-      duration: "10 días",
-      highlights: [
-        "Playas tropicales",
-        "Templos budistas",
-        "Street food",
-        "Masajes thai",
-      ],
-      description:
-        "Descubre la sonrisa de Asia en este destino exótico y acogedor.",
-      category: "culture",
-    },
-  ];
+
+  const { destinations: supabaseDestinations, loading, error } = useDestinations();
+
+    // Manejo de carga
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center">
+        <Preloader isLoading={loading} />
+      </div>
+    );
+  }
+
+  // Manejo de errores
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center">
+        <div className="text-xl text-red-600">Error al cargar destinos: {error}</div>
+      </div>
+    );
+  }
+
+  // const destinations: Destination[] = [
+  //   {
+  //     id: 1,
+  //     name: "Bali",
+  //     country: "Indonesia",
+  //     image:
+  //       "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop",
+  //     price: 1200,
+  //     rating: 4.8,
+  //     reviews: 2847,
+  //     duration: "7 días",
+  //     highlights: [
+  //       "Templos sagrados",
+  //       "Playas paradisíacas",
+  //       "Cultura balinesa",
+  //       "Spa y wellness",
+  //     ],
+  //     description:
+  //       "Descubre la magia de Bali, donde la espiritualidad se encuentra con paisajes tropicales.",
+  //     category: "culture",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "París",
+  //     country: "Francia",
+  //     image:
+  //       "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400&h=300&fit=crop",
+  //     price: 1800,
+  //     rating: 4.9,
+  //     reviews: 4521,
+  //     duration: "6 días",
+  //     highlights: [
+  //       "Torre Eiffel",
+  //       "Louvre",
+  //       "Champs-Élysées",
+  //       "Gastronomía francesa",
+  //     ],
+  //     description:
+  //       "La ciudad del amor te espera con su arte, cultura y romance incomparables.",
+  //     category: "city",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Santorini",
+  //     country: "Grecia",
+  //     image:
+  //       "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&h=300&fit=crop",
+  //     price: 1500,
+  //     rating: 4.7,
+  //     reviews: 1893,
+  //     duration: "5 días",
+  //     highlights: [
+  //       "Puestas de sol",
+  //       "Arquitectura cicládica",
+  //       "Vinos locales",
+  //       "Playas volcánicas",
+  //     ],
+  //     description:
+  //       "Vive la magia del Egeo en esta joya griega con vistas espectaculares.",
+  //     category: "beach",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Tokio",
+  //     country: "Japón",
+  //     image:
+  //       "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop",
+  //     price: 2200,
+  //     rating: 4.6,
+  //     reviews: 3214,
+  //     duration: "8 días",
+  //     highlights: [
+  //       "Templos tradicionales",
+  //       "Tecnología",
+  //       "Sushi auténtico",
+  //       "Cultura pop",
+  //     ],
+  //     description:
+  //       "Sumérgete en el contraste perfecto entre tradición y modernidad.",
+  //     category: "city",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Maldivas",
+  //     country: "Maldivas",
+  //     image:
+  //       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+  //     price: 3500,
+  //     rating: 4.9,
+  //     reviews: 1567,
+  //     duration: "7 días",
+  //     highlights: [
+  //       "Bungalows sobre agua",
+  //       "Aguas cristalinas",
+  //       "Snorkel",
+  //       "Lujo tropical",
+  //     ],
+  //     description:
+  //       "El paraíso tropical definitivo para una experiencia de lujo inolvidable.",
+  //     category: "beach",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Nueva York",
+  //     country: "Estados Unidos",
+  //     image:
+  //       "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&h=300&fit=crop",
+  //     price: 1900,
+  //     rating: 4.5,
+  //     reviews: 5672,
+  //     duration: "6 días",
+  //     highlights: [
+  //       "Times Square",
+  //       "Central Park",
+  //       "Broadway",
+  //       "Estatua de la Libertad",
+  //     ],
+  //     description:
+  //       "La ciudad que nunca duerme te ofrece experiencias urbanas incomparables.",
+  //     category: "city",
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Machu Picchu",
+  //     country: "Perú",
+  //     image:
+  //       "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=400&h=300&fit=crop",
+  //     price: 1100,
+  //     rating: 4.8,
+  //     reviews: 2134,
+  //     duration: "5 días",
+  //     highlights: [
+  //       "Ciudadela inca",
+  //       "Trekking",
+  //       "Historia ancestral",
+  //       "Paisajes andinos",
+  //     ],
+  //     description:
+  //       "Descubre una de las maravillas del mundo en los Andes peruanos.",
+  //     category: "adventure",
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Dubái",
+  //     country: "Emiratos Árabes Unidos",
+  //     image:
+  //       "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop",
+  //     price: 2000,
+  //     rating: 4.6,
+  //     reviews: 2876,
+  //     duration: "6 días",
+  //     highlights: ["Burj Khalifa", "Mall gigantes", "Desierto", "Lujo árabe"],
+  //     description:
+  //       "Experimenta el lujo y la innovación en el corazón del desierto.",
+  //     category: "city",
+  //   },
+  //   {
+  //     id: 9,
+  //     name: "Islandia",
+  //     country: "Islandia",
+  //     image:
+  //       "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400&h=300&fit=crop",
+  //     price: 2400,
+  //     rating: 4.7,
+  //     reviews: 1456,
+  //     duration: "8 días",
+  //     highlights: ["Aurora boreal", "Géiseres", "Glaciares", "Aguas termales"],
+  //     description:
+  //       "Tierra de fuego y hielo que ofrece paisajes únicos en el mundo.",
+  //     category: "nature",
+  //   },
+  //   {
+  //     id: 10,
+  //     name: "Tailandia",
+  //     country: "Tailandia",
+  //     image:
+  //       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+  //     price: 1300,
+  //     rating: 4.6,
+  //     reviews: 3421,
+  //     duration: "10 días",
+  //     highlights: [
+  //       "Playas tropicales",
+  //       "Templos budistas",
+  //       "Street food",
+  //       "Masajes thai",
+  //     ],
+  //     description:
+  //       "Descubre la sonrisa de Asia en este destino exótico y acogedor.",
+  //     category: "culture",
+  //   },
+  // ];
 
   const toggleFavorite = (id: number): void => {
     setFavorites((prev) =>
@@ -244,7 +266,7 @@ const Destinations: React.FC = () => {
     );
   };
 
-  const filteredDestinations = destinations.filter((dest) => {
+  const filteredDestinations = supabaseDestinations.filter((dest) => {
     const matchesCategory =
       filters.category === "all" || dest.category === filters.category;
     const matchesPrice =

@@ -1,45 +1,87 @@
 "use client";
-import React from "react";
-import styles from "./AirplaneUp.module.css";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import styles from "./AirplaneSoarPreloader.module.css";
+import { useTranslations } from "next-intl";
 
-const AirplaneUp = () => {
+interface PreloaderProps {
+  loading: boolean; // nuevo prop para controlar la carga
+}
+
+export default function Preloader({ loading }: PreloaderProps) {
+  const preloaderRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [showPreloader, setShowPreloader] = useState(loading);
+
+  const t = useTranslations("Navigation");
+
+  useEffect(() => {
+    setShowPreloader(loading); // actualizamos según prop
+  }, [loading]);
+
+  useEffect(() => {
+    if (!showPreloader) return;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        if (preloaderRef.current) {
+          preloaderRef.current.style.display = "none";
+        }
+      },
+    });
+
+    tl.from(textRef.current, {
+      opacity: 0,
+      y: 30,
+      duration: 2,
+      ease: "power2.out",
+    })
+      .to(textRef.current, {
+        opacity: 0,
+        y: -30,
+        duration: 1,
+        delay: 0.5,
+        ease: "power2.in",
+      })
+      .to(preloaderRef.current, {
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.inOut",
+      });
+  }, [showPreloader]);
+
+  if (!showPreloader) return null;
+
   return (
-    <div className="fixed pointer-events-none z-50" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-      <div
-        className={styles.cursorAirplane}
-        style={{
-          transform: `rotate(45deg)`, 
-        }}
-      >
-        <img
-          src="/airplane-white.svg"
-          alt="Airplane"
-          className="w-full h-full drop-shadow-[4px_5px_5px_rgba(0,0,0,.5)]"
-        />
-        <div className={styles.cockpitWindow} />
-        <div className={styles.cockpitWindowFront} />
-
-        {/* Luces */}
-        <div
-          className={`${styles.blinkRed} ${styles.light}`}
-          style={{
-            bottom: "5px",
-            left: "8px",
-          }}
-        />
-        <div
-          className={`${styles.blinkGreen} ${styles.light}`}
-          style={{
-            top: "8px",
-            right: "8px",
-          }}
-        />
+    <div
+      ref={preloaderRef}
+      aria-hidden="true"
+      className={`fixed inset-0 z-50 ${styles.cloudsBg} flex items-center justify-center bg-gradient-to-b from-indigo-700 to-blue-400`}
+    >
+      {/* Nubes */}
+      <div ref={textRef} className={styles.clouds}>
+        <div className={`${styles.cloud} ${styles.x1}`}></div>
+        <div className={`${styles.cloud} ${styles.x2}`}></div>
+        <div className={`${styles.cloud} ${styles.x3}`}></div>
+        <div className={`${styles.cloud} ${styles.x4}`}></div>
+        <div className={`${styles.cloud} ${styles.x5}`}></div>
       </div>
-     
-     
 
+      {/* Avión y texto */}
+      <div ref={textRef} className="relative z-10">
+        <img
+          src="/viajesoar-logo-final.png"
+          className="drop-shadow-[5px_8px_5px_rgba(0,0,0,.5)] mx-auto w-[200px] lg:w-[300px]"
+          alt=""
+        />
+        <h1
+          className={`${styles.title} rotate-[-7deg] text-4xl lg:text-6xl text-center tracking-wide font-bold `}
+        >
+          {t("soar1")}
+          <span className="animate-pulse text-[#b9e215]">Soar</span>
+          {t("soar2")}
+        </h1>
+      </div>
     </div>
   );
-};
-
-export default AirplaneUp;
+}
