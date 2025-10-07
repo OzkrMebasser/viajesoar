@@ -39,12 +39,12 @@ const LogoBig = () => (
         alt="ViajeSoar Logo"
         className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
       />
-      <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-[#179bed] blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
     <strong>
       <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white">
         VIAJE
-        <span className="soar text-[#69d3f5] ">SOAR</span>
+        <span className="soar text-[#179bed] ">SOAR</span>
       </span>
     </strong>
   </>
@@ -56,9 +56,9 @@ const LogoSmall = () => (
       <img
         src="/VIAJES-soar-logo-blues.png"
         alt="ViajeSoar Logo"
-        className="w-[70px] h-[70px] lg:w-[80px] lg:h-[80px] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-5"
+        className="mt-8 w-[70px] h-[70px] lg:w-[90px] lg:h-[90px] transition-transform duration-300 group-hover:scale-125 group-hover:rotate-5"
       />
-      <div className="absolute inset-0 bg-white/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-[#179bed]/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
   </>
 );

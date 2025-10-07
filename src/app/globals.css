@@ -6,3 +6,73 @@
 {
     z-index: 999999999999999999;
 }
+
+
+/* ----------------- Pattern de fondo ----------------- */
+.pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.05) 20px,
+      transparent 20px,
+      transparent 40px
+    ),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
+  background-blend-mode: overlay;
+  background-size: cover;
+}
+
+/* ----------------- Aviones animados ----------------- */
+.pattern::before,
+.pattern::after {
+  content: "\2708"; /* ✈ */
+  position: absolute;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pattern::before {
+  top: 10%;
+  left: -5%;
+  animation: fly1 12s linear infinite;
+}
+
+.pattern::after {
+  top: 60%;
+  left: -10%;
+  font-size: 1.5rem;
+  animation: fly2 18s linear infinite;
+}
+
+@keyframes fly1 {
+  0% { transform: translateX(0) rotate(0deg); }
+  100% { transform: translateX(110vw) rotate(360deg); }
+}
+
+@keyframes fly2 {
+  0% { transform: translateX(0) rotate(0deg); }
+  100% { transform: translateX(120vw) rotate(-360deg); }
+}
+
+/* ----------------- Globos animados ----------------- */
+.globo {
+  position: absolute;
+  font-size: 2.5rem;
+  color: rgba(255, 140, 0, 0.7); /* naranja/amarillo */
+  animation: float 8s ease-in-out infinite alternate;
+}
+
+.float1 { top: 40%; left: 30%; animation-delay: 0s; }
+.float2 { top: 70%; left: 60%; animation-delay: 2s; }
+
+@keyframes float {
+  0% { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-30px) translateX(10px); }
+}
