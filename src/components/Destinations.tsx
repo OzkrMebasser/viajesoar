@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useDestinations } from "@/lib/hooks/useDestinations";
-import Preloader from "@/components/Airplane/Preloader";
+// import Preloader from "@/components/Airplane/Preloader";
 
 import {
   MapPin,
