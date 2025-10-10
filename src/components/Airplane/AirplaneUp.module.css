@@ -1,4 +1,4 @@
-.cursorWrapper {
+/* .cursorWrapper {
   position: fixed;
   pointer-events: none;
   z-index: 99;
@@ -14,20 +14,20 @@
   transition: transform 0.1s ease-out;
   z-index: 100;
   pointer-events: none;
-}
+} */
 
 /* Luces comunes */
-.light {
+/* .light {
   position: absolute;
   border-radius: 9999px;
   width: 10px;
   height: 10px;
   pointer-events: none;
   transform: rotate(-360deg);
-}
+} */
 
 /* Parpadeo luces */
-@keyframes blink {
+/* @keyframes blink {
   0%, 50%, 100% {
     opacity: 1;
   }
@@ -59,7 +59,7 @@
   height: 5px;
   border-radius: 9999px;
   background: linear-gradient(90deg, #2e2e2ecc, rgb(0, 0, 0));
-  /* opacity: 0.8; */
+ 
   pointer-events: none;
   transform: rotate(135deg);
 }
@@ -73,9 +73,9 @@
   height: 8px;
   border-radius: 9999px;
   background: #2e2e2e;
-  /* opacity: 0.8; */
+ 
   pointer-events: none;
   transform: rotate(135deg);
 }
 
-
+ */

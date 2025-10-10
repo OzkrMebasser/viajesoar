@@ -1,30 +1,40 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { gsap } from "gsap";
 import { useSlideshowDestinations } from "@/lib/hooks/useSlideshowDestinations";
-import Preloader from "@/components/Airplane/Preloader";
-
 import { Bookmark } from "lucide-react";
+import WorldMapLoader from "@/components/WorldMapLoader";
+import { useLocale } from "next-intl";
+import { useFadeOutMap } from "@/lib/hooks/useFadeOutMap";
 
-const TravelSlideshow = () => {
+// lang type
+type Locale = "en" | "es";
+
+const HeroTravelSlides = () => {
+  //States
+  const [lang, setLang] = useState<"es" | "en">("es");
+  const [order, setOrder] = useState<number[]>([]);
+  const [detailsEven, setDetailsEven] = useState<boolean>(true);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+
+  //Language with Locale
+  const locale = useLocale() as Locale;
+
+  //Data from supabase
   const {
     destinations: supabaseDestinations,
     loading,
     error,
-  } = useSlideshowDestinations();
+  } = useSlideshowDestinations(locale);
 
   const data = supabaseDestinations;
 
-  const [order, setOrder] = useState<number[]>([]);
-  const [detailsEven, setDetailsEven] = useState<boolean>(true);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // console.log(data);
 
+  // All the refs...
   const orderRef = useRef<number[]>([]);
-
   const detailsEvenRef = useRef<boolean>(true);
   const loopTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const cardContentRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -48,6 +58,8 @@ const TravelSlideshow = () => {
   const title2OddRef = useRef<HTMLDivElement>(null);
   const descOddRef = useRef<HTMLDivElement>(null);
   const ctaOddRef = useRef<HTMLDivElement>(null);
+
+  /// UseEffects....
 
   useEffect(() => {
     if (data.length > 0 && order.length === 0) {
@@ -78,6 +90,16 @@ const TravelSlideshow = () => {
     };
   }, [data.length, order.length]);
 
+
+  // Hook para el fade-out del mapa (loader)
+  const showMap = useFadeOutMap({
+    selector: ".worldmap-container",
+    trigger: !loading && data.length > 0,
+    delay: 2000, // puedes cambiarlo según lo necesites
+    duration: 3, // duración del fade
+  });
+
+  // Slides animations
   const initializeAnimations = (): void => {
     const { innerHeight: height, innerWidth: width } = window;
     const isSmallMobile = width <= 480; // iPhone 8 y similares
@@ -561,11 +583,6 @@ const TravelSlideshow = () => {
     }, 100);
   };
 
-  if (loading || data.length === 0) {
-    return <Preloader isLoading={isLoading} />;
-  }
-
-  // AGREGA esta condición de error justo después:
   if (error) {
     return (
       <div className="relative w-full h-screen bg-gray-900 text-white overflow-hidden flex items-center justify-center">
@@ -581,12 +598,15 @@ const TravelSlideshow = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen bg-gray-900 text-white overflow-hidden"
+      className="relative w-full h-screen bg-transparent text-white overflow-hidden"
     >
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500&display=swap"
-        rel="stylesheet"
-      />
+      {/* Mapa del mundo loader */}
+      {showMap && (
+        <div className="worldmap-container absolute inset-0 z-50 bg-black">
+          <WorldMapLoader />
+        </div>
+      )}
+
       {/* Images cards */}
       {data.map((item, index) => (
         <div key={index}>
@@ -609,16 +629,10 @@ const TravelSlideshow = () => {
             <div className="w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white" />
             <div className="mt-1 text-xs font-medium">{item.place}</div>
             <div className="mt-1 text-xs font-medium">{item.country}</div>
-            <div
-              className="font-semibold text-xs sm:text-sm md:text-xl"
-              style={{ fontFamily: "Oswald, sans-serif" }}
-            >
+            <div className="font-semibold text-xs sm:text-sm md:text-xl">
               {item.title}
             </div>
-            <div
-              className="font-semibold text-xs sm:text-sm md:text-xl"
-              style={{ fontFamily: "Oswald, sans-serif" }}
-            >
+            <div className="font-semibold text-xs sm:text-sm md:text-xl">
               {item.title2}
             </div>
           </div>
@@ -632,24 +646,17 @@ const TravelSlideshow = () => {
       >
         <div className="relative overflow-hidden">
           <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div
-            ref={placeTextEvenRef}
-            className="pt-2 text-xs sm:text-sm md:text-xl"
-          >
+          <div ref={placeTextEvenRef} className="pt-2 text-sm md:text-xl">
             {data[order[0]]?.place}
           </div>
-          <div
-            ref={countryTextOddRef}
-            className="pb-2 text-xs sm:text-sm md:text-xl"
-          >
+          <div ref={countryTextOddRef} className="pb-2 text-sm md:text-xl">
             {data[order[0]]?.country}
           </div>
         </div>
         <div className="mb-1 overflow-hidden">
           <div
             ref={title1EvenRef}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold"
-            style={{ fontFamily: "Oswald, sans-serif" }}
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold"
           >
             {data[order[0]]?.title}
           </div>
@@ -657,8 +664,7 @@ const TravelSlideshow = () => {
         <div className="mb-2 md:mb-4 h-12 sm:h-16 md:h-25 overflow-hidden">
           <div
             ref={title2EvenRef}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold leading-tight"
-            style={{ fontFamily: "Oswald, sans-serif" }}
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight"
           >
             {data[order[0]]?.title2}
           </div>
@@ -708,7 +714,6 @@ const TravelSlideshow = () => {
           <div
             ref={title1OddRef}
             className="text-2xl sm:text-4xl md:text-7xl font-semibold"
-            style={{ fontFamily: "Oswald, sans-serif" }}
           >
             {data[order[0]]?.title}
           </div>
@@ -717,7 +722,6 @@ const TravelSlideshow = () => {
           <div
             ref={title2OddRef}
             className="text-2xl sm:text-4xl md:text-7xl font-semibold leading-tight"
-            style={{ fontFamily: "Oswald, sans-serif" }}
           >
             {data[order[0]]?.title2}
           </div>
@@ -741,51 +745,16 @@ const TravelSlideshow = () => {
         </div>
       </div>
 
-      {/* Navigation buttons */}
-      {/* <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 flex gap-2">
-        <button
-          onClick={handlePrev}
-          className="bg-white/20 backdrop-blur-sm border border-white/30 w-10 h-10 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center hover:bg-white/30 transition-all duration-200"
-          disabled={isAnimating}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <button
-          onClick={handleNext}
-          className="bg-white/20 backdrop-blur-sm border border-white/30 w-10 h-10 sm:w-12 sm:h-12 rounded-full text-white flex items-center justify-center hover:bg-white/30 transition-all duration-200"
-          disabled={isAnimating}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9,18 15,12 9,6"></polyline>
-          </svg>
-        </button>
-      </div> */}
-
-      {/* Progress indicator */}
-      {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-30">
-        <div className="bg-white/20 backdrop-blur-sm rounded-full h-1 w-32 sm:w-40 md:w-60 overflow-hidden">
-          <div
-            ref={progressRef}
-            className="bg-white h-full rounded-full transition-all duration-1000 ease-out"
-          />
-        </div>
-        <div className="mt-2 text-xs text-white/80">
-          {order[0] + 1} / {data.length}
-        </div>
-      </div> */}
-
       {/* Hidden elements for GSAP references */}
-      {/* <div ref={indicatorRef} className="absolute top-0 left-0 w-1 h-full bg-white/50 z-40" /> */}
+
       <nav ref={navRef} className="opacity-0" />
-      {/* <div ref={paginationRef} className="opacity-0" /> */}
+
       <div
         ref={coverRef}
-        className="absolute top-0 left-0 w-full h-full bg-gray-900 z-50"
+        className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
       />
     </div>
   );
 };
 
-export default TravelSlideshow;
+export default HeroTravelSlides;

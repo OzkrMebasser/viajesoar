@@ -1,0 +1,16 @@
+
+H1
+className="text-3xl sm:text-4xl md:text-7xl font-semibold"
+
+H2
+className="text-sm md:text-xl"
+
+
+
+PALETTE
+
+
+
+
+/* Array */
+["69d3f5","d0e3e8","179bed","044f7c","0475bd","0466a5","5c8dac","338ec4","376c8e","8494a4"]

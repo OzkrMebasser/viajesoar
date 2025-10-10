@@ -1,0 +1,72 @@
+-- ============================================
+-- SCHEMA COMPLETO DE DESTINOS TURÍSTICOS BILINGÜE
+-- ============================================
+
+-- Tabla para regiones (slider)
+CREATE TABLE destinations_regions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  locale VARCHAR(2) NOT NULL, -- 'es' o 'en'
+  name VARCHAR(100) NOT NULL,
+  icon VARCHAR(50) NOT NULL,
+  image TEXT NOT NULL,
+  gradient VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla para categorías
+CREATE TABLE destination_categories (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  locale VARCHAR(2) NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  slug VARCHAR(50) NOT NULL
+);
+
+-- Tabla para destinos detallados
+CREATE TABLE destinations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  locale VARCHAR(2) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  image TEXT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  rating DECIMAL(3,2) CHECK (rating >= 0 AND rating <= 5),
+  reviews INTEGER DEFAULT 0,
+  duration VARCHAR(50) NOT NULL,
+  description TEXT NOT NULL,
+  category_id UUID REFERENCES destination_categories(id),
+  region_id UUID REFERENCES destinations_regions(id),
+  is_active BOOLEAN DEFAULT true,
+  is_featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla para highlights de destinos
+CREATE TABLE destination_highlights (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  destination_id UUID REFERENCES destinations(id) ON DELETE CASCADE,
+  locale VARCHAR(2) NOT NULL,
+  highlight TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla para slideshow
+CREATE TABLE travel_slideshow_destinations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  locale VARCHAR(2) NOT NULL,
+  place VARCHAR(100) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  title2 VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL,
+  image TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+
+

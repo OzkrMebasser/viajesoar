@@ -46,27 +46,76 @@
 }
 
 /* Nubes individuales */
-.x1 { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); animation-delay: 0s, 0s; }
-.x2 { top: 55%; left: 30%; transform: translate(-50%, -50%) scale(0.6); opacity: 0.6; animation-delay: 0.02s, 0s; }
-.x3 { top: 45%; left: 70%; transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; animation-delay: 0.04s, 0s; }
-.x4 { top: 60%; left: 50%; transform: translate(-50%, -50%) scale(0.75); opacity: 0.75; animation-delay: 0.06s, 0s; }
-.x5 { top: 40%; left: 40%; transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; animation-delay: 0.08s, 0s; }
+.x1 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  animation-delay: 0s, 0s;
+}
+.x2 {
+  top: 55%;
+  left: 30%;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0.6;
+  animation-delay: 0.02s, 0s;
+}
+.x3 {
+  top: 45%;
+  left: 70%;
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0.8;
+  animation-delay: 0.04s, 0s;
+}
+.x4 {
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.75);
+  opacity: 0.75;
+  animation-delay: 0.06s, 0s;
+}
+.x5 {
+  top: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0.8;
+  animation-delay: 0.08s, 0s;
+}
 
 /* Animación de caída rápida desde arriba */
 @keyframes dropIn {
-  0% { margin-top: -500px; opacity: 0; }
-  100% { margin-top: 0; opacity: 1; }
+  0% {
+    margin-top: -500px;
+    opacity: 0;
+  }
+  100% {
+    margin-top: 0;
+    opacity: 1;
+  }
 }
 
 /* Movimiento vertical continuo */
 @keyframes moveclouds {
-  0% { margin-top: 0; }
-  100% { margin-top: 1000px; }
+  0% {
+    margin-top: 0;
+  }
+  100% {
+    margin-top: 1000px;
+  }
 }
 
 /* Velocidades de movimiento según nube */
-.x1 { animation-duration: 4s, 4s; }
-.x2 { animation-duration: 0.05s, 5s; }
-.x3 { animation-duration: 0.05s, 6s; }
-.x4 { animation-duration: 0.05s, 5s; }
-.x5 { animation-duration: 0.05s, 4s; }
+.x1 {
+  animation-duration: 4s, 4s;
+}
+.x2 {
+  animation-duration: 0.05s, 5s;
+}
+.x3 {
+  animation-duration: 0.05s, 6s;
+}
+.x4 {
+  animation-duration: 0.05s, 5s;
+}
+.x5 {
+  animation-duration: 0.05s, 4s;
+}
