@@ -1,563 +1,341 @@
 "use client";
-import React, { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useState, useMemo } from "react";
+import { Search, Star, MapPin, Clock, DollarSign, Filter } from "lucide-react";
 import { useDestinations } from "@/lib/hooks/useDestinations";
-// import Preloader from "@/components/Airplane/Preloader";
+import { useLocale } from "next-intl";
 
-import {
-  MapPin,
-  Calendar,
-  Users,
-  Star,
-  Plane,
-  Heart,
-  Search,
-} from "lucide-react";
+// lang type
+type Locale = "en" | "es";
 
-interface Destination {
-  id: number;
-  name: string;
-  country: string;
-  image: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  duration: string;
-  highlights: string[];
-  description: string;
-  category: "beach" | "city" | "nature" | "culture" | "adventure";
-}
+const Destinations = () => {
+  const [lang, setLang] = useState<"es" | "en">("es");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCountry, setSelectedCountry] = useState("all");
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [showFilters, setShowFilters] = useState(false);
 
-interface FilterState {
-  category: string;
-  priceRange: string;
-  searchTerm: string;
-}
+  const locale = useLocale() as Locale;
+  const { destinations: data, loading, error } = useDestinations(locale);
 
-const Destinations: React.FC = () => {
-  const [selectedDestination, setSelectedDestination] =
-    useState<Destination | null>(null);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [filters, setFilters] = useState<FilterState>({
-    category: "all",
-    priceRange: "all",
-    searchTerm: "",
-  });
+  // Categorías dinámicas
+  const dynamicCategories = useMemo(() => {
+    const cats = Array.from(new Set(data.map((d) => d.category).filter(Boolean)));
+    return [{ id: "all", label: locale === "es" ? "Todos" : "All" }, ...cats.map((cat) => ({ id: cat, label: cat }))];
+  }, [data, locale]);
 
-    const t = useTranslations("Navigation");
+  // Países dinámicos
+  const dynamicCountries = useMemo(() => {
+    const countries = Array.from(new Set(data.map((d) => d.country).filter(Boolean)));
+    return [{ id: "all", label: locale === "es" ? "Todos los países" : "All countries" }, ...countries.map((c) => ({ id: c, label: c }))];
+  }, [data, locale]);
 
+  // Filtrado
+  const filteredDestinations = useMemo(() => {
+    return data.filter((dest) => {
+      const matchesSearch =
+        dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dest.country.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === "all" || dest.category === selectedCategory;
+      const matchesCountry = selectedCountry === "all" || dest.country === selectedCountry;
+      const matchesPrice = dest.price >= priceRange[0] && dest.price <= priceRange[1];
+      return matchesSearch && matchesCategory && matchesCountry && matchesPrice;
+    });
+  }, [data, searchQuery, selectedCategory, selectedCountry, priceRange]);
 
-  const { destinations: supabaseDestinations, loading, error } = useDestinations();
+  const translations = {
+    es: {
+      title: "Nuestros Destinos",
+      subtitle: "Descubre los mejores lugares para viajar",
+      searchPlaceholder: "Buscar destinos...",
+      filters: "Filtros",
+      priceRange: "Rango de precio",
+      from: "Desde",
+      to: "Hasta",
+      duration: "Duración",
+      rating: "Valoración",
+      reviews: "opiniones",
+      highlights: "Destacados",
+      bookNow: "Reservar ahora",
+      noResults: "No se encontraron destinos",
+      featured: "Destacado",
+      loading: "Cargando destinos...",
+      error: "Error al cargar los destinos",
+    },
+    en: {
+      title: "Our Destinations",
+      subtitle: "Discover the best places to travel",
+      searchPlaceholder: "Search destinations...",
+      filters: "Filters",
+      priceRange: "Price range",
+      from: "From",
+      to: "To",
+      duration: "Duration",
+      rating: "Rating",
+      reviews: "reviews",
+      highlights: "Highlights",
+      bookNow: "Book now",
+      noResults: "No destinations found",
+      featured: "Featured",
+      loading: "Loading destinations...",
+      error: "Error loading destinations",
+    },
+  };
 
-    // Manejo de carga
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center">
-  //       <Preloader isLoading={loading} />
-  //     </div>
-  //   );
-  // }
+  const t = translations[locale] || translations.es;
 
-  // Manejo de errores
-  if (error) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center">
-        <div className="text-xl text-red-600">Error al cargar destinos: {error}</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">{t.loading}</p>
+        </div>
       </div>
     );
   }
 
-  // const destinations: Destination[] = [
-  //   {
-  //     id: 1,
-  //     name: "Bali",
-  //     country: "Indonesia",
-  //     image:
-  //       "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop",
-  //     price: 1200,
-  //     rating: 4.8,
-  //     reviews: 2847,
-  //     duration: "7 días",
-  //     highlights: [
-  //       "Templos sagrados",
-  //       "Playas paradisíacas",
-  //       "Cultura balinesa",
-  //       "Spa y wellness",
-  //     ],
-  //     description:
-  //       "Descubre la magia de Bali, donde la espiritualidad se encuentra con paisajes tropicales.",
-  //     category: "culture",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "París",
-  //     country: "Francia",
-  //     image:
-  //       "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400&h=300&fit=crop",
-  //     price: 1800,
-  //     rating: 4.9,
-  //     reviews: 4521,
-  //     duration: "6 días",
-  //     highlights: [
-  //       "Torre Eiffel",
-  //       "Louvre",
-  //       "Champs-Élysées",
-  //       "Gastronomía francesa",
-  //     ],
-  //     description:
-  //       "La ciudad del amor te espera con su arte, cultura y romance incomparables.",
-  //     category: "city",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Santorini",
-  //     country: "Grecia",
-  //     image:
-  //       "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&h=300&fit=crop",
-  //     price: 1500,
-  //     rating: 4.7,
-  //     reviews: 1893,
-  //     duration: "5 días",
-  //     highlights: [
-  //       "Puestas de sol",
-  //       "Arquitectura cicládica",
-  //       "Vinos locales",
-  //       "Playas volcánicas",
-  //     ],
-  //     description:
-  //       "Vive la magia del Egeo en esta joya griega con vistas espectaculares.",
-  //     category: "beach",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Tokio",
-  //     country: "Japón",
-  //     image:
-  //       "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop",
-  //     price: 2200,
-  //     rating: 4.6,
-  //     reviews: 3214,
-  //     duration: "8 días",
-  //     highlights: [
-  //       "Templos tradicionales",
-  //       "Tecnología",
-  //       "Sushi auténtico",
-  //       "Cultura pop",
-  //     ],
-  //     description:
-  //       "Sumérgete en el contraste perfecto entre tradición y modernidad.",
-  //     category: "city",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Maldivas",
-  //     country: "Maldivas",
-  //     image:
-  //       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-  //     price: 3500,
-  //     rating: 4.9,
-  //     reviews: 1567,
-  //     duration: "7 días",
-  //     highlights: [
-  //       "Bungalows sobre agua",
-  //       "Aguas cristalinas",
-  //       "Snorkel",
-  //       "Lujo tropical",
-  //     ],
-  //     description:
-  //       "El paraíso tropical definitivo para una experiencia de lujo inolvidable.",
-  //     category: "beach",
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Nueva York",
-  //     country: "Estados Unidos",
-  //     image:
-  //       "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&h=300&fit=crop",
-  //     price: 1900,
-  //     rating: 4.5,
-  //     reviews: 5672,
-  //     duration: "6 días",
-  //     highlights: [
-  //       "Times Square",
-  //       "Central Park",
-  //       "Broadway",
-  //       "Estatua de la Libertad",
-  //     ],
-  //     description:
-  //       "La ciudad que nunca duerme te ofrece experiencias urbanas incomparables.",
-  //     category: "city",
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Machu Picchu",
-  //     country: "Perú",
-  //     image:
-  //       "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=400&h=300&fit=crop",
-  //     price: 1100,
-  //     rating: 4.8,
-  //     reviews: 2134,
-  //     duration: "5 días",
-  //     highlights: [
-  //       "Ciudadela inca",
-  //       "Trekking",
-  //       "Historia ancestral",
-  //       "Paisajes andinos",
-  //     ],
-  //     description:
-  //       "Descubre una de las maravillas del mundo en los Andes peruanos.",
-  //     category: "adventure",
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Dubái",
-  //     country: "Emiratos Árabes Unidos",
-  //     image:
-  //       "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop",
-  //     price: 2000,
-  //     rating: 4.6,
-  //     reviews: 2876,
-  //     duration: "6 días",
-  //     highlights: ["Burj Khalifa", "Mall gigantes", "Desierto", "Lujo árabe"],
-  //     description:
-  //       "Experimenta el lujo y la innovación en el corazón del desierto.",
-  //     category: "city",
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Islandia",
-  //     country: "Islandia",
-  //     image:
-  //       "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400&h=300&fit=crop",
-  //     price: 2400,
-  //     rating: 4.7,
-  //     reviews: 1456,
-  //     duration: "8 días",
-  //     highlights: ["Aurora boreal", "Géiseres", "Glaciares", "Aguas termales"],
-  //     description:
-  //       "Tierra de fuego y hielo que ofrece paisajes únicos en el mundo.",
-  //     category: "nature",
-  //   },
-  //   {
-  //     id: 10,
-  //     name: "Tailandia",
-  //     country: "Tailandia",
-  //     image:
-  //       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-  //     price: 1300,
-  //     rating: 4.6,
-  //     reviews: 3421,
-  //     duration: "10 días",
-  //     highlights: [
-  //       "Playas tropicales",
-  //       "Templos budistas",
-  //       "Street food",
-  //       "Masajes thai",
-  //     ],
-  //     description:
-  //       "Descubre la sonrisa de Asia en este destino exótico y acogedor.",
-  //     category: "culture",
-  //   },
-  // ];
-
-  const toggleFavorite = (id: number): void => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 text-lg font-semibold">{t.error}</p>
+          <p className="text-slate-600 mt-2">{error}</p>
+        </div>
+      </div>
     );
-  };
-
-  const filteredDestinations = supabaseDestinations.filter((dest) => {
-    const matchesCategory =
-      filters.category === "all" || dest.category === filters.category;
-    const matchesPrice =
-      filters.priceRange === "all" ||
-      (filters.priceRange === "budget" && dest.price < 1500) ||
-      (filters.priceRange === "mid" &&
-        dest.price >= 1500 &&
-        dest.price < 2500) ||
-      (filters.priceRange === "luxury" && dest.price >= 2500);
-    const matchesSearch =
-      dest.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-      dest.country.toLowerCase().includes(filters.searchTerm.toLowerCase());
-
-    return matchesCategory && matchesPrice && matchesSearch;
-  });
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
-      {/* Hero Section */}
-      <section className="relative h-96 bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center text-white">
-        <div className="text-center space-y-4">
-          <h2 className="text-5xl font-bold">{t("discoverWorld")}</h2>
-          <p className="text-xl opacity-90">
-            Los destinos más populares de 2025 te esperan
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-5xl font-bold mb-2">{t.title}</h1>
+          <p className="text-lg opacity-90">{t.subtitle}</p>
+          <p className="text-sm opacity-75 mt-2">
+            {data.length} {locale === "es" ? "destinos disponibles" : "destinations available"}
           </p>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
-      </section>
+      </div>
 
-      {/* Filters */}
-      <section className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Buscar destino..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={filters.searchTerm}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    searchTerm: e.target.value,
-                  }))
-                }
-              />
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Search and Filters Section */}
+        <div className="mb-8 space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-4 top-3.5 text-slate-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder={t.searchPlaceholder}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+            />
+          </div>
+
+          {/* Filter Toggle and Category Pills */}
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition"
+            >
+              <Filter className="h-4 w-4" />
+              {t.filters}
+            </button> */}
+
+            {/* Category Buttons */}
+            <div className="flex flex-wrap gap-2">
+              {dynamicCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-4 py-2 rounded-full transition ${
+                    selectedCategory === cat.id
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "bg-white text-slate-700 border border-slate-200 hover:border-blue-600"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
             </div>
 
-            {/* Category Filter */}
-            <label htmlFor="category-select" className="sr-only">
-              Categoría
-            </label>
-            <select
-              id="category-select"
-              aria-label="Categoría"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              value={filters.category}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, category: e.target.value }))
-              }
-            >
-              <option value="all">Todas las categorías</option>
-              <option value="beach">Playa</option>
-              <option value="city">Ciudad</option>
-              <option value="nature">Naturaleza</option>
-              <option value="culture">Cultura</option>
-              <option value="adventure">Aventura</option>
-            </select>
-
-            {/* Price Filter */}
-            <label htmlFor="price-select" className="sr-only">
-              Rango de precio
-            </label>
-            <select
-              id="price-select"
-              aria-label="Rango de precio"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              value={filters.priceRange}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, priceRange: e.target.value }))
-              }
-            >
-              <option value="all">Todos los precios</option>
-              <option value="budget">Económico (&lt; $1,500)</option>
-              <option value="mid">Medio ($1,500 - $2,500)</option>
-              <option value="luxury">Lujo (&gt; $2,500)</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Destinations Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredDestinations.map((destination) => (
-            <div
-              key={destination.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-            >
-              <div className="relative">
-                <img
-                  src={destination.image}
-                  alt={destination.name}
-                  className="w-full h-48 object-cover"
-                />
+            {/* Country Buttons */}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {dynamicCountries.map((country) => (
                 <button
-                  onClick={() => toggleFavorite(destination.id)}
-                  className="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
-                  title={favorites.includes(destination.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
-                  aria-label={favorites.includes(destination.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+                  key={country.id}
+                  onClick={() => setSelectedCountry(country.id)}
+                  className={`px-4 py-2 rounded-full transition ${
+                    selectedCountry === country.id
+                      ? "bg-green-600 text-white shadow-lg"
+                      : "bg-white text-slate-700 border border-slate-200 hover:border-green-600"
+                  }`}
                 >
-                  <Heart
-                    className={`w-5 h-5 ${
-                      favorites.includes(destination.id)
-                        ? "text-red-500 fill-current"
-                        : "text-gray-600"
-                    }`}
-                  />
+                  {country.label}
                 </button>
-                <div className="absolute bottom-3 left-3 bg-black/60 text-white px-2 py-1 rounded text-sm">
-                  {destination.duration}
+              ))}
+            </div>
+          </div>
+
+          {/* Advanced Filters */}
+          {/* {showFilters && (
+            <div className="bg-white border border-slate-200 rounded-lg p-6 space-y-4 animate-in">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  {t.priceRange}
+                </label>
+                <div className="flex gap-4">
+                  <div>
+                    <label className="text-xs text-slate-500">{t.from}</label>
+                    <input
+                      type="number"
+                      value={priceRange[0]}
+                      onChange={(e) =>
+                        setPriceRange([parseInt(e.target.value), priceRange[1]])
+                      }
+                      className="w-full px-3 py-2 border border-slate-200 rounded mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500">{t.to}</label>
+                    <input
+                      type="number"
+                      value={priceRange[1]}
+                      onChange={(e) =>
+                        setPriceRange([priceRange[0], parseInt(e.target.value)])
+                      }
+                      className="w-full px-3 py-2 border border-slate-200 rounded mt-1"
+                    />
+                  </div>
                 </div>
               </div>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                {locale === "es" ? "Cerrar filtros" : "Close filters"}
+              </button>
+            </div>
+          )} */}
+        </div>
 
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-800">
-                      {destination.name}
-                    </h3>
-                    <p className="text-gray-600 flex items-center">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {destination.country}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium ml-1">
-                        {destination.rating}
-                      </span>
+        {/* Results Count */}
+        {filteredDestinations.length > 0 && (
+          <p className="text-sm text-slate-600 mb-6">
+            {locale === "es"
+              ? `Mostrando ${filteredDestinations.length} de ${data.length} destinos`
+              : `Showing ${filteredDestinations.length} of ${data.length} destinations`}
+          </p>
+        )}
+
+        {/* Destinations Grid */}
+        {filteredDestinations.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-xl text-slate-600">{t.noResults}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredDestinations.map((destination) => (
+              <div
+                key={destination.id}
+                className="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden"
+              >
+                {/* Image Container */}
+                <div className="relative h-56 overflow-hidden bg-slate-200">
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  {destination.is_featured && (
+                    <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                      {t.featured}
                     </div>
-                    <p className="text-xs text-gray-500">
-                      ({destination.reviews} reseñas)
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                  {destination.description}
-                </p>
-
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {destination.highlights
-                    .slice(0, 2)
-                    .map((highlight, index) => (
-                      <span
-                        key={index}
-                        className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
-                      >
-                        {highlight}
-                      </span>
-                    ))}
-                  {destination.highlights.length > 2 && (
-                    <span className="text-xs text-gray-500">
-                      +{destination.highlights.length - 2} más
-                    </span>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between">
+                {/* Content */}
+                <div className="p-6 space-y-3">
                   <div>
-                    <span className="text-2xl font-bold text-green-600">
-                      ${destination.price.toLocaleString()}
-                    </span>
-                    <span className="text-gray-500 text-sm ml-1">USD</span>
+                    <h3 className="text-2xl font-bold text-slate-900">
+                      {destination.name}
+                    </h3>
+                    <div className="flex items-center gap-2 text-slate-600 mt-1">
+                      <MapPin className="h-4 w-4" />
+                      <span className="text-sm">{destination.country}</span>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setSelectedDestination(destination)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                  >
-                    Ver detalles
+
+                  <p className="text-slate-600 text-sm line-clamp-2">
+                    {destination.description}
+                  </p>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < Math.round(destination.rating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-slate-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm font-medium text-slate-700">
+                      {destination.rating.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      ({destination.reviews} {t.reviews})
+                    </span>
+                  </div>
+
+                  {/* Details */}
+                  <div className="flex gap-4 py-3 border-y border-slate-200 text-sm">
+                    <div className="flex items-center gap-1 text-slate-600">
+                      <Clock className="h-4 w-4" />
+                      {destination.duration}
+                    </div>
+                    <div className="flex items-center gap-1 font-bold text-blue-600">
+                      <DollarSign className="h-4 w-4" />
+                      ${destination.price.toFixed(2)}
+                    </div>
+                  </div>
+
+                  {/* Highlights */}
+                  {destination.highlights && destination.highlights.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-slate-700 uppercase">
+                        {t.highlights}
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {destination.highlights.slice(0, 3).map((highlight, idx) => (
+                          <span
+                            key={idx}
+                            className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded"
+                          >
+                            {highlight}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Button */}
+                  <button className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 rounded-lg transition-all transform hover:scale-105">
+                    {t.bookNow}
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredDestinations.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              No se encontraron destinos con los filtros seleccionados.
-            </p>
+            ))}
           </div>
         )}
-      </section>
-
-      {/* Modal */}
-      {selectedDestination && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="relative">
-              <img
-                src={selectedDestination.image}
-                alt={selectedDestination.name}
-                className="w-full h-64 object-cover rounded-t-xl"
-              />
-              <button
-                onClick={() => setSelectedDestination(null)}
-                className="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800">
-                    {selectedDestination.name}
-                  </h2>
-                  <p className="text-gray-600 flex items-center mt-1">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {selectedDestination.country}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <span className="font-medium ml-1">
-                      {selectedDestination.rating}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    ({selectedDestination.reviews} reseñas)
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-gray-700 mb-4">
-                {selectedDestination.description}
-              </p>
-
-              <div className="mb-4">
-                <h3 className="font-semibold text-gray-800 mb-2">
-                  Highlights del destino:
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedDestination.highlights.map((highlight, index) => (
-                    <span
-                      key={index}
-                      className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
-                    >
-                      {highlight}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center text-gray-600">
-                    <Calendar className="w-5 h-5 mr-2" />
-                    <span>{selectedDestination.duration}</span>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <Users className="w-5 h-5 mr-2" />
-                    <span>2 personas</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <span className="text-3xl font-bold text-green-600">
-                    ${selectedDestination.price.toLocaleString()}
-                  </span>
-                  <span className="text-gray-500 ml-1">USD</span>
-                </div>
-              </div>
-
-              <div className="flex space-x-3 mt-6">
-                <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                  Reservar ahora
-                </button>
-                <button className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors font-medium">
-                  Contactar agente
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

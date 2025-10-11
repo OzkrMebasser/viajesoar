@@ -48,5 +48,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+.TXT*
+.txt*
 .txt
 .txt
+*txt
+.TXT

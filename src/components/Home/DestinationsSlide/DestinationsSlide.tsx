@@ -155,7 +155,7 @@ export default function DestinationsSlide() {
                         {destination.name}
                       </h3>
                       <p className="text-slate-200 mb-3">
-                        {destination.description}
+                        {destination.description} 
                       </p>
                       <button
                         onClick={() => {

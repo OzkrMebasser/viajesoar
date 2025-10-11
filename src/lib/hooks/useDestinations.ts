@@ -1,4 +1,3 @@
-// lib/hooks/useDestinations.ts
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -12,7 +11,7 @@ export interface DestinationRegion {
   description: string;
   image: string;
   gradient: string;
-  icon: string; // ← el nombre del ícono (ej: "GiPalmTree")
+  icon: string;
   locale: string;
   is_active: boolean;
   order_index?: number;
@@ -21,6 +20,7 @@ export interface DestinationRegion {
 
 export interface Destination {
   id: string;
+  locale: string;
   name: string;
   country: string;
   image: string;
@@ -28,65 +28,16 @@ export interface Destination {
   rating: number;
   reviews: number;
   duration: string;
-  highlights: string[];
   description: string;
-  category: "beach" | "city" | "nature" | "culture" | "adventure";
+  category: string;
+  slug: string;
+  highlights: string[];
+  is_featured: boolean;
+  is_active: boolean;
 }
-
 // ============================================
-// HOOK PARA DESTINOS DE REGIONES (Slider)
+// HOOK PARA DESTINOS DE REGIONES HOME (Slider)
 // ============================================
-// export function useDestinationRegions(lang: 'es' | 'en' = 'es') {
-//   const [regions, setRegions] = useState<DestinationRegion[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     async function fetchRegions() {
-//       try {
-//         setLoading(true);
-//         const { data, error } = await supabase
-//           .from('destinations_regions')
-//           .select('*')
-//           .eq('is_active', true)
-//           .order('order_index', { ascending: true });
-
-//         if (error) throw error;
-
-//         const mappedRegions: DestinationRegion[] = data.map((region: any) => ({
-//           name: lang === 'es' ? region.name_es : region.name_en,
-//           icon: region.icon,
-//           image: region.image,
-//           gradient: region.gradient,
-//           description: lang === 'es' ? region.description_es : region.description_en,
-//         }));
-
-//         setRegions(mappedRegions);
-//       } catch (err) {
-//         console.error('Error fetching regions:', err);
-//         setError(err instanceof Error ? err.message : 'Error desconocido');
-//       } finally {
-//         setLoading(false);
-//       }
-//     }
-
-//     fetchRegions();
-//   }, [lang]); // 👈 importante: lang en dependencias para cambiar idioma
-
-//   return { regions, loading, error };
-// }
-
-// interface DestinationRegion {
-//   id: number;
-//   name: string;
-//   description: string;
-//   image: string;
-//   gradient: string;
-//   icon: string; // ← el nombre del ícono (ej: "GiPalmTree")
-//   locale: string;
-//   is_active: boolean;
-//   order_index?: number;
-// }
 
 export function useDestinationRegions(locale: "es" | "en" = "es") {
   const [regions, setRegions] = useState<DestinationRegion[]>([]);
@@ -99,11 +50,14 @@ export function useDestinationRegions(locale: "es" | "en" = "es") {
         setLoading(true);
 
         const { data, error } = await supabase
+         
           .from("destinations_regions")
           .select("*")
-          .eq("is_active", true)
           .eq("locale", locale)
+          .eq("is_active", true)
           .order("order_index", { ascending: true });
+
+          console.log("Regions...", data)
 
         if (error) throw error;
 
@@ -126,6 +80,39 @@ export function useDestinationRegions(locale: "es" | "en" = "es") {
 // HOOK PARA URL POR NOMBRE
 // ============================================
 
+export function useDestinationBySlug(slug: string, locale: string) {
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchDestination() {
+      try {
+        setLoading(true);
+
+        const { data, error } = await supabase
+          .from("destinations_regions")
+          .select("*")
+          .eq("slug", slug)
+          .eq("locale", locale)
+          .limit(1);
+
+        if (error) throw error;
+
+        setDestination(data?.[0] || null);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slug) fetchDestination();
+  }, [slug, locale]);
+
+  return { destination, loading, error };
+}
+
 export function useDestinationByName(name: string, locale: string) {
   const [destination, setDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -140,7 +127,7 @@ export function useDestinationByName(name: string, locale: string) {
           .select("*")
           .eq("slug", name)
           .eq("locale", locale)
-          .single(); // Devuelve solo uno
+          .single();
 
         if (error) throw error;
         setDestination(data || null);
@@ -157,114 +144,56 @@ export function useDestinationByName(name: string, locale: string) {
   return { destination, loading, error };
 }
 
-
-
-export function useDestinationBySlug(slug: string, locale: string) {
-  const [destination, setDestination] = useState<Destination | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchDestination() {
-      try {
-        setLoading(true);
-
-        const { data, error } = await supabase
-          .from("destinations_regions")
-          .select("*")
-          .eq("slug", slug)
-          .eq("locale", locale)
-          .limit(1); // evita error de multiple rows
-
-        if (error) throw error;
-
-        setDestination(data?.[0] || null); // toma el primer registro si existe
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (slug) fetchDestination();
-  }, [slug, locale]);
-
-  return { destination, loading, error };
-}
-
 // ============================================
-// HOOK PARA DESTINOS DETALLADOS
+// HOOK PARA DESTINOS DETALLADOS - FIXED
 // ============================================
-export function useDestinations(lang: "es" | "en" = "es") {
+
+// lib/hooks/useDestinations.ts
+
+export const useDestinations = (locale: "es" | "en" = "es") => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchDestinations() {
+    const fetchDestinations = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-
-        const { data: destinationsData, error: destError } = await supabase
+        const { data, error } = await supabase
           .from("destinations")
-          .select(
-            `
-            *,
-            category:destination_categories(slug)
-          `
-          )
-          .eq("is_active", true);
+          .select("*")
+          .eq("locale", locale)
+          .eq("is_active", true)
+          .order("name", { ascending: true });
 
-        if (destError) throw destError;
+        if (error) throw error;
 
-        const destinationsWithHighlights = await Promise.all(
-          destinationsData.map(async (dest: any) => {
-            const { data: highlights } = await supabase
-              .from("destination_highlights")
-              .select("*")
-              .eq("destination_id", dest.id)
-              .order("order_index", { ascending: true });
-
-            return {
-              id: dest.id,
-              name: lang === "es" ? dest.name_es : dest.name_en,
-              country: lang === "es" ? dest.country_es : dest.country_en,
-              image: dest.image,
-              price: parseFloat(dest.price),
-              rating: parseFloat(dest.rating),
-              reviews: dest.reviews,
-              duration: lang === "es" ? dest.duration_es : dest.duration_en,
-              description:
-                lang === "es" ? dest.description_es : dest.description_en,
-              category: dest.category?.slug || "culture",
-              highlights:
-                highlights?.map((h: any) =>
-                  lang === "es" ? h.highlight_es : h.highlight_en
-                ) || [],
-            };
-          })
-        );
-
-        setDestinations(destinationsWithHighlights);
-      } catch (err) {
-        console.error("Error fetching destinations:", err);
-        setError(err instanceof Error ? err.message : "Error desconocido");
+        if (data) {
+          const formatted = data.map((d: any) => ({
+            ...d,
+            highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(Boolean),
+          }));
+          setDestinations(formatted);
+        }
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || "Error fetching destinations");
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchDestinations();
-  }, [lang]); // 👈 importante: lang en dependencias para cambiar idioma
+  }, [locale]);
 
   return { destinations, loading, error };
-}
+};
+
 
 // ============================================
 // CRUD Y FUNCIONES AUXILIARES
 // ============================================
 
-// Para admin: crear región con soporte idioma
 export async function createRegion(
   region: Omit<DestinationRegion, "id"> & { orderIndex: number }
 ) {
@@ -426,11 +355,12 @@ export async function getDestinationsByCategory(
 ) {
   const { data, error } = await supabase
     .from("destinations")
-    .select(`*, category:destination_categories!inner(slug)`)
-    .eq("category.slug", categorySlug)
+    .select("*")
     .eq("is_active", true);
 
   if (error) throw error;
+  
+  // Filtrar localmente si la categoría no es un join en BD
   return data;
 }
 
