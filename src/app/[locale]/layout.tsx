@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/app/i18n/routing";
 import AirplaneCursor from "@/components/Airplane/AirplaneCursor";
 import Navigation from "@/components/Navigation";
+import { FavoritesProvider } from "@/lib/context/FavoritesProvider";
 
 export default async function LocaleLayout({
   children,
@@ -15,9 +16,13 @@ export default async function LocaleLayout({
   const { locale } = await params;
   // console.log(locale);
 
+
+
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
+
+  // console.log(`la ruta es ${routing.pathnames["/favorites"][locale as "es" | "en"]}`);
 
   const messages = await getMessages();
 
@@ -25,9 +30,11 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Navigation />
-          <AirplaneCursor />
-          {children}
+          <FavoritesProvider>
+            <Navigation />
+            <AirplaneCursor />
+            {children}
+          </FavoritesProvider>
         </NextIntlClientProvider>
       </body>
     </html>

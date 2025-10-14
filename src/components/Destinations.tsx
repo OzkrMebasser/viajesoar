@@ -1,10 +1,17 @@
 "use client";
-import { useState, useMemo } from "react";
-import { Search, Star, MapPin, Clock, DollarSign, Filter } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Search, Star, MapPin, Clock, DollarSign, Heart as HeartIcon } from "lucide-react";
 import { useDestinations } from "@/lib/hooks/useDestinations";
 import { useLocale } from "next-intl";
+import { useFavorites } from "@/lib/context/FavoritesProvider";
+import { supabase } from "@/lib/supabase";
+import FavoritesPage from "./FavoritesPage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // 👈 Estilos del toast
 
-// lang type
+// ==============================
+// Componente principal
+// ==============================
 type Locale = "en" | "es";
 
 const Destinations = () => {
@@ -18,19 +25,48 @@ const Destinations = () => {
   const locale = useLocale() as Locale;
   const { destinations: data, loading, error } = useDestinations(locale);
 
+  // ==============================
+  // 👇 Usuario y favoritos
+  // ==============================
+  const [user, setUser] = useState<any>(null);
+  const { favorites, toggleFavorite } = useFavorites();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    getUser();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  // ==============================
   // Categorías dinámicas
+  // ==============================
   const dynamicCategories = useMemo(() => {
     const cats = Array.from(new Set(data.map((d) => d.category).filter(Boolean)));
-    return [{ id: "all", label: locale === "es" ? "Todos" : "All" }, ...cats.map((cat) => ({ id: cat, label: cat }))];
+    return [
+      { id: "all", label: locale === "es" ? "Todos" : "All" },
+      ...cats.map((cat) => ({ id: cat, label: cat })),
+    ];
   }, [data, locale]);
 
-  // Países dinámicos
   const dynamicCountries = useMemo(() => {
     const countries = Array.from(new Set(data.map((d) => d.country).filter(Boolean)));
-    return [{ id: "all", label: locale === "es" ? "Todos los países" : "All countries" }, ...countries.map((c) => ({ id: c, label: c }))];
+    return [
+      { id: "all", label: locale === "es" ? "Todos los países" : "All countries" },
+      ...countries.map((c) => ({ id: c, label: c })),
+    ];
   }, [data, locale]);
 
+  // ==============================
   // Filtrado
+  // ==============================
   const filteredDestinations = useMemo(() => {
     return data.filter((dest) => {
       const matchesSearch =
@@ -43,6 +79,9 @@ const Destinations = () => {
     });
   }, [data, searchQuery, selectedCategory, selectedCountry, priceRange]);
 
+  // ==============================
+  // Traducciones
+  // ==============================
   const translations = {
     es: {
       title: "Nuestros Destinos",
@@ -61,6 +100,7 @@ const Destinations = () => {
       featured: "Destacado",
       loading: "Cargando destinos...",
       error: "Error al cargar los destinos",
+      loginToSave: "Inicia sesión para guardar favoritos 🩷",
     },
     en: {
       title: "Our Destinations",
@@ -79,9 +119,9 @@ const Destinations = () => {
       featured: "Featured",
       loading: "Loading destinations...",
       error: "Error loading destinations",
+      loginToSave: "Login to save favorites 🩷",
     },
   };
-
   const t = translations[locale] || translations.es;
 
   if (loading) {
@@ -106,8 +146,13 @@ const Destinations = () => {
     );
   }
 
+  // ==============================
+  // Render
+  // ==============================
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <ToastContainer position="bottom-right" /> {/* 👈 Toast abajo derecha */}
+      
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
@@ -121,9 +166,8 @@ const Destinations = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Search and Filters Section */}
+        {/* Search & Filters */}
         <div className="mb-8 space-y-4">
-          {/* Search Bar */}
           <div className="relative">
             <Search className="absolute left-4 top-3.5 text-slate-400 h-5 w-5" />
             <input
@@ -135,17 +179,8 @@ const Destinations = () => {
             />
           </div>
 
-          {/* Filter Toggle and Category Pills */}
+          {/* Category & Country Filters */}
           <div className="flex flex-wrap gap-2 items-center">
-            {/* <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition"
-            >
-              <Filter className="h-4 w-4" />
-              {t.filters}
-            </button> */}
-
-            {/* Category Buttons */}
             <div className="flex flex-wrap gap-2">
               {dynamicCategories.map((cat) => (
                 <button
@@ -162,7 +197,6 @@ const Destinations = () => {
               ))}
             </div>
 
-            {/* Country Buttons */}
             <div className="flex flex-wrap gap-2 mt-2">
               {dynamicCountries.map((country) => (
                 <button
@@ -179,47 +213,6 @@ const Destinations = () => {
               ))}
             </div>
           </div>
-
-          {/* Advanced Filters */}
-          {/* {showFilters && (
-            <div className="bg-white border border-slate-200 rounded-lg p-6 space-y-4 animate-in">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  {t.priceRange}
-                </label>
-                <div className="flex gap-4">
-                  <div>
-                    <label className="text-xs text-slate-500">{t.from}</label>
-                    <input
-                      type="number"
-                      value={priceRange[0]}
-                      onChange={(e) =>
-                        setPriceRange([parseInt(e.target.value), priceRange[1]])
-                      }
-                      className="w-full px-3 py-2 border border-slate-200 rounded mt-1"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-500">{t.to}</label>
-                    <input
-                      type="number"
-                      value={priceRange[1]}
-                      onChange={(e) =>
-                        setPriceRange([priceRange[0], parseInt(e.target.value)])
-                      }
-                      className="w-full px-3 py-2 border border-slate-200 rounded mt-1"
-                    />
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-              >
-                {locale === "es" ? "Cerrar filtros" : "Close filters"}
-              </button>
-            </div>
-          )} */}
         </div>
 
         {/* Results Count */}
@@ -243,15 +236,49 @@ const Destinations = () => {
                 key={destination.id}
                 className="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden"
               >
-                {/* Image Container */}
+                {/* Image */}
                 <div className="relative h-56 overflow-hidden bg-slate-200">
                   <img
                     src={destination.image}
                     alt={destination.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
+
+                  {/* ❤️ FAVORITE BUTTON */}
+                  {user ? (
+                    <button
+                      onClick={() => toggleFavorite(String(destination.id))}
+                      className="absolute top-3 right-3 p-2 bg-white/80 rounded-full shadow hover:bg-white transition"
+                      aria-label={
+                        favorites.has(String(destination.id))
+                          ? locale === "es"
+                            ? "Quitar de favoritos"
+                            : "Remove from favorites"
+                          : locale === "es"
+                          ? "Agregar a favoritos"
+                          : "Add to favorites"
+                      }
+                    >
+                      <HeartIcon
+                        className={`h-5 w-5 ${
+                          favorites.has(String(destination.id))
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-500"
+                        }`}
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => toast.info(t.loginToSave)} // 👈 Mostrar toast
+                      className="absolute top-3 right-3 p-2 bg-white/60 rounded-full hover:bg-white/80 transition"
+                      title={t.loginToSave}
+                    >
+                      <HeartIcon className="h-5 w-5 text-gray-300" />
+                    </button>
+                  )}
+
                   {destination.is_featured && (
-                    <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                    <div className="absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                       {t.featured}
                     </div>
                   )}
@@ -260,18 +287,14 @@ const Destinations = () => {
                 {/* Content */}
                 <div className="p-6 space-y-3">
                   <div>
-                    <h3 className="text-2xl font-bold text-slate-900">
-                      {destination.name}
-                    </h3>
+                    <h3 className="text-2xl font-bold text-slate-900">{destination.name}</h3>
                     <div className="flex items-center gap-2 text-slate-600 mt-1">
                       <MapPin className="h-4 w-4" />
                       <span className="text-sm">{destination.country}</span>
                     </div>
                   </div>
 
-                  <p className="text-slate-600 text-sm line-clamp-2">
-                    {destination.description}
-                  </p>
+                  <p className="text-slate-600 text-sm line-clamp-2">{destination.description}</p>
 
                   {/* Rating */}
                   <div className="flex items-center gap-2">
@@ -310,15 +333,10 @@ const Destinations = () => {
                   {/* Highlights */}
                   {destination.highlights && destination.highlights.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-xs font-semibold text-slate-700 uppercase">
-                        {t.highlights}
-                      </p>
+                      <p className="text-xs font-semibold text-slate-700 uppercase">{t.highlights}</p>
                       <div className="flex flex-wrap gap-1">
                         {destination.highlights.slice(0, 3).map((highlight, idx) => (
-                          <span
-                            key={idx}
-                            className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded"
-                          >
+                          <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
                             {highlight}
                           </span>
                         ))}
@@ -326,7 +344,6 @@ const Destinations = () => {
                     </div>
                   )}
 
-                  {/* Button */}
                   <button className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 rounded-lg transition-all transform hover:scale-105">
                     {t.bookNow}
                   </button>
@@ -336,6 +353,7 @@ const Destinations = () => {
           </div>
         )}
       </div>
+      {/* <FavoritesPage /> */}
     </div>
   );
 };

@@ -8,11 +8,11 @@ export const routing = defineRouting({
       en: "/",
       es: "/",
     },
-     "/login": {
+    "/login": {
       en: "/login",
-      es: "/iniciar-sesion", 
+      es: "/iniciar-sesion",
     },
-     "/sign-up": {
+    "/sign-up": {
       en: "/sign-up",
       es: "/registrarse",
     },
@@ -35,6 +35,10 @@ export const routing = defineRouting({
     "/destinations": {
       en: "/destinations",
       es: "/destinos",
+    },
+    "/favorites": {
+      en: "/favorites",
+      es: "/favoritos",
     },
     "/flights": {
       en: "/flights",

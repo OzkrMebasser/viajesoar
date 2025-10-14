@@ -3,7 +3,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/app/i18n/navigation";
 import { useTranslations } from "next-intl";
 
-import { Globe, Search, User, Menu, IndentIncrease,IndentDecrease, X } from "lucide-react";
+import {
+  Globe,
+  Search,
+  User,
+  Menu,
+  IndentIncrease,
+  IndentDecrease,
+  X,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 // import { useRouter } from "next/navigation";
 import UserMenu from "./Auth/UserMenu";
@@ -39,6 +47,7 @@ const LogoBig = () => (
         alt="ViajeSoar Logo"
         className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
       />
+
       <div className="absolute inset-0 bg-[#179bed] blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
     <strong>
@@ -58,6 +67,7 @@ const LogoSmall = () => (
         alt="ViajeSoar Logo"
         className="mt-8 w-[70px] h-[70px] lg:w-[90px] lg:h-[90px] transition-transform duration-300 group-hover:scale-125 group-hover:rotate-5"
       />
+
       <div className="absolute inset-0 bg-[#179bed]/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
   </>
@@ -313,44 +323,13 @@ const Navigation = () => {
               )}
             </button>
 
-            <div
-              className="flex items-center gap-2 group cursor-pointer absolute left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
-              role="button"
-              tabIndex={0}
-              aria-label="Ir al inicio"
+            <Link
+              href="/"
               onClick={() => setActiveItem("Home")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  setActiveItem("Home");
-                }
-              }}
+              className="flex items-center gap-2 group cursor-pointer absolute left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
             >
-              {/* <div className="relative">
-                <img
-                  src="/viajesoar-logo.png"
-                  alt="ViajeSoar Logo"
-                  className={
-                    isScrolled
-                      ? "w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
-                      : "w-[70px] h-[70px] lg:w-[80px] lg:h-[80px]"
-                  }
-                />
-                <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-              </div>
-              <strong>
-                <span
-                  className={
-                    isScrolled
-                      ? "text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white"
-                      : "text-xl lg:text-4xl font-bold tracking-wider transition-colors duration-300 text-white"
-                  }
-                >
-                  VIAJE
-                  <span className="soar text-[#ccfb08] ">SOAR</span>
-                </span>
-              </strong> */}
               {isScrolled ? <LogoBig /> : <LogoSmall />}
-            </div>
+            </Link>
 
             <div className="flex items-center gap-3 relative z-[10000]">
               <button
