@@ -1,4 +1,3 @@
-import Favoritos from "@/components/Favoritos";
 import FavoritesPage from "@/components/FavoritesPage";
 
 
