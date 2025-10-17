@@ -1,6 +1,6 @@
 import TravelDestinations from "@/components/Home/DestinationsSlide/DestinationsSlide";
-import Mock from "@/components/Mock";
 import TravelSlideshow from "@/components/Home/HeroTravelSlides";
+import CubeEffectSlider from "@/components/CubeEffectSlider";
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
       {/* <AirplaneSoarPreloader /> */}
       <TravelSlideshow />
       <TravelDestinations />
-      <Mock />
+      <CubeEffectSlider />
     </div>
   );
 }

@@ -1,5 +1,10 @@
 "use client";
 
+
+
+
+const dotsColor ="bg-gradient-to-r from-[#14b8a6] via-[#06b6d4] to-[#179bed]";
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   FaEuroSign,
@@ -10,7 +15,7 @@ import {
 import { GiEarthAmerica, GiPalmTree, GiAztecCalendarSun } from "react-icons/gi";
 import { MdTravelExplore } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import DotGrid from "@/components/DotGrid";
+// import DotGrid from "@/components/DotGrid";
 import SplitText from "@/components/SplitText";
 import { useLocale } from "next-intl";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,6 +23,7 @@ import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { useDestinationRegions } from "@/lib/hooks/useDestinations";
+import ParticlesCanvas from "@/components/ParticlesCanvas";
 
 // Icon map
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -71,20 +77,21 @@ export default function DestinationsSlide() {
     );
 
   return (
-    <div className="relative lg:min-h-screen py-16 px-4 overflow-hidden">
-      <div className="absolute inset-0 z-0">
+    <div className="relative lg:min-h-screen py-16 px-4 overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
+        <ParticlesCanvas />
+      {/* <div className="absolute inset-0 z-0">
         <DotGrid
           dotSize={6}
           gap={10}
-          baseColor="#242526"
-          activeColor="#179bed"
+          baseColor=""
+          activeColor="#09332e"
           proximity={120}
           shockRadius={250}
           shockStrength={5}
           resistance={750}
-          returnDuration={1.5}
+          returnDuration={2}
         />
-      </div>
+      </div> */}
 
       <div className="relative max-w-8xl mx-auto z-20">
         {/* Header */}

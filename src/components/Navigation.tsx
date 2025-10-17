@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/app/i18n/navigation";
 import { useTranslations } from "next-intl";
+import ScrollIndicator from "./ScrollIndicator";
 
 import {
   Globe,
@@ -29,10 +30,10 @@ type SearchResult = {
 
 type Locale = "es" | "en";
 
-// Solo las rutas que quieres mostrar en la navegación principal
+// rutas navegación principal
 const routes: Record<string, { [key in Locale]: string }> = {
   home: { es: "/", en: "/" },
-  services: { es: "/servicios", en: "/services" }, // Cambiado de "holidays" a "services"
+  services: { es: "/servicios", en: "/services" }, 
   destinations: { es: "/destinos", en: "/destinations" },
   flights: { es: "/vuelos", en: "/flights" },
   offers: { es: "/ofertas", en: "/offers" },
@@ -48,14 +49,15 @@ const LogoBig = () => (
         className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
       />
 
-      <div className="absolute inset-0 bg-[#179bed] blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-teal-400 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
     <strong>
       <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-white">
         VIAJE
-        <span className="soar text-[#179bed] ">SOAR</span>
+        <span className="soar text-teal-400 ">SOAR</span>
       </span>
     </strong>
+
   </>
 );
 
@@ -68,8 +70,9 @@ const LogoSmall = () => (
         className="mt-8 w-[70px] h-[70px] lg:w-[90px] lg:h-[90px] transition-transform duration-300 group-hover:scale-125 group-hover:rotate-5"
       />
 
-      <div className="absolute inset-0 bg-[#179bed]/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-teal-400/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
     </div>
+    
   </>
 );
 
@@ -82,6 +85,8 @@ const Navigation = () => {
   const [activeItem, setActiveItem] = useState("Home");
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  
+
 
   const t = useTranslations("Navigation");
 
@@ -302,7 +307,7 @@ const Navigation = () => {
         aria-label="Navegación principal"
       >
         <div className="w-full mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 ">
             <button
               type="button"
               onClick={(e) => {
@@ -332,6 +337,8 @@ const Navigation = () => {
             </Link>
 
             <div className="flex items-center gap-3 relative z-[10000]">
+           
+
               <button
                 type="button"
                 className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001] hidden md:block"
@@ -373,6 +380,7 @@ const Navigation = () => {
               </div>
             </div>
           </div>
+           <ScrollIndicator />
         </div>
       </nav>
 
