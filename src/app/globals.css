@@ -6,7 +6,6 @@
 
 
 
-
 body {
   font-family: 'Oswald', sans-serif;
 }
@@ -15,6 +14,58 @@ body {
 {
     z-index: 999999999999999999;
 }
+
+:root {
+  /* Valores por defecto (dark) */
+  --bg: #0f172a;
+  --bg-secondary: #1e293b;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --accent: #14b8a6;
+  --accent-hover: #0d9488;
+  --border: #334155;
+
+  --gradient: linear-gradient(to bottom, #000000, #0a0a0a, #000000);
+}
+
+/* Tema light */
+html[data-theme='light'] {
+  --bg: #181818;
+  --bg-secondary: #d2d6da;
+  --text: #1e293b;
+  --text-secondary: #475569;
+  --accent: #0891b2;
+  --accent-hover: #0e7490;
+  --border: #e2e8f0;
+
+  --gradient: linear-gradient(to bottom, #ffffff, #f1f5f9, #ffffff);
+}
+
+/* Tema vibrant */
+html[data-theme='vibrant'] {
+  --bg: #fff7ed;
+  --bg-secondary: #fed7aa;
+  --text: #d0e3e8;
+  --text-secondary: #92400e;
+  --accent: #044f7c;
+  --accent-hover: #0891b2;
+  --border: #fed7aa;
+
+  --gradient: linear-gradient(135deg, #ce2424 0%, #e4ac6d 50%, #ce2424 100%);
+}
+
+/* Clases reutilizables */
+.bg-theme { background-color: var(--bg); }
+.bg-theme-secondary { background-color: var(--bg-secondary); }
+.text-theme { color: var(--text); }
+.text-theme-secondary { color: var(--text-secondary); }
+.border-theme { border-color: var(--border); }
+.accent { color: var(--accent); }
+.accent-hover:hover { color: var(--accent-hover); }
+
+/* Para gradients */
+.bg-gradient-theme { background-image: var(--gradient); }
+
 
 
 /* ----------------- Pattern de fondo ----------------- */

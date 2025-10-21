@@ -24,21 +24,21 @@ const WorldMapLoader = () => {
   ];
 
   return (
-    <div className="bg-slate-900/90 min-h-screen flex flex-col items-center justify-center">
+    <div className="bg-gradient-to-b from-black via-gray-950 to-black min-h-screen flex flex-col items-center justify-center">
       <h1 className="slide-in-blurred-top z-50 absolute pb-[22rem] lg:pb-[25rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide  uppercase text-white ">
         VIAJE
-        <span className="animate-pulse text-[#179bed] drop-shadow-[0_0_3px_black] ml-1">
+        <span className="animate-pulse text-teal-400 drop-shadow-[0_0_3px_black] ml-1">
           Soar
         </span>
       </h1>
 
-      <h1 className="slide-in-blurred-bottom z-50 absolute pt-[22rem] lg:pt-[7rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide px-6 uppercase text-white ">
+      <h2 className="slide-in-blurred-bottom z-50 absolute pt-[22rem] lg:pt-[7rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide px-6 uppercase text-yellow-500 ">
         {t("soar1")}
-        <span className="animate-pulse text-[#179bed] drop-shadow-[0_0_3px_black] mr-1">
+        <span className=" text-white drop-shadow-[0_0_3px_black] mr-1">
           Soar
         </span>
         {t("soar2")}
-      </h1>
+      </h2>
 
       <div className="relative w-full max-w-6xl flex justify-center">
         <img
@@ -57,10 +57,10 @@ const WorldMapLoader = () => {
               transform: "translate(-50%, -50%)",
             }}
           >
-            <div className=" lg:ml-[55px]  px-1.5 py-0.5 rounded-md bg-slate-800/70 backdrop-blur-sm text-white text-[7px] xs:text-[8px] sm:text-xs md:text-sm whitespace-nowrap">
+            <div className=" lg:ml-[55px]  px-1.5 py-0.5 rounded-md bg-gray-950/70 backdrop-blur-sm text-white text-[7px] xs:text-[8px] sm:text-xs md:text-sm whitespace-nowrap">
               {loc.name}
             </div>
-            <span className="block rounded-full bg-[#179bed] shadow-lg animate-pulse w-[3px] h-[3px] xs:w-[4px] xs:h-[4px] sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 lg:w-3 lg:h-3 ring-[1px] xs:ring-[2px] sm:ring-[3px] md:ring-[4px] ring-[#179bed]/30"></span>
+            <span className="block rounded-full bg-teal-400 shadow-lg animate-pulse w-[3px] h-[3px] xs:w-[4px] xs:h-[4px] sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 lg:w-3 lg:h-3 ring-[1px] xs:ring-[2px] sm:ring-[3px] md:ring-[4px] ring-teal-400/30"></span>
           </div>
         ))}
 

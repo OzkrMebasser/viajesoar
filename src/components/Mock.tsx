@@ -1,11 +1,14 @@
-import React from 'react'
+"use client";
+import { useTheme } from "@/lib/context/ThemeContext";
 
 const Mock = () => {
-  return (
-    <div className='h-500 w-full bg-gray-200 flex items-center justify-center'>
-      Mock
-    </div>
-  )
-}
+  const { theme } = useTheme();
 
-export default Mock
+  return (
+    <div>
+      <h2>Hola desde {theme} theme!</h2>
+    </div>
+  );
+};
+
+export default Mock;
