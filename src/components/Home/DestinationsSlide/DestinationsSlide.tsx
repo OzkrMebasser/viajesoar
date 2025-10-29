@@ -77,7 +77,7 @@ export default function DestinationsSlide() {
     );
 
   return (
-    <div className="relative lg:min-h-screen py-16 px-4 overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
+    <div className="relative lg:min-h-screen py-16 px-4 overflow-hidden bg-gradient-theme">
         <ParticlesCanvas />
       {/* <div className="absolute inset-0 z-0">
         <DotGrid

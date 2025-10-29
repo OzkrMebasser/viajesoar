@@ -6,6 +6,7 @@
     "destinations": "Destinos",
     "flights": "Vuelos",
     "offers": "Ofertas",
+    "blog": "Blog",
     "contact": "Contacto",
     "soar1": "¡Te vamos a ",
     "soar2": "prender!",
@@ -28,5 +29,9 @@
   },
   "Common": {
     "goToHome": "Ir al inicio"
+  },
+  "Blog": {
+    "latestPosts": "Últimas Publicaciones",
+    "readMore": "Leer Más"
   }
 }

@@ -39,28 +39,43 @@ const routes: Record<string, { [key in Locale]: string }> = {
   destinations: { es: "/destinos", en: "/destinations" },
   flights: { es: "/vuelos", en: "/flights" },
   offers: { es: "/ofertas", en: "/offers" },
+  blog: { es: "/blog", en: "/blog" },
   contact: { es: "/contacto", en: "/contact" },
 };
 
-const LogoBig = () => (
-  <>
-    <div className="relative">
-      <img
-        src="/VIAJES-soar-logo-blues.png"
-        alt="ViajeSoar Logo"
-        className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
-      />
+const LogoBig = () => {
+  const { theme } = useTheme();
 
-      <div className="absolute inset-0 accent-hover:hover blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-    </div>
-    <strong>
-      <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-theme">
-        VIAJE
-        <span className="soar accent">SOAR</span>
-      </span>
-    </strong>
-  </>
-);
+  return (
+    <>
+      <div className="relative">
+        <img
+          src="/VIAJES-soar-logo-blues.png"
+          alt="ViajeSoar Logo"
+          className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
+        />
+
+        <div className="absolute inset-0 accent-hover:hover blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+      </div>
+      <strong>
+        <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-theme">
+          VIAJE
+          <span
+            className={`soar accent ml-[1px] 
+              ${
+                theme === "vibrant"
+                  ? "[text-shadow:_2px_2px_2px_rgba(0,0,0,0.1)]"
+                  : ""
+              }
+            `}
+          >
+            SOAR
+          </span>
+        </span>
+      </strong>
+    </>
+  );
+};
 
 const LogoSmall = () => (
   <>
@@ -86,8 +101,7 @@ const Navigation = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const themeMenuRef = useRef<HTMLDivElement | null>(null);
-  // const { theme, setTheme } = useTheme();
-
+  const { theme } = useTheme();
 
   const t = useTranslations("Navigation");
 
@@ -101,6 +115,7 @@ const Navigation = () => {
     { label: t("destinations"), href: routes.destinations[locale] },
     { label: t("flights"), href: routes.flights[locale] },
     { label: t("offers"), href: routes.offers[locale] },
+    { label: t("blog"), href: routes.blog[locale] },
     { label: t("contact"), href: routes.contact[locale] },
   ];
 
@@ -116,6 +131,7 @@ const Navigation = () => {
       "/destinos": "/destinations",
       "/vuelos": "/flights",
       "/ofertas": "/offers",
+      "/blog-es": "/blog",
       "/contacto": "/contact",
       // Rutas en inglés -> español
       "/login": "/iniciar-sesion",
@@ -123,6 +139,7 @@ const Navigation = () => {
       "/destinations": "/destinos",
       "/flights": "/vuelos",
       "/offers": "/ofertas",
+      "/blog": "/blog-es",
       "/contact": "/contacto",
     };
 
@@ -301,13 +318,15 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`nav fixed  left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out ${
-          isScrolled ? "backdrop-blur-sm bg-gradient-theme shadow-md" : ""
+        className={`nav fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out  ${
+          isScrolled
+            ? "backdrop-blur-sm bg-gradient-theme text-theme shadow-md"
+            : "text-theme-nav"
         }`}
         role="navigation"
         aria-label="Navegación principal"
       >
-        <div className="w-full mx-auto px-4">
+        <div className="w-full mx-auto px-4 ">
           <div className="flex items-center justify-between h-16 ">
             <button
               type="button"
@@ -316,17 +335,18 @@ const Navigation = () => {
                 e.stopPropagation();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className="p-2 rounded-lg transition-all duration-300 text-white hover:bg-white/10 relative z-[10000] pointer-events-auto"
+              className="p-2 rounded-lg transition-all duration-300 relative z-[10000] pointer-events-auto"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={isMobileMenuOpen ? "true" : "false"}
               aria-controls="mobile-menu"
             >
-              {isMobileMenuOpen ? (
-                <IndentDecrease className="w-6 h-6" />
+              <IndentIncrease className="w-6 h-6 text-nav" />
+              {/* {isMobileMenuOpen ? (
+                <IndentDecrease className="w-6 h-6 text-green-500 " />
               ) : (
                 // <Menu className="w-6 h-6" />
-                <IndentIncrease className="w-6 h-6" />
-              )}
+                <IndentIncrease className="w-6 h-6 text-fuchsia-500" />
+              )} */}
             </button>
 
             <Link
@@ -342,7 +362,7 @@ const Navigation = () => {
               {/*Boton búsqueda*/}
               <button
                 type="button"
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001] hidden md:block"
+                className="p-2 rounded-full transition-all duration-300 hover:scale-110  pointer-events-auto z-[10001] hidden md:block"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -350,22 +370,20 @@ const Navigation = () => {
                 }}
                 aria-label="Buscar"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-5 h-5 text-nav" />
               </button>
               {/*Boton idioma*/}
               <button
                 type="button"
                 onClick={toggleLanguage}
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10001] hidden md:block"
+                className="p-2 rounded-full transition-all duration-300 hover:scale-110  pointer-events-auto z-[10001] hidden md:block"
                 aria-label="Cambiar idioma"
               >
                 <Globe className="w-5 h-5" />
               </button>
               {/* 🎨 Selector de tema con <select> y emojis */}
-              <ThemeSelector />
 
-
-              <div className="relative pointer-events-auto z-[10001]">
+              <div className="relative pointer-events-auto z-[10001] ">
                 {user ? (
                   <UserMenu isMobile={false} />
                 ) : (
@@ -376,10 +394,10 @@ const Navigation = () => {
                       e.stopPropagation();
                       handleLoginRedirect();
                     }}
-                    className="p-2 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-[10002]"
+                    className="p-2 rounded-full transition-all duration-300 hover:scale-110  hover:bg-white/90 pointer-events-auto z-[10002]"
                     aria-label="Iniciar sesión"
                   >
-                    <User className="w-5 h-5" />
+                    <User className="w-5 h-5 text-nav" />
                   </button>
                 )}
               </div>
@@ -390,22 +408,22 @@ const Navigation = () => {
       </nav>
 
       <div
-        className={`fixed inset-0 z-50 transition-all duration-300 ${
+        className={`fixed inset-0 z-50 transition-all duration-300 text-theme  ${
           isSearchOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+            ? "opacity-100 pointer-events-auto "
+            : "opacity-0 pointer-events-none "
         }`}
       >
         <div
-          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+          className="absolute inset-0  backdrop-blur-sm"
           onClick={() => setIsSearchOpen(false)}
         />
 
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-gray-100">
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4 mt-16   ">
+          <div className="rounded-2xl shadow-2xl overflow-hidden bg-theme">
+            <div className="p-6">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2  w-5 h-5" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -434,7 +452,7 @@ const Navigation = () => {
                           {result.description}
                         </p>
                       </div>
-                      <span className="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full">
+                      <span className="text-xs bg-teal-100 text-theme-secondary px-2 py-1 rounded-full">
                         {result.category}
                       </span>
                     </div>
@@ -476,7 +494,7 @@ const Navigation = () => {
       </div>
 
       <div
-        className={`nav fixed inset-0 z-40 transition-all duration-500 ${
+        className={`nav fixed inset-0 z-40 transition-all duration-500  ${
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -485,7 +503,7 @@ const Navigation = () => {
         aria-hidden={!!isMobileMenuOpen}
       >
         <div
-          className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          className="absolute inset-0 bg-[var(--accent)]/20 backdrop-blur-sm"
           onClick={() => setIsMobileMenuOpen(false)}
           role="button"
           tabIndex={0}
@@ -502,10 +520,21 @@ const Navigation = () => {
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <div className="flex items-center justify-between p-6 border-b border-gray-800">
+          {/*Border mobile nav  */}
+          <div className="flex items-center justify-between p-4 border-b border-[var(--text)]">
+            {/*Hide Menu */}
             <button
               type="button"
-              className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`p-2 text-theme rounded-lg transition-colors hover:bg-[var(--bg-secondary)]`}
+              aria-label="Cerrar menú"
+            >
+              <IndentDecrease className="w-6 h-6" />
+            </button>
+            {/* Search Button */}
+            <button
+              type="button"
+              className={`p-2 text-theme  rounded-lg transition-colors hover:bg-[var(--bg-secondary)]`}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -516,25 +545,29 @@ const Navigation = () => {
             >
               <Search className="w-5 h-5" />
             </button>
-
+            {/* Language Selector */}
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-              aria-label="Cerrar menú"
+              onClick={toggleLanguage}
+              className={`p-2 text-theme  rounded-lg transition-colors hover:bg-[var(--bg-secondary)]`}
+              aria-label="Cambiar idioma"
             >
-              <IndentDecrease className="w-5 h-5" />
+              <Globe className="w-5 h-5" />
             </button>
+
+            {/* Theme Selector */}
+            <ThemeSelector />
           </div>
 
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-teal-400 font-medium text-sm tracking-wider uppercase">
+          <div className="px-5 flex flex-col justify-evenly h-full relative z-50">
+            {/* <div className="flex items-center justify-between mb-6">
+              <span className="text-theme-secondary font-medium text-sm tracking-wider uppercase">
                 Navigation
               </span>
-            </div>
+            </div> */}
 
-            <div className="space-y-6 relative z-50">
+            {/* Navigation Items */}
+            <div className="space-y-12 lg:space-y-6  relative z-50">
               {navItems.map((item, index) => (
                 <Link
                   key={index}
@@ -545,8 +578,8 @@ const Navigation = () => {
                   }}
                   className={`block w-full text-left font-medium transition-all duration-300 transform hover:translate-x-2 tracking-wider uppercase text-sm ${
                     activeItem === item.label
-                      ? "text-teal-400"
-                      : "text-gray-300 hover:text-white"
+                      ? "text-theme accent"
+                      : "text-theme hover:accent-hover"
                   }`}
                   style={{
                     animationDelay: `${index * 100}ms`,
@@ -563,15 +596,15 @@ const Navigation = () => {
             </div>
 
             <div className=" ">
-              <button
+              {/* <button
                 type="button"
                 onClick={toggleLanguage}
                 className="p-2 mt-4 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-50"
                 aria-label="Cambiar idioma"
               >
                 <Globe className="w-5 h-5" />
-              </button>
-              {user ? (
+              </button> */}
+              {/* {user ? (
                 <UserMenu isMobile={true} />
               ) : (
                 <button
@@ -587,12 +620,12 @@ const Navigation = () => {
                   <User className="w-5 h-5" />
                   <span>Iniciar Sesión</span>
                 </button>
-              )}
+              )} */}
             </div>
           </div>
-          <div className="relative mx-auto h-44 w-44 bg-gray-600">
+          {/* <div className="relative mx-auto h-44 w-44 bg-gray-600">
             <p className="text-white text-center">Logo aqui</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

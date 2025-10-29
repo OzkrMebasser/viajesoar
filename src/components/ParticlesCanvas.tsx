@@ -10,7 +10,7 @@ const ParticlesCanvas: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     canvas.width = window.innerWidth;
@@ -25,7 +25,7 @@ const ParticlesCanvas: React.FC = () => {
     }> = [];
 
     const particleCount = 7; // máximo 7 partículas
-    const colors = ['#14b8a6', '#0891b2', '#06b6d4', '#0ea5e9', '#179bed'];
+    const colors = ["#14b8a6", "#0891b2", "#06b6d4", "#0ea5e9", "#179bed"];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -60,7 +60,7 @@ const ParticlesCanvas: React.FC = () => {
 
         if (dist < influence) {
           const angle = Math.atan2(dy, dx);
-          const force = (influence - dist) / influence * maxForce;
+          const force = ((influence - dist) / influence) * maxForce;
           p.vx -= Math.cos(angle) * force;
           p.vy -= Math.sin(angle) * force;
         }
@@ -72,8 +72,13 @@ const ParticlesCanvas: React.FC = () => {
 
         ctx.fillStyle = colors[idx % colors.length];
         ctx.globalAlpha = 0.5;
+        // bubbles
+        // ctx.beginPath();
+        // ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        // ctx.fill();
+        // squares
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);
         ctx.fill();
       });
 
@@ -93,12 +98,12 @@ const ParticlesCanvas: React.FC = () => {
       mouse.current.y = e.clientY;
     };
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 

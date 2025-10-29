@@ -6,6 +6,7 @@
     "destinations": "Destinations",
     "flights": "Flights",
     "offers": "Offers",
+    "blog": "Blog",
     "contact": "Contact",
     "soar1": "We’ll ",
     "soar2": "prise You!",
@@ -31,5 +32,9 @@
   },
   "Common": {
     "goToHome": "Go to homepage"
+  },
+  "Blog": {
+    "latestPosts": "Latest Posts",
+    "readMore": "Read More"
   }
 }

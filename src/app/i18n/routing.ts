@@ -30,7 +30,7 @@ export const routing = defineRouting({
     },
     "/blog": {
       en: "/blog",
-      es: "/blog",
+      es: "/blog-es",
     },
     "/destinations": {
       en: "/destinations",

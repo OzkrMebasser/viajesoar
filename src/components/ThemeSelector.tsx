@@ -9,36 +9,48 @@ export default function ThemeSelector() {
   const [open, setOpen] = useState(false);
 
   const themes = [
-    { value: "dark", icon: <TbBulbOff size={15} /> },
-    { value: "light", icon: <TbBulbFilled size={15} /> },
-    { value: "vibrant", icon: <RiLightbulbFlashFill size={15} /> },
+    { value: "dark" as const, label: "Dark", icon: <TbBulbOff size={20} /> },
+    {
+      value: "light" as const,
+      label: "Light",
+      icon: <TbBulbFilled size={20} />,
+    },
+    {
+      value: "vibrant" as const,
+      label: "Vibrant",
+      icon: <RiLightbulbFlashFill size={20} />,
+    },
   ];
 
   return (
-    <div className="relative inline-block">
+    <div className="relative nav">
       <button
         onClick={() => setOpen(!open)}
-        className="p-2 rounded-full bg-theme-secondary text-theme-secondary  transition-colors"
+        className={`p-2 text-theme rounded-lg transition-colors  hover:bg-[var(--bg-secondary)]`}
       >
         {themes.find((t) => t.value === theme)?.icon}
       </button>
 
       {open && (
-        <div className="absolute -right-[1px] mt-2 flex flex-col bg-theme text-theme-secondary border border-theme-secondary shadow-lg z-10 rounded">
+        <div
+          className={`absolute left-0 right-0 top-full mt-2 flex flex-col shadow-lg z-10 rounded bg-theme-secondary`}
+        >
           {themes.map((t) => (
             <button
               key={t.value}
               onClick={() => {
-                setTheme(t.value as any);
+                setTheme(t.value);
                 setOpen(false);
               }}
-              className={` w-8 h-8 flex items-center justify-center rounded transition-colors ${
-                theme === t.value
-                  ? "bg-theme-secondary text-theme-secondary  "
-                  : "hover:bg-theme-secondary hover:text-theme-secondary"
-              }`}
+              className={`relative group w-auto h-10  flex items-center justify-center rounded transition-colors text-theme hover:bg-[var(--bg-tertiary)] `}
             >
               {t.icon}
+              {/* Tooltip */}
+              <span
+                className={`absolute left-full ml-2 px-2 py-1 text-xs rounded  opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none bg-[var(--bg-tertiary)] `}
+              >
+                {t.label}
+              </span>
             </button>
           ))}
         </div>
