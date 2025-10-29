@@ -13,6 +13,7 @@ export interface Messages {
     destinations: string;
     flights: string;
     offers: string;
+    blog: string;
     contact: string;
     navigation: string;
     trending: string;
