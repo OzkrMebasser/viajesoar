@@ -85,11 +85,11 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   for (let i = 0; i < 5; i++) {
     if (i < Math.floor(rating)) {
       stars.push(
-        <Star key={i} className="w-4 h-4 fill-teal-400 text-teal-400" />
+        <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
       );
     } else if (i < rating) {
       stars.push(
-        <StarHalf key={i} className="w-4 h-4 fill-teal-400 text-teal-400" />
+        <StarHalf key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
       );
     } else {
       stars.push(<Star key={i} className="w-4 h-4 text-gray-400" />);
@@ -110,7 +110,7 @@ export default function CubeEffectSlider(): React.ReactNode {
   if (!mounted) return null;
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-black via-gray-950 to-black flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12 overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12 overflow-hidden">
       {/* Animated Particles Background */}
       <ParticlesCanvas />
 
@@ -123,7 +123,7 @@ export default function CubeEffectSlider(): React.ReactNode {
           </h1> */}
           <SplitText
             text={locale === "es" ? "Aventuras SOARprendentes" : "SOARprising Tours"}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold text-white mb-4 uppercase"
+            className="text-2xl sm:text-4xl md:text-7xl font-semibold text-theme-tittles mb-4 uppercase"
             delay={100}
             duration={0.6}
             ease="power3.out"
@@ -133,13 +133,13 @@ export default function CubeEffectSlider(): React.ReactNode {
             textAlign="center"
           />
 
-          <p className="text-base sm:text-lg text-gray-200 mb-8 leading-relaxed">
+          <p className="text-base sm:text-lg text-theme mb-8 leading-relaxed">
             Our tours are designed to transport you to the heart of the world's
             most captivating destinations, creating memories that will last a
             lifetime. You can uncover the hidden gems, iconic landmarks, and
             unique cultural treasures that make each destination special.
           </p>
-          <button className="w-fit px-6 py-2 sm:px-8 sm:py-3 bg-teal-500 hover:bg-teal-600 text-black font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+          <button className="w-fit px-6 py-2 sm:px-8 sm:py-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-theme-btn font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
             Explore Tours
             <ArrowRight className="w-4 h-4" />
           </button>

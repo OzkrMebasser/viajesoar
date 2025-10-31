@@ -1,9 +1,6 @@
 "use client";
-
-
-
-
-const dotsColor ="bg-gradient-to-r from-[#14b8a6] via-[#06b6d4] to-[#179bed]";
+import { useTheme } from "@/lib/context/ThemeContext";
+const dotsColor = "bg-gradient-to-r from-[#14b8a6] via-[#06b6d4] to-[#179bed]";
 
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -43,6 +40,7 @@ export default function DestinationsSlide() {
   const locale = useLocale() as Locale;
   const { regions, loading, error } = useDestinationRegions(locale);
   const router = useRouter();
+  const { theme } = useTheme();
 
   const titleRef = useRef<HTMLDivElement>(null);
   const [titleVisible, setTitleVisible] = useState(false);
@@ -78,27 +76,15 @@ export default function DestinationsSlide() {
 
   return (
     <div className="relative lg:min-h-screen py-16 px-4 overflow-hidden bg-gradient-theme">
-        <ParticlesCanvas />
-      {/* <div className="absolute inset-0 z-0">
-        <DotGrid
-          dotSize={6}
-          gap={10}
-          baseColor=""
-          activeColor="#09332e"
-          proximity={120}
-          shockRadius={250}
-          shockStrength={5}
-          resistance={750}
-          returnDuration={2}
-        />
-      </div> */}
+      {/* square particles */}
+      <ParticlesCanvas />
 
       <div className="relative max-w-8xl mx-auto z-20">
         {/* Header */}
         <div className="text-center mb-10" ref={titleRef}>
           <SplitText
             text={locale === "es" ? "Descubre el Mundo" : "Discover the World"}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold text-white mb-4 uppercase"
+            className="text-2xl sm:text-4xl md:text-7xl font-semibold text-theme-tittles mb-4 uppercase"
             delay={100}
             duration={0.6}
             ease="power3.out"
@@ -107,7 +93,9 @@ export default function DestinationsSlide() {
             to={{ opacity: 1, y: 0 }}
             textAlign="center"
           />
-          <p className="text-slate-300 text-sm md:text-xl px-6">
+          <p
+            className={`text-[var(--accent)] text-base md:text-xl px-6`}
+          >
             {locale === "es"
               ? "Explora destinos increíbles alrededor del planeta"
               : "Explore amazing destinations around the world"}
@@ -128,7 +116,7 @@ export default function DestinationsSlide() {
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}
-          className="no-scrollbar"
+          className="no-scrollbar  "
         >
           {regions.map((destination) => {
             const IconComponent = iconMap[destination.icon] || MdTravelExplore;
@@ -136,14 +124,14 @@ export default function DestinationsSlide() {
             return (
               <SwiperSlide
                 key={destination.id}
-                className="min-w-[300px] md:min-w-[350px] rounded-2xl"
+                className="min-w-[300px] md:min-w-[350px] rounded-2xl "
               >
-                <div className="bg-white/5 rounded-2xl shadow-xl overflow-hidden relative group">
-                  <div className="relative h-72">
+                <div className="bg-white/5 rounded-2xl  overflow-hidden relative group   ">
+                  <div className="relative h-80 ">
                     <img
                       src={destination.image}
                       alt={destination.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 "
                       draggable={false}
                     />
                     <div
@@ -162,7 +150,7 @@ export default function DestinationsSlide() {
                         {destination.name}
                       </h3>
                       <p className="text-slate-200 mb-3">
-                        {destination.description} 
+                        {destination.description}
                       </p>
                       <button
                         onClick={() => {

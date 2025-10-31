@@ -61,13 +61,7 @@ const LogoBig = () => {
         <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-theme">
           VIAJE
           <span
-            className={`soar accent ml-[1px] 
-              ${
-                theme === "vibrant"
-                  ? "[text-shadow:_2px_2px_2px_rgba(0,0,0,0.1)]"
-                  : ""
-              }
-            `}
+            className="soar accent ml-[1px]"
           >
             SOAR
           </span>

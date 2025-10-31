@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
+import { useTheme } from "@/lib/context/ThemeContext";
 
 // Particles Canvas Component
 const ParticlesCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0, y: 0 });
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -25,7 +27,16 @@ const ParticlesCanvas: React.FC = () => {
     }> = [];
 
     const particleCount = 7; // máximo 7 partículas
-    const colors = ["#14b8a6", "#0891b2", "#06b6d4", "#0ea5e9", "#179bed"];
+
+    let colors: string[] = [];
+
+    if (theme === "dark") {
+      colors = ["#14b8a6", "#0891b2", "#0d9488", "#0ea5e9", "#01ac9d"];
+    } else if (theme === "light") {
+      colors = ["#0891b2", "#01ac9d", "#0d9488", "#0e7490", "#a8c7e6"];
+    } else {
+      colors = ["#014e7d", "#4af0d8", "#7bd2ff", "#32ff7e", "#4af0d8"];
+    }
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -105,7 +116,7 @@ const ParticlesCanvas: React.FC = () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [theme]);
 
   return <canvas ref={canvasRef} className="absolute inset-0 z-0" />;
 };
