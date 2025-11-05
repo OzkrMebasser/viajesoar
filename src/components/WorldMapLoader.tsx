@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import LittlePlane from "@/components/Airplane/LittlePlane";
 import { useTranslations } from "next-intl";
 
@@ -24,19 +24,15 @@ const WorldMapLoader = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-black via-gray-950 to-black min-h-screen flex flex-col items-center justify-center">
-      <h1 className="slide-in-blurred-top z-50 absolute pb-[22rem] lg:pb-[25rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide  uppercase text-white ">
+    <div className="bg-gradient-theme min-h-screen flex flex-col items-center justify-center">
+      <h1 className="slide-in-blurred-top z-50 absolute pb-[22rem] lg:pb-[25rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide  uppercase text-theme ">
         VIAJE
-        <span className="animate-pulse text-teal-400 drop-shadow-[0_0_3px_black] ml-1">
-          Soar
-        </span>
+        <span className="animate-pulse accent ml-1">Soar</span>
       </h1>
 
-      <h2 className="slide-in-blurred-bottom z-50 absolute pt-[22rem] lg:pt-[7rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide px-6 uppercase text-yellow-500 ">
+      <h2 className="slide-in-blurred-bottom z-50 absolute pt-[22rem] lg:pt-[7rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide px-6 uppercase text-theme ">
         {t("soar1")}
-        <span className=" text-white drop-shadow-[0_0_3px_black] mr-1">
-          Soar
-        </span>
+        <span className=" accent  mr-1">Soar</span>
         {t("soar2")}
       </h2>
 
@@ -44,7 +40,7 @@ const WorldMapLoader = () => {
         <img
           src="/worldMap.png"
           alt="World Map"
-          className="w-full h-auto select-none pointer-events-none "
+          className="w-full h-auto select-none pointer-events-none map-theme"
         />
 
         {locations.map((loc, index) => (
@@ -60,7 +56,7 @@ const WorldMapLoader = () => {
             <div className=" lg:ml-[55px]  px-1.5 py-0.5 rounded-md bg-gray-950/70 backdrop-blur-sm text-white text-[7px] xs:text-[8px] sm:text-xs md:text-sm whitespace-nowrap">
               {loc.name}
             </div>
-            <span className="block rounded-full bg-teal-400 shadow-lg animate-pulse w-[3px] h-[3px] xs:w-[4px] xs:h-[4px] sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 lg:w-3 lg:h-3 ring-[1px] xs:ring-[2px] sm:ring-[3px] md:ring-[4px] ring-teal-400/30"></span>
+            <span className="block rounded-full bg-theme-accent shadow-lg animate-pulse w-[3px] h-[3px] xs:w-[4px] xs:h-[4px] sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 lg:w-3 lg:h-3 ring-[1px] xs:ring-[2px] sm:ring-[3px] md:ring-[4px] ring-[var(--accent)]/30"></span>
           </div>
         ))}
 
@@ -105,7 +101,7 @@ const WorldMapLoader = () => {
         />
         {/* ✈️ Dubai - Bali */}
         <LittlePlane
-          from={{ top: "48%", left: "61%" }}        
+          from={{ top: "48%", left: "61%" }}
           to={{ top: "65%", left: "80%" }}
           duration={28}
         />
@@ -121,7 +117,6 @@ const WorldMapLoader = () => {
           to={{ top: "76%", left: "43%" }}
           duration={40}
         />
-
       </div>
     </div>
   );

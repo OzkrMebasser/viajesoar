@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   Facebook,
@@ -120,7 +120,9 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
       icon: Clock,
       title: t.support24,
       description:
-        locale === "es" ? "Contacta en cualquier momento" : "Contact us anytime",
+        locale === "es"
+          ? "Contacta en cualquier momento"
+          : "Contact us anytime",
     },
     {
       icon: MapPin,
@@ -133,7 +135,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-black via-gray-950 to-black text-white relative overflow-hidden">
+    <footer className="bg-gradient-theme text-theme  relative overflow-hidden">
       {/* Elementos decorativos de fondo */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl" />
@@ -152,14 +154,16 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                     key={idx}
                     className="flex items-start gap-4 group hover:scale-105 transition-all duration-300"
                   >
-                    <div className="p-3 rounded-lg bg-teal-500/10 group-hover:bg-teal-500/20 transition-colors">
-                      <Icon className="w-6 h-6 text-teal-400" />
+                    <div className="p-3 rounded-lg bg-[var(--accent)]/10 group-hover:bg-[var(--accent)]/20 transition-colors">
+                      <Icon className="w-6 h-6 accent" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-100 mb-1">
+                      <h3 className="font-semibold text-theme mb-1">
                         {feature.title}
                       </h3>
-                      <p className="text-sm text-gray-400">{feature.description}</p>
+                      <p className="text-sm text-theme-tittles">
+                        {feature.description}
+                      </p>
                     </div>
                   </div>
                 );
@@ -180,10 +184,10 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   className="w-10 h-10"
                 />
                 <span className="text-xl font-bold tracking-wider">
-                  VIAJE<span className="text-teal-400">SOAR</span>
+                  VIAJE<span className="accent">SOAR</span>
                 </span>
               </div>
-              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+              <p className="text-theme text-sm mb-6 leading-relaxed">
                 {locale === "es"
                   ? "Tu agencia de viajes de confianza para descubrir los mejores destinos del mundo."
                   : "Your trusted travel agency to discover the best destinations worldwide."}
@@ -192,7 +196,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 {[Facebook, Instagram, Twitter, Linkedin].map((Icon, idx) => (
                   <button
                     key={idx}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-teal-500/20 text-gray-400 hover:text-teal-400 transition-all duration-300 transform hover:scale-110"
+                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110"
                     aria-label="Social media"
                   >
                     <Icon className="w-4 h-4" />
@@ -203,8 +207,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-semibold text-gray-100 mb-4 flex items-center gap-2">
-                <div className="w-1 h-5 bg-teal-400 rounded-full" />
+              <h4 className="font-semibold text-theme  mb-4 flex items-center gap-2">
+                <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
                 {t.quickLinks}
               </h4>
               <ul className="space-y-3">
@@ -212,9 +216,9 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   <li key={idx}>
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2 group text-sm"
+                      className="hover:text-[var(--accent)] transition-colors duration-300 flex items-center gap-2 group text-sm"
                     >
-                      <span className="w-0 group-hover:w-2 h-0.5 bg-teal-400 transition-all duration-300" />
+                      <span className="w-0 group-hover:w-2 h-0.5 bg-[var(--accent)] transition-all duration-300" />
                       {link.label}
                     </a>
                   </li>
@@ -224,8 +228,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
 
             {/* Company */}
             <div>
-              <h4 className="font-semibold text-gray-100 mb-4 flex items-center gap-2">
-                <div className="w-1 h-5 bg-teal-400 rounded-full" />
+              <h4 className="font-semibold text-theme mb-4 flex items-center gap-2">
+                <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
                 {t.company}
               </h4>
               <ul className="space-y-3">
@@ -233,9 +237,9 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   <li key={idx}>
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2 group text-sm"
+                      className="text-theme hover:accent transition-colors duration-300 flex items-center gap-2 group text-sm"
                     >
-                      <span className="w-0 group-hover:w-2 h-0.5 bg-teal-400 transition-all duration-300" />
+                      <span className="w-0 group-hover:w-2 h-0.5 bg-[var(--accent)] transition-all duration-300" />
                       {link.label}
                     </a>
                   </li>
@@ -271,7 +275,9 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                  <span className="text-sm text-gray-400">info@viagesoar.com</span>
+                  <span className="text-sm text-gray-400">
+                    info@viagesoar.com
+                  </span>
                 </div>
                 <div className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
@@ -289,7 +295,9 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
               <h3 className="text-2xl font-bold mb-2 text-center">
                 {t.newsletter}
               </h3>
-              <p className="text-gray-400 text-center mb-6">{t.subscribeText}</p>
+              <p className="text-gray-400 text-center mb-6">
+                {t.subscribeText}
+              </p>
 
               <div
                 onSubmit={handleSubscribe}

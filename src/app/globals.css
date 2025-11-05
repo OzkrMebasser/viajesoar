@@ -27,6 +27,7 @@ body {
   --bg: #0f172a;
   --bg-secondary: #1e293b;
   --bg-tertiary: #374151;
+  --bg-accent: #14b8a6;
   --text: #f8fafc;
   --text-tittles: #f8fafc;
   --text-subtittles: #e2e8f0;
@@ -39,9 +40,10 @@ body {
   --accent-secondary: #01ac9d;
   --accent-secondary-hover: #0f766e;
   --border: #334155;
-
+  --map-filter: brightness(1.6) contrast(1.1);
   --gradient: linear-gradient(to bottom, #000000, #080808, #000000);
-
+  --gradient-secondary: linear-gradient(to top, #000000, #100818, #000000);
+  --gradient-tertiary: linear-gradient(to bottom, #080808, #141414, #080808);
 
   /* hex logo */
   /* --cerulean: #0c95ea;
@@ -60,6 +62,7 @@ html[data-theme="light"] {
   --bg: #f1fcfb;
   --bg-secondary: #c2dbf3;
   --bg-tertiary: #a8c7e6;
+  --bg-accent: #0891b2;
   --text: #1e293b;
   --text-secondary: #0d9488;
   --text-tertiary: #94a3b8;
@@ -72,8 +75,11 @@ html[data-theme="light"] {
   --accent-secondary: #01ac9d;
   --accent-secondary-hover: #0f766e;
   --border: #e2e8f0;
+  --map-filter: brightness(0.9) contrast(1.05);
 
   --gradient: linear-gradient(to bottom, #ffffff, #f1f5f9, #ffffff);
+  --gradient-secondary: linear-gradient(to top, #ffffff, #dee6ee, #ffffff);
+  --gradient-tertiary: linear-gradient(to bottom, #f1f5f9, #ffffff, #f1f5f9);
 }
 
 /* Tema vibrant */
@@ -81,6 +87,7 @@ html[data-theme="vibrant"] {
   --bg: #fff7ed;
   --bg-secondary: #014e7d;
   --bg-tertiary: #ffaf40;
+  --bg-accent: #014e7d;
   --text: #fcf9f7;
   --text-secondary: #f33219;
   --text-tertiary: #94a3b8;
@@ -93,9 +100,12 @@ html[data-theme="vibrant"] {
   --accent-secondary: #e2ddda;
   --accent-secondary-hover: #e4c7a6;
   --border: #fed7aa;
-  --gradient: linear-gradient(to top, #ff9f1a, #ffaf40, #ff9f1a);
+  --map-filter: brightness(.5) contrast(1.1) saturate(1.2);
 
-  
+  --gradient: linear-gradient(to top, #ff9f1a, #ffaf40, #ff9f1a);
+  --gradient-secondary: linear-gradient(to bottom, #fdb756, rgb(248, 177, 78), #fdb756);
+  --gradient-tertiary: linear-gradient(to top, #f8a736, #ebaf5b, #f8a736);
+
 }
 
 /* Clases reutilizables */
@@ -110,6 +120,9 @@ html[data-theme="vibrant"] {
 }
 .bg-theme-tertiary {
   background-color: var(--bg-tertiary);
+}
+.bg-theme-accent {
+  background-color: var(--bg-accent);
 }
 .text-theme {
   color: var(--text);
@@ -147,12 +160,21 @@ html[data-theme="vibrant"] {
 .accent-secondary-hover:hover {
   color: var(--accent-secondary-hover);
 }
+.map-theme {
+  filter: var(--map-filter);
+  transition: filter 0.3s ease;
+}
 
 /* Para gradients */
 .bg-gradient-theme {
   background-image: var(--gradient);
 }
-
+.bg-gradient-theme-secondary {
+  background-image: var(--gradient-secondary);
+}
+.bg-gradient-theme-tertiary {
+  background-image: var(--gradient-tertiary);
+}
 /* ----------------- Pattern de fondo ----------------- */
 .pattern {
   position: absolute;
@@ -365,4 +387,25 @@ html[data-theme="vibrant"] {
     filter: blur(0);
     opacity: 1;
   }
+}
+
+.spinner {
+  width: 80px;
+  height: 80px;
+  background-image: url("/VIAJES-soar-logo-blues.png"); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 12px; /* opcional, por si tu logo es cuadrado */
+  animation: rotateplane 1.8s infinite ease-in-out;
+}
+
+@keyframes rotateplane {
+  0% {
+    transform: perspective(360px) rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(720px) rotateX(0deg) rotateY(720deg);
+  }
+ 
 }

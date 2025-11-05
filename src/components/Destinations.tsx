@@ -126,10 +126,10 @@ const Destinations = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">{t.loading}</p>
+          <div className="spinner  rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)] mx-auto mb-4"></div>
+          <p className="text-theme">{t.loading}</p>
         </div>
       </div>
     );
@@ -150,12 +150,13 @@ const Destinations = () => {
   // Render
   // ==============================
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <ToastContainer position="bottom-right" /> {/* 👈 Toast abajo derecha */}
+    <div className="min-h-screen ">
+      <ToastContainer position="bottom-right"   progressClassName="!bg-[var(--accent)]"
+ /> {/* 👈 Toast abajo derecha */}
       
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
-        <div className="max-w-7xl mx-auto">
+      <div className=" bg-gradient-theme text-theme py-16 px-4">
+        <div className="max-w-7xl mx-auto pt-8">
           <h1 className="text-5xl font-bold mb-2">{t.title}</h1>
           <p className="text-lg opacity-90">{t.subtitle}</p>
           <p className="text-sm opacity-75 mt-2">
@@ -165,9 +166,9 @@ const Destinations = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="w-full mx-auto px-6 lg:px-12 py-12 bg-gradient-theme-tertiary">
         {/* Search & Filters */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 space-y-4 ">
           <div className="relative">
             <Search className="absolute left-4 top-3.5 text-slate-400 h-5 w-5" />
             <input

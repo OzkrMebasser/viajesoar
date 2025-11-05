@@ -1,5 +1,6 @@
 "use client";
 import { useTheme } from "@/lib/context/ThemeContext";
+
 const dotsColor = "bg-gradient-to-r from-[#14b8a6] via-[#06b6d4] to-[#179bed]";
 
 import React, { useEffect, useRef, useState } from "react";

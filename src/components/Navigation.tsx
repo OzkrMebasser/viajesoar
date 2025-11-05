@@ -314,14 +314,14 @@ const Navigation = () => {
       <nav
         className={`nav fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out  ${
           isScrolled
-            ? "backdrop-blur-sm bg-gradient-theme text-theme shadow-md"
-            : "text-theme-nav"
+            ? "backdrop-blur-sm bg-gradient-theme text-theme shadow-md  "
+            : "text-theme-nav  "
         }`}
         role="navigation"
         aria-label="Navegación principal"
       >
-        <div className="w-full mx-auto px-4 ">
-          <div className="flex items-center justify-between h-16 ">
+        <div className="w-full mx-auto px-4  ">
+          <div className="flex items-center justify-between h-16  ">
             <button
               type="button"
               onClick={(e) => {
@@ -329,12 +329,12 @@ const Navigation = () => {
                 e.stopPropagation();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className="p-2 rounded-lg transition-all duration-300 relative z-[10000] pointer-events-auto"
+              className="p-2 rounded-lg transition-all duration-300 relative z-[10000] pointer-events-auto  "
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={isMobileMenuOpen ? "true" : "false"}
               aria-controls="mobile-menu"
             >
-              <IndentIncrease className="w-6 h-6 text-nav" />
+              <IndentIncrease className={`w-6 h-6 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
               {/* {isMobileMenuOpen ? (
                 <IndentDecrease className="w-6 h-6 text-green-500 " />
               ) : (
@@ -352,11 +352,11 @@ const Navigation = () => {
             </Link>
 
             {/* Área de íconos a la derecha */}
-            <div className="flex items-center gap-3 relative z-[10000]">
+            <div className="flex items-center gap-3 relative z-[10000] ">
               {/*Boton búsqueda*/}
               <button
                 type="button"
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110  pointer-events-auto z-[10001] hidden md:block"
+                className=" p-2 rounded-full transition-all duration-300 hover:scale-110  pointer-events-auto z-[10001] hidden md:block"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -364,7 +364,7 @@ const Navigation = () => {
                 }}
                 aria-label="Buscar"
               >
-                <Search className="w-5 h-5 text-nav" />
+                <Search className={`w-5 h-5 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
               </button>
               {/*Boton idioma*/}
               <button
@@ -373,7 +373,7 @@ const Navigation = () => {
                 className="p-2 rounded-full transition-all duration-300 hover:scale-110  pointer-events-auto z-[10001] hidden md:block"
                 aria-label="Cambiar idioma"
               >
-                <Globe className="w-5 h-5" />
+                <Globe className={`w-5 h-5 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
               </button>
               {/* 🎨 Selector de tema con <select> y emojis */}
 
@@ -391,7 +391,7 @@ const Navigation = () => {
                     className="p-2 rounded-full transition-all duration-300 hover:scale-110  hover:bg-white/90 pointer-events-auto z-[10002]"
                     aria-label="Iniciar sesión"
                   >
-                    <User className="w-5 h-5 text-nav" />
+                    <User className={`w-5 h-5 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
                   </button>
                 )}
               </div>
@@ -561,7 +561,7 @@ const Navigation = () => {
             </div> */}
 
             {/* Navigation Items */}
-            <div className="space-y-12 lg:space-y-6  relative z-50">
+            <div className="space-y-12 lg:space-y-6  relative z-50 ">
               {navItems.map((item, index) => (
                 <Link
                   key={index}
