@@ -1,13 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { MessageCircle, Mail, MessageCircleMore, Send, X } from 'lucide-react';
+import { useState } from "react";
+import { MessageCircle, Mail, MessageCircleMore, Send, X } from "lucide-react";
 
 interface ContactButtonConfig {
   id: string;
   icon: React.ReactNode;
-  color: string;
-  hoverColor: string;
   href: string;
 }
 
@@ -16,25 +14,22 @@ export default function FloatingContactBot() {
 
   const contactButtons: ContactButtonConfig[] = [
     {
-      id: 'email',
+      id: "email",
       icon: <Mail size={20} />,
-      color: 'bg-white/5',
-      hoverColor: 'hover:bg-teal-500/20 hover:text-teal-400',
-      href: 'mailto:contacto@ejemplo.com',
+
+      href: "mailto:contacto@ejemplo.com",
     },
     {
-      id: 'messenger',
+      id: "messenger",
       icon: <MessageCircleMore size={20} />,
-      color: 'bg-white/5',
-      hoverColor: 'hover:bg-teal-500/20 hover:text-teal-400',
-      href: 'https://m.me/tu-pagina',
+
+      href: "https://m.me/tu-pagina",
     },
     {
-      id: 'whatsapp',
+      id: "whatsapp",
       icon: <Send size={20} />,
-      color: 'bg-white/5',
-      hoverColor: 'hover:bg-teal-500/20 hover:text-teal-400',
-      href: 'https://wa.me/+5491234567890',
+
+      href: "https://wa.me/+5491234567890",
     },
   ];
 
@@ -43,7 +38,7 @@ export default function FloatingContactBot() {
   };
 
   const handleContactClick = (href: string) => {
-    window.open(href, '_blank');
+    window.open(href, "_blank");
     setIsOpen(false);
   };
 
@@ -57,7 +52,7 @@ export default function FloatingContactBot() {
               <button
                 key={btn.id}
                 onClick={() => handleContactClick(btn.href)}
-                className={`${btn.color} ${btn.hoverColor} text-gray-400 rounded-full shadow-md transition-all duration-300 transform hover:scale-110 w-12 h-12 flex items-center justify-center`}
+                className={`bg-theme-tertiary text-[var(--accent)] hover:text-[var(--text-secondary)] border border-[var(--accent)] rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 w-12 h-12 flex items-center justify-center`}
                 style={{
                   animation: `slideUp 0.3s ease-out ${index * 0.08}s both`,
                 }}
@@ -73,15 +68,13 @@ export default function FloatingContactBot() {
         <button
           onClick={toggleMenu}
           className={`${
-            isOpen ? 'bg-teal-500/20 text-teal-400' : 'bg-teal-400 text-black hover:bg-teal-500/20 hover:text-teal-400'
+            isOpen
+              ? "bg-theme-accent text-theme-btn rotate-180 "
+              : "hover:rotate-12 bg-theme-accent text-theme-btn hover:bg-[var(--bg-accent)]/20 hover:text-theme-btn"
           } rounded-full shadow-md transition-all duration-300 transform hover:scale-110 flex items-center justify-center w-12 h-12`}
           aria-label="Abrir menú de contacto"
         >
-          {isOpen ? (
-            <X size={20} />
-          ) : (
-            <MessageCircle size={20} />
-          )}
+          {isOpen ? <X size={20} /> : <MessageCircle size={20} />}
         </button>
       </div>
 

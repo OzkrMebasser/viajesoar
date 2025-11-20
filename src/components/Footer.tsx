@@ -13,6 +13,7 @@ import {
   Plane,
   Clock,
 } from "lucide-react";
+import ButtonArrow from "./ui/ButtonArrow";
 
 type Locale = "es" | "en";
 
@@ -144,7 +145,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
 
       <div className="relative z-10">
         {/* Features Section */}
-        <div className="border-b border-gray-800 px-4 py-16 sm:py-20">
+        <div className="border-b border-theme px-4 py-16 sm:py-20">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {features.map((feature, idx) => {
@@ -173,7 +174,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
         </div>
 
         {/* Main Content */}
-        <div className="px-4 py-16 sm:py-20">
+        <div className="px-4 py-16 sm:py-20 ">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Logo Section */}
             <div className="lg:col-span-1">
@@ -196,7 +197,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 {[Facebook, Instagram, Twitter, Linkedin].map((Icon, idx) => (
                   <button
                     key={idx}
-                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110"
+                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                     aria-label="Social media"
                   >
                     <Icon className="w-4 h-4" />
@@ -237,7 +238,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   <li key={idx}>
                     <a
                       href={link.href}
-                      className="text-theme hover:accent transition-colors duration-300 flex items-center gap-2 group text-sm"
+                      className="hover:text-[var(--accent)] transition-colors duration-300 flex items-center gap-2 group text-sm"
                     >
                       <span className="w-0 group-hover:w-2 h-0.5 bg-[var(--accent)] transition-all duration-300" />
                       {link.label}
@@ -249,8 +250,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
 
             {/* Support & Contact */}
             <div>
-              <h4 className="font-semibold text-gray-100 mb-4 flex items-center gap-2">
-                <div className="w-1 h-5 bg-teal-400 rounded-full" />
+              <h4 className="font-semibold text-theme mb-4 flex items-center gap-2">
+                <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
                 {t.support}
               </h4>
               <ul className="space-y-3 mb-6">
@@ -258,9 +259,9 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   <li key={idx}>
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2 group text-sm"
+                      className="hover:text-[var(--accent)] transition-colors duration-300 flex items-center gap-2 group text-sm"
                     >
-                      <span className="w-0 group-hover:w-2 h-0.5 bg-teal-400 transition-all duration-300" />
+                      <span className="w-0 group-hover:w-2 h-0.5 bg-[var(--accent)] transition-all duration-300" />
                       {link.label}
                     </a>
                   </li>
@@ -269,19 +270,39 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
 
               {/* Contact Info */}
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                  <span className="text-sm text-gray-400">+1 234 567 890</span>
+                <div className="flex items-center gap-3 text-theme">
+                  {/* <Phone className="w-4 h-4 text-[var(--accent)] flex-shrink-0" /> */}
+                  <button
+                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                    aria-label="Telephone number"
+                  >
+                    <Phone className="w-4 h-4" />
+                  </button>
+                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
+                    +1 234 567 890
+                  </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                  <span className="text-sm text-gray-400">
+                <div className="flex items-center gap-3 text-theme">
+                  {/* <Mail className="w-4 h-4 text-[var(--accent)] flex-shrink-0" /> */}
+                     <button
+                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                    aria-label="Email address"
+                  >
+                    <Mail className="w-4 h-4" />
+                  </button>
+                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
                     info@viagesoar.com
                   </span>
                 </div>
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-400">
+                <div className="flex items-start gap-3 text-theme">
+                  {/* <MapPin className="w-4 h-4 text-[var(--accent)] flex-shrink-0 mt-0.5" /> */}
+                       <button
+                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                    aria-label="Location"
+                  >
+                    <MapPin className="w-4 h-4" />
+                  </button>
+                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
                     La Paz, Baja California Sur, MX
                   </span>
                 </div>
@@ -290,12 +311,12 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
           </div>
 
           {/* Newsletter Section */}
-          <div className="border-t border-gray-800 pt-12 mt-8">
+          <div className="border-t border-theme pt-12 mt-8">
             <div className="max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold mb-2 text-center">
+              <h3 className="text-2xl font-bold mb-2 text-center text-theme">
                 {t.newsletter}
               </h3>
-              <p className="text-gray-400 text-center mb-6">
+              <p className="text-[var(--accent)] text-base md:text-xl text-center mb-6">
                 {t.subscribeText}
               </p>
 
@@ -309,11 +330,11 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                     placeholder={t.emailPlaceholder}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-teal-400 transition-colors"
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-[var(--accent)] text-theme placeholder-gray-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
                     required
                   />
                 </div>
-                <button
+                {/* <button
                   onClick={() => {
                     if (email) {
                       setSubscribed(true);
@@ -325,11 +346,21 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 >
                   {t.subscribe}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
+                </button> */}
+                <ButtonArrow
+                  title={t.subscribe}
+                  onClick={() => {
+                    if (email) {
+                      setSubscribed(true);
+                      setEmail("");
+                      setTimeout(() => setSubscribed(false), 3000);
+                    }
+                  }}
+                />
               </div>
 
               {subscribed && (
-                <p className="text-center text-teal-400 text-sm mt-3 animate-pulse">
+                <p className="text-center text-[var(--accent)] text-base mt-3 animate-pulse">
                   ✓{" "}
                   {locale === "es"
                     ? "¡Gracias por suscribirse!"
@@ -341,14 +372,16 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 px-4 py-8">
+        <div className="border-t border-theme px-4 py-8 lg:px-24">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-gray-400 text-sm flex items-center gap-2">
-              © 2024 ViajeSoar. {t.allRights}.
+            <p className="text-theme text-sm flex items-center gap-2">
+              © {new Date().getFullYear()} <span className=" tracking-wider">
+                  VIAJE<span className="accent ml-[1px]">SOAR </span>
+                </span>   {t.allRights}.
             </p>
-            <p className="text-gray-400 text-sm flex items-center gap-1">
+            <p className="text-theme text-sm flex items-center gap-1">
               {t.madeWith}{" "}
-              <Heart className="w-4 h-4 text-teal-400 fill-current" /> para los
+              <Heart className="w-4 h-4 text-[var(--accent)] fill-current" /> para los
               viajeros
             </p>
           </div>

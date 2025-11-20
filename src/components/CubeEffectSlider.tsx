@@ -10,6 +10,7 @@ import SplitText from "./SplitText";
 import "swiper/css";
 import "swiper/css/effect-cube";
 import ParticlesCanvas from "./ParticlesCanvas";
+import ButtonArrow from "./ui/ButtonArrow";
 
 
 type Locale = "es" | "en";
@@ -139,10 +140,12 @@ export default function CubeEffectSlider(): React.ReactNode {
             lifetime. You can uncover the hidden gems, iconic landmarks, and
             unique cultural treasures that make each destination special.
           </p>
-          <button className="w-fit px-6 py-2 sm:px-8 sm:py-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-theme-btn font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+          {/* <button className="w-fit px-6 py-2 sm:px-8 sm:py-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-theme-btn font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2 hover:gap-3">
             Explore Tours
-            <ArrowRight className="w-4 h-4" />
-          </button>
+            <ArrowRight className="w-4 h-4 " />
+          </button> */}
+
+          <ButtonArrow title={locale === "es" ? "Explorar Tours" : "Explore Tours"} />
         </div>
 
         {/* Swiper Slider */}
