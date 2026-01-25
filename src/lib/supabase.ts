@@ -21,5 +21,5 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 // Para debug - verifica que el cliente se cree correctamente
 // console.log("Supabase URL:", supabaseUrl);
-console.log("Supabase Key exists:", !!supabaseAnonKey);
-console.log("Supabase client created:", !!supabase);
+// console.log("Supabase Key exists:", !!supabaseAnonKey);
+// console.log("Supabase client created:", !!supabase);

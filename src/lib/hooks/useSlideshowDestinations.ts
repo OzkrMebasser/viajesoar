@@ -57,6 +57,7 @@ export function useSlideshowDestinations(lang: 'es' | 'en' = 'es') {
 
     fetchDestinations();
   }, [lang]);
+  
 
   return { destinations, loading, error };
 }
@@ -64,49 +65,49 @@ export function useSlideshowDestinations(lang: 'es' | 'en' = 'es') {
 // ===============================
 // FUNCIONES CRUD PARA ADMIN
 // ===============================
-export async function createSlideshowDestination(destination: SlideshowDestination & { locale: 'es' | 'en', orderIndex: number }) {
-  const { data, error } = await supabase
-    .from('travel_slideshow_destinations')
-    .insert([{
-      locale: destination.locale,
-      place: destination.place,
-      country: destination.country,
-      title: destination.title,
-      title2: destination.title2,
-      description: destination.description,
-      image: destination.image,
-      order_index: destination.orderIndex,
-    }])
-    .select();
+// export async function createSlideshowDestination(destination: SlideshowDestination & { locale: 'es' | 'en', orderIndex: number }) {
+//   const { data, error } = await supabase
+//     .from('travel_slideshow_destinations')
+//     .insert([{
+//       locale: destination.locale,
+//       place: destination.place,
+//       country: destination.country,
+//       title: destination.title,
+//       title2: destination.title2,
+//       description: destination.description,
+//       image: destination.image,
+//       order_index: destination.orderIndex,
+//     }])
+//     .select();
 
-  if (error) throw error;
-  return data;
-}
+//   if (error) throw error;
+//   return data;
+// }
 
-export async function updateSlideshowDestination(id: string, updates: Partial<SlideshowDestination>) {
-  const { data, error } = await supabase
-    .from('travel_slideshow_destinations')
-    .update({
-      place: updates.place,
-      country: updates.country,
-      title: updates.title,
-      title2: updates.title2,
-      description: updates.description,
-      image: updates.image,
-      order_index: updates.orderIndex,
-    })
-    .eq('id', id)
-    .select();
+// export async function updateSlideshowDestination(id: string, updates: Partial<SlideshowDestination>) {
+//   const { data, error } = await supabase
+//     .from('travel_slideshow_destinations')
+//     .update({
+//       place: updates.place,
+//       country: updates.country,
+//       title: updates.title,
+//       title2: updates.title2,
+//       description: updates.description,
+//       image: updates.image,
+//       order_index: updates.orderIndex,
+//     })
+//     .eq('id', id)
+//     .select();
 
-  if (error) throw error;
-  return data;
-}
+//   if (error) throw error;
+//   return data;
+// }
 
-export async function deleteSlideshowDestination(id: string) {
-  const { error } = await supabase
-    .from('travel_slideshow_destinations')
-    .update({ is_active: false })
-    .eq('id', id);
+// export async function deleteSlideshowDestination(id: string) {
+//   const { error } = await supabase
+//     .from('travel_slideshow_destinations')
+//     .update({ is_active: false })
+//     .eq('id', id);
 
-  if (error) throw error;
-}
+//   if (error) throw error;
+// }

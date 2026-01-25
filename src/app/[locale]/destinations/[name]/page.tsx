@@ -15,7 +15,7 @@ export default function DestinationPage() {
   if (!destination) return <div>No se encontró el destino</div>;
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-amber-700">
       <h1 className="text-4xl font-bold">{destination.name}</h1>
       <p>{destination.description}</p>
       <img src={destination.image} alt={destination.name} className="mt-4 rounded" />

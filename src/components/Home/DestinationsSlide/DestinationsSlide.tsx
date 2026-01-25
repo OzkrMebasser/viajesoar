@@ -20,7 +20,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
-import { useDestinationRegions } from "@/lib/hooks/useDestinations";
+import { useDestinationRegions, useCountriesByRegion } from "@/lib/hooks/useDestinations";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
 
 // Icon map
@@ -40,6 +40,8 @@ type Locale = "es" | "en";
 export default function DestinationsSlide() {
   const locale = useLocale() as Locale;
   const { regions, loading, error } = useDestinationRegions(locale);
+  const { countries } = useCountriesByRegion(locale);
+  console.log('countries', countries);
   const router = useRouter();
   const { theme } = useTheme();
 
@@ -64,7 +66,7 @@ export default function DestinationsSlide() {
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
-        {locale === "es" ? "Cargando destinos..." : "Loading destinations..."}
+        {locale === "es" ? "Cargando regiones..." : "Loading destinations..."}
       </div>
     );
 
@@ -119,6 +121,7 @@ export default function DestinationsSlide() {
           }}
           className="no-scrollbar  "
         >
+          {/*Regions map */}
           {regions.map((destination) => {
             const IconComponent = iconMap[destination.icon] || MdTravelExplore;
 
