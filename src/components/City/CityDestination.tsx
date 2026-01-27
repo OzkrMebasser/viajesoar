@@ -14,14 +14,14 @@ export default function CityDestination() {
 
   // 1️⃣ Ciudad / destino
   const { destination, loading: destinationLoading, error: destinationError } = useCityBySlug(citySlug, locale);
-
+console.log("Destination", destination)
   // 2️⃣ País (solo para validar jerarquía y mostrar info)
   const { country, loading: countryLoading } = useCountryBySlug(countrySlug, locale);
-
+console.log("Country", country)
   // 3️⃣ Actividades
 const { activities, loading: activitiesLoading } = useActivitiesByDestination(destination?.id || "", locale);
 
-  console.log("Activities", activities.map(a => a.name));
+  console.log("Activities", activities.map(a => a.destination_id));
   // ================= LOADING =================
   if (destinationLoading || countryLoading) {
     return (
