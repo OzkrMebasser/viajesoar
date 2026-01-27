@@ -28,7 +28,8 @@ export interface DestinationCountry {
   region_id: string;
   order_index: number;
   is_active: boolean;
-  created_at: string;
+  // created_at: string;
+
 }
 
 export interface Destination {
@@ -49,6 +50,7 @@ export interface Destination {
   is_featured: boolean;
   is_active: boolean;
 }
+
 
 export interface Activity {
   id: string;
@@ -199,7 +201,7 @@ export function useCountryBySlug(slug: string, locale: "es" | "en" = "es") {
  */
 export function useCountriesByRegion(
   regionId?: string,
-  locale: "es" | "en" = "es",
+  locale: "es" | "en" = "es"
 ) {
   const [countries, setCountries] = useState<DestinationCountry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -208,7 +210,7 @@ export function useCountriesByRegion(
   const isUUID =
     typeof regionId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      regionId,
+      regionId
     );
 
   useEffect(() => {
@@ -226,22 +228,18 @@ export function useCountriesByRegion(
         setError(null);
 
         const { data, error } = await supabase
-          .from("destinations")
-          .select(
-            `
-    id,
-    name,
-    slug,
-    description,
-    image,
-    region_id,
-    locale,
-    is_active,
-    order_index,
-    created_at
-  `,
-          )
-
+          .from("destinations_countries")
+          .select(`
+            id,
+            name,
+            slug,
+            description,
+            image,
+            region_id,
+            locale,
+            is_active,
+            order_index
+          `)
           .eq("region_id", regionId)
           .eq("locale", locale)
           .eq("is_active", true)
@@ -346,7 +344,7 @@ export const useDestinations = (locale: "es" | "en" = "es") => {
           const formatted = data.map((d: any) => ({
             ...d,
             highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(
-              Boolean,
+              Boolean
             ),
           }));
           setDestinations(formatted);
@@ -371,7 +369,7 @@ export const useDestinations = (locale: "es" | "en" = "es") => {
 
 export function useDestinationsByRegion(
   region_id: string,
-  locale: "es" | "en" = "es",
+  locale: "es" | "en" = "es"
 ) {
   const [countries, setCountries] = useState<
     (DestinationCountry & { destinations: Destination[] })[]
@@ -389,8 +387,7 @@ export function useDestinationsByRegion(
 
         const { data, error } = await supabase
           .from("destinations")
-          .select(
-            `
+          .select(`
             *,
             country:country_id (
               id,
@@ -400,8 +397,7 @@ export function useDestinationsByRegion(
               image,
               region_id
             )
-          `,
-          )
+          `)
           .eq("locale", locale)
           .eq("is_active", true)
           .order("name", { ascending: true });
@@ -414,7 +410,7 @@ export function useDestinationsByRegion(
         }
 
         const filtered = data.filter(
-          (d: any) => d.country && d.country.region_id === region_id,
+          (d: any) => d.country && d.country.region_id === region_id
         );
 
         const countriesMap: Record<
@@ -438,7 +434,7 @@ export function useDestinationsByRegion(
         const result = Object.values(countriesMap).map((country) => ({
           ...country,
           destinations: country.destinations.sort((a, b) =>
-            a.name.localeCompare(b.name),
+            a.name.localeCompare(b.name)
           ),
         }));
 
@@ -457,16 +453,17 @@ export function useDestinationsByRegion(
   return { countries, loading, error };
 }
 
+
 /**
  * 
 
  */
 
-/* =====================================================
+ /* =====================================================
     DESTINOS ACTIVIDADES
    ===================================================== */
 
-export function useActivityBySlug(slug: string, locale: "es" | "en") {
+ export function useActivityBySlug(slug: string, locale: "es" | "en") {
   const [activity, setActivity] = useState<Activity | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -503,10 +500,7 @@ export function useActivityBySlug(slug: string, locale: "es" | "en") {
   return { activity, loading, error };
 }
 
-export function useActivitiesByDestination(
-  destinationId: string,
-  locale: "es" | "en",
-) {
+export function useActivitiesByDestination(destinationId: string, locale: "es" | "en") {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -528,14 +522,7 @@ export function useActivitiesByDestination(
           // .eq("is_active", true) // temporalmente comentalo
           .order("name", { ascending: true });
 
-        console.log(
-          "🚀 Fetched activities for",
-          destinationId,
-          ":",
-          data,
-          "Error:",
-          error,
-        );
+        console.log("🚀 Fetched activities for", destinationId, ":", data, "Error:", error);
 
         if (error) throw error;
         setActivities(data || []);
@@ -560,17 +547,19 @@ export function useActivitiesByDestination(
 
 export async function searchDestinations(
   query: string,
-  lang: "es" | "en" = "es",
+  lang: "es" | "en" = "es"
 ) {
   const nameField = lang === "es" ? "name_es" : "name_en";
   const countryField = lang === "es" ? "country_es" : "country_en";
-  const descriptionField = lang === "es" ? "description_es" : "description_en";
+  const descriptionField = lang === "es"
+    ? "description_es"
+    : "description_en";
 
   const { data, error } = await supabase
     .from("destinations")
     .select("*")
     .or(
-      `${nameField}.ilike.%${query}%,${countryField}.ilike.%${query}%,${descriptionField}.ilike.%${query}%`,
+      `${nameField}.ilike.%${query}%,${countryField}.ilike.%${query}%,${descriptionField}.ilike.%${query}%`
     )
     .eq("is_active", true);
 
@@ -580,7 +569,7 @@ export async function searchDestinations(
 
 export async function getDestinationsByCategory(
   categorySlug: string,
-  lang: "es" | "en" = "es",
+  lang: "es" | "en" = "es"
 ) {
   const { data, error } = await supabase
     .from("destinations")
