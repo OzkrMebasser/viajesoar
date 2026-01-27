@@ -1,9 +1,8 @@
-import Destinations from "@/components/Destinations";
-
+import RegionDestination from "@/components/Region/RegionDestination";
 const DestinationsPage = () => {
   return (
     <main>
-      <Destinations />
+      <RegionDestination />
     </main>
   );
 };

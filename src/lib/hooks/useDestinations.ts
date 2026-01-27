@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-// ============================================
-// TIPOS
-// ============================================
+/* =====================================================
+   TIPOS (MODELOS DE DATOS)
+   ===================================================== */
 
 export interface DestinationRegion {
-  id: number;
+  id: string;
   name: string;
   description: string;
   image: string;
@@ -16,6 +16,19 @@ export interface DestinationRegion {
   is_active: boolean;
   order_index?: number;
   slug: string;
+}
+
+export interface DestinationCountry {
+  id: string;
+  locale: "es" | "en";
+  name: string;
+  slug: string;
+  description: string;
+  image: string;
+  region_id: string;
+  order_index: number;
+  is_active: boolean;
+  created_at: string;
 }
 
 export interface Destination {
@@ -32,27 +45,33 @@ export interface Destination {
   category: string;
   slug: string;
   highlights: string[];
+  country_id: string;
   is_featured: boolean;
   is_active: boolean;
 }
 
-export interface DestinationCountry {
+
+export interface Activity {
   id: string;
-  locale: "es" | "en";
+  locale: string;
   name: string;
   slug: string;
   description: string;
-  image: string;
-  region_id: string;
-  order_index: number;
+  category: "tour" | "free-activity";
+  price: number | null;
+  photos: string[];
+  destination_id: string;
   is_active: boolean;
-  created_at: string;
 }
 
-// ============================================
-// HOOK PARA DESTINOS DE REGIONES HOME (Slider)
-// ============================================
+/* =====================================================
+   REGIONES (HOME / SLIDER / LANDING)
+   ===================================================== */
 
+/**
+ * Obtiene todas las regiones activas por idioma
+ * Usado en Home / Landing
+ */
 export function useDestinationRegions(locale: "es" | "en" = "es") {
   const [regions, setRegions] = useState<DestinationRegion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,14 +83,13 @@ export function useDestinationRegions(locale: "es" | "en" = "es") {
         setLoading(true);
 
         const { data, error } = await supabase
-         
           .from("destinations_regions")
           .select("*")
           .eq("locale", locale)
           .eq("is_active", true)
           .order("order_index", { ascending: true });
 
-          console.log("Regions...", data)
+        // console.log("Regions...", data);
 
         if (error) throw error;
 
@@ -90,10 +108,14 @@ export function useDestinationRegions(locale: "es" | "en" = "es") {
   return { regions, loading, error };
 }
 
-// ============================================
-// HOOK PARA URL POR NOMBRE
-// ============================================
+/* =====================================================
+   REGIÓN INDIVIDUAL (POR SLUG)
+   ===================================================== */
 
+/**
+ * Obtiene UNA región por slug (URL)
+ * /destinos/[regionSlug]
+ */
 export function useDestinationBySlug(slug: string, locale: string) {
   const [destination, setDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -127,43 +149,15 @@ export function useDestinationBySlug(slug: string, locale: string) {
   return { destination, loading, error };
 }
 
-export function useDestinationByName(name: string, locale: string) {
-  const [destination, setDestination] = useState<Destination | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+/* =====================================================
+   PAÍSES
+   ===================================================== */
 
-  useEffect(() => {
-    async function fetchDestination() {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from("destinations_regions")
-          .select("*")
-          .eq("slug", name)
-          .eq("locale", locale)
-          .single();
-
-        if (error) throw error;
-        setDestination(data || null);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (name) fetchDestination();
-  }, [name, locale]);
-
-  return { destination, loading, error };
-}
-
-
-// HOOK PARA PAÍSES POR SLUG
-export function useCountryBySlug(
-  slug: string,
-  locale: "es" | "en" = "es"
-) {
+/**
+ * Obtiene un país por slug
+ * /destinos/[region]/[country]
+ */
+export function useCountryBySlug(slug: string, locale: "es" | "en" = "es") {
   const [country, setCountry] = useState<DestinationCountry | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -200,38 +194,63 @@ export function useCountryBySlug(
   return { country, loading, error };
 }
 
-// HOOK PARA PAÍSES POR REGIÓN
-
+/**
+ * Obtiene países por región (UUID)
+ * /destinos/[region]
+ */
 export function useCountriesByRegion(
-  regionId: string,
+  regionId?: string,
   locale: "es" | "en" = "es"
 ) {
   const [countries, setCountries] = useState<DestinationCountry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isUUID =
+    typeof regionId === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      regionId
+    );
+
   useEffect(() => {
-    if (!regionId) return;
+    if (!isUUID) {
+      console.warn("⛔ regionId inválido:", regionId);
+      setCountries([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
 
     async function fetchCountries() {
       try {
         setLoading(true);
+        setError(null);
 
         const { data, error } = await supabase
-       
           .from("destinations_countries")
-          .select("*")
-          // .eq("region_id", regionId)
+          .select(`
+            id,
+            name,
+            slug,
+            description,
+            image,
+            region_id,
+            locale,
+            is_active,
+            order_index
+          `)
+          .eq("region_id", regionId)
           .eq("locale", locale)
           .eq("is_active", true)
           .order("order_index", { ascending: true });
- console.log(data)
+
         if (error) throw error;
 
-        setCountries(data || []);
-      } catch (err: any) {
-        console.error("Error fetching countries:", err);
-        setError(err.message);
+        setCountries(data ?? []);
+      } catch (err) {
+        console.error("❌ Error fetching countries:", err);
+        setError("No se pudieron cargar los países");
+        setCountries([]);
       } finally {
         setLoading(false);
       }
@@ -240,16 +259,68 @@ export function useCountriesByRegion(
     fetchCountries();
   }, [regionId, locale]);
 
-  return { countries, loading, error };
+  return {
+    countries,
+    loading,
+    error,
+    isEmpty: !loading && countries.length === 0,
+  };
 }
 
+/* =====================================================
+   CIUDADES / DESTINOS INDIVIDUALES
+   ===================================================== */
 
-// ============================================
-// HOOK PARA DESTINOS DETALLADOS - FIXED
-// ============================================
+/**
+ * Obtiene una ciudad / destino por slug
+ * /destinos/[region]/[country]/[city]
+ */
+export function useCityBySlug(slug: string, locale: "es" | "en") {
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-// lib/hooks/useDestinations.ts
+  useEffect(() => {
+    if (!slug) return;
 
+    async function fetchCity() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const { data, error } = await supabase
+          .from("destinations")
+          .select("*")
+          .eq("slug", slug)
+          .eq("locale", locale)
+          .eq("is_active", true)
+          .single();
+
+        if (error) throw error;
+
+        setDestination(data);
+      } catch (err: any) {
+        console.error("❌ Error fetching city:", err);
+        setError(err.message || "Error loading city");
+        setDestination(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCity();
+  }, [slug, locale]);
+
+  return { destination, loading, error };
+}
+
+/* =====================================================
+   DESTINOS (LISTADOS GENERALES)
+   ===================================================== */
+
+/**
+ * Obtiene todos los destinos activos por idioma
+ */
 export const useDestinations = (locale: "es" | "en" = "es") => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
@@ -271,7 +342,9 @@ export const useDestinations = (locale: "es" | "en" = "es") => {
         if (data) {
           const formatted = data.map((d: any) => ({
             ...d,
-            highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(Boolean),
+            highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(
+              Boolean
+            ),
           }));
           setDestinations(formatted);
         }
@@ -289,156 +362,197 @@ export const useDestinations = (locale: "es" | "en" = "es") => {
   return { destinations, loading, error };
 };
 
+/* =====================================================
+   DESTINOS AGRUPADOS POR REGIÓN → PAÍSES → CIUDADES
+   ===================================================== */
 
-// ============================================
-// CRUD Y FUNCIONES AUXILIARES
-// ============================================
-// CREATE REGION
-// export async function createRegion(
-//   region: Omit<DestinationRegion, "id"> & { orderIndex: number }
-// ) {
-//   const { data, error } = await supabase
-//     .from("destinations_regions")
-//     .insert([
-//       {
-//         name_es: region.name,
-//         name_en: region.name,
-//         icon: region.icon,
-//         image: region.image,
-//         gradient: region.gradient,
-//         description_es: region.description,
-//         description_en: region.description,
-//         order_index: region.orderIndex,
-//       },
-//     ])
-//     .select();
+export function useDestinationsByRegion(
+  region_id: string,
+  locale: "es" | "en" = "es"
+) {
+  const [countries, setCountries] = useState<
+    (DestinationCountry & { destinations: Destination[] })[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-//   if (error) throw error;
-//   return data;
-// }
+  useEffect(() => {
+    if (!region_id) return;
 
-// CREATE DESTINATION
-// export async function createDestination(
-//   destination: Omit<Destination, "id">,
-//   categorySlug: string
-// ) {
-//   const { data: category } = await supabase
-//     .from("destination_categories")
-//     .select("id")
-//     .eq("slug", categorySlug)
-//     .single();
+    async function fetchData() {
+      try {
+        setLoading(true);
+        setError(null);
 
-//   if (!category) throw new Error("Categoría no encontrada");
+        const { data, error } = await supabase
+          .from("destinations")
+          .select(`
+            *,
+            country:country_id (
+              id,
+              name,
+              slug,
+              description,
+              image,
+              region_id
+            )
+          `)
+          .eq("locale", locale)
+          .eq("is_active", true)
+          .order("name", { ascending: true });
 
-//   const { data: newDest, error: destError } = await supabase
-//     .from("destinations")
-//     .insert([
-//       {
-//         name_es: destination.name,
-//         name_en: destination.name,
-//         country_es: destination.country,
-//         country_en: destination.country,
-//         image: destination.image,
-//         price: destination.price,
-//         rating: destination.rating,
-//         reviews: destination.reviews,
-//         duration_es: destination.duration,
-//         duration_en: destination.duration,
-//         description_es: destination.description,
-//         description_en: destination.description,
-//         category_id: category.id,
-//       },
-//     ])
-//     .select()
-//     .single();
+        if (error) throw error;
 
-//   if (destError) throw destError;
+        if (!data) {
+          setCountries([]);
+          return;
+        }
 
-//   if (destination.highlights.length > 0) {
-//     const highlightsToInsert = destination.highlights.map(
-//       (highlight, index) => ({
-//         destination_id: newDest.id,
-//         highlight_es: highlight,
-//         highlight_en: highlight,
-//         order_index: index + 1,
-//       })
-//     );
+        const filtered = data.filter(
+          (d: any) => d.country && d.country.region_id === region_id
+        );
 
-//     const { error: highlightsError } = await supabase
-//       .from("destination_highlights")
-//       .insert(highlightsToInsert);
+        const countriesMap: Record<
+          string,
+          DestinationCountry & { destinations: Destination[] }
+        > = {};
 
-//     if (highlightsError) throw highlightsError;
-//   }
+        filtered.forEach((dest: any) => {
+          const country = dest.country;
 
-//   return newDest;
-// }
+          if (!countriesMap[country.id]) {
+            countriesMap[country.id] = {
+              ...country,
+              destinations: [],
+            };
+          }
 
-//UPDATE DESTINATION
-// export async function updateDestination(
-//   id: string,
-//   updates: Partial<Destination>
-// ) {
-//   const { data, error } = await supabase
-//     .from("destinations")
-//     .update({
-//       name_es: updates.name,
-//       name_en: updates.name,
-//       country_es: updates.country,
-//       country_en: updates.country,
-//       image: updates.image,
-//       price: updates.price,
-//       rating: updates.rating,
-//       reviews: updates.reviews,
-//       duration_es: updates.duration,
-//       duration_en: updates.duration,
-//       description_es: updates.description,
-//       description_en: updates.description,
-//     })
-//     .eq("id", id)
-//     .select();
+          countriesMap[country.id].destinations.push(dest);
+        });
 
-//   if (error) throw error;
+        const result = Object.values(countriesMap).map((country) => ({
+          ...country,
+          destinations: country.destinations.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          ),
+        }));
 
-//   if (updates.highlights) {
-//     await supabase
-//       .from("destination_highlights")
-//       .delete()
-//       .eq("destination_id", id);
+        setCountries(result);
+      } catch (err: any) {
+        console.error("Error fetching destinations by region:", err);
+        setError(err.message || "Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    }
 
-//     const highlightsToInsert = updates.highlights.map((highlight, index) => ({
-//       destination_id: id,
-//       highlight_es: highlight,
-//       highlight_en: highlight,
-//       order_index: index + 1,
-//     }));
+    fetchData();
+  }, [region_id, locale]);
 
-//     await supabase.from("destination_highlights").insert(highlightsToInsert);
-//   }
+  return { countries, loading, error };
+}
 
-//   return data;
-// }
 
-// SOFT DELETE DESTINATION
-// export async function deleteDestination(id: string) {
-//   const { error } = await supabase
-//     .from("destinations")
-//     .update({ is_active: false })
-//     .eq("id", id);
+/**
+ * 
 
-//   if (error) throw error;
-// }
+ */
 
-// ============================================
-// FUNCIONES DE BÚSQUEDA Y FILTRADO
-// ============================================
+ /* =====================================================
+    DESTINOS ACTIVIDADES
+   ===================================================== */
+
+ export function useActivityBySlug(slug: string, locale: "es" | "en") {
+  const [activity, setActivity] = useState<Activity | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    async function fetchActivity() {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("destinations_activities")
+          .select("*")
+          .eq("slug", slug)
+          .eq("locale", locale)
+          .eq("is_active", true)
+          .single();
+
+        if (error) throw error;
+
+        setActivity(data);
+      } catch (err: any) {
+        console.error("Error fetching activity:", err);
+        setError(err.message || "Error loading activity");
+        setActivity(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchActivity();
+  }, [slug, locale]);
+
+  return { activity, loading, error };
+}
+
+export function useActivitiesByDestination(destinationId: string, locale: "es" | "en") {
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!destinationId) return;
+
+    async function fetchActivities() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // 🔹 Solo para debug, quita filtros si quieres ver si hay datos
+        const { data, error } = await supabase
+          .from("destinations_activities")
+          .select("*")
+          .eq("destination_id", destinationId)
+          // .eq("locale", locale) // temporalmente comentalo
+          // .eq("is_active", true) // temporalmente comentalo
+          .order("name", { ascending: true });
+
+        console.log("🚀 Fetched activities for", destinationId, ":", data, "Error:", error);
+
+        if (error) throw error;
+        setActivities(data || []);
+      } catch (err: any) {
+        console.error("Error fetching activities:", err);
+        setError(err.message || "Error loading activities");
+        setActivities([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchActivities();
+  }, [destinationId, locale]);
+
+  return { activities, loading, error };
+}
+
+/* =====================================================
+   UTILIDADES DE BÚSQUEDA Y FILTROS
+   ===================================================== */
+
 export async function searchDestinations(
   query: string,
   lang: "es" | "en" = "es"
 ) {
   const nameField = lang === "es" ? "name_es" : "name_en";
   const countryField = lang === "es" ? "country_es" : "country_en";
-  const descriptionField = lang === "es" ? "description_es" : "description_en";
+  const descriptionField = lang === "es"
+    ? "description_es"
+    : "description_en";
 
   const { data, error } = await supabase
     .from("destinations")
@@ -462,8 +576,7 @@ export async function getDestinationsByCategory(
     .eq("is_active", true);
 
   if (error) throw error;
-  
-  // Filtrar localmente si la categoría no es un join en BD
+
   return data;
 }
 

@@ -20,7 +20,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
-import { useDestinationRegions, useCountriesByRegion } from "@/lib/hooks/useDestinations";
+import {
+  useDestinationRegions,
+  useCountriesByRegion,
+} from "@/lib/hooks/useDestinations";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
 
 // Icon map
@@ -41,7 +44,7 @@ export default function DestinationsSlide() {
   const locale = useLocale() as Locale;
   const { regions, loading, error } = useDestinationRegions(locale);
   const { countries } = useCountriesByRegion(locale);
-  console.log('countries', countries);
+  // console.log('countries', countries);
   const router = useRouter();
   const { theme } = useTheme();
 
@@ -57,7 +60,7 @@ export default function DestinationsSlide() {
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     observer.observe(titleRef.current);
     return () => observer.disconnect();
@@ -96,9 +99,7 @@ export default function DestinationsSlide() {
             to={{ opacity: 1, y: 0 }}
             textAlign="center"
           />
-          <p
-            className={`text-[var(--accent)] text-base md:text-xl px-6`}
-          >
+          <p className={`text-[var(--accent)] text-base md:text-xl px-6`}>
             {locale === "es"
               ? "Explora destinos increíbles alrededor del planeta"
               : "Explore amazing destinations around the world"}
@@ -122,24 +123,24 @@ export default function DestinationsSlide() {
           className="no-scrollbar  "
         >
           {/*Regions map */}
-          {regions.map((destination) => {
-            const IconComponent = iconMap[destination.icon] || MdTravelExplore;
+          {regions.map((region) => {
+            const IconComponent = iconMap[region.icon] || MdTravelExplore;
 
             return (
               <SwiperSlide
-                key={destination.id}
+                key={region.id}
                 className="min-w-[300px] md:min-w-[350px] rounded-2xl "
               >
                 <div className="bg-white/5 rounded-2xl  overflow-hidden relative group   ">
                   <div className="relative h-80 ">
                     <img
-                      src={destination.image}
-                      alt={destination.name}
+                      src={region.image}
+                      alt={region.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 "
                       draggable={false}
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t ${destination.gradient} opacity-60`}
+                      className={`absolute inset-0 bg-gradient-to-t ${region.gradient} opacity-60`}
                     />
                   </div>
 
@@ -151,12 +152,26 @@ export default function DestinationsSlide() {
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white">
-                        {destination.name}
+                        {region.name}
                       </h3>
                       <p className="text-slate-200 mb-3">
-                        {destination.description}
+                        {region.description}
                       </p>
                       <button
+                        onClick={() => {
+                          const basePath =
+                            locale === "es" ? "destinos" : "destinations";
+
+                          router.push(
+                            `/${locale}/${basePath}/${region.slug}`,
+                          );
+                        }}
+                        className="bg-white text-slate-900 px-5 py-2 rounded-full font-semibold hover:bg-slate-100 transition"
+                      >
+                        {locale === "es" ? "Explorar" : "Explore"}
+                      </button>
+
+                      {/* <button
                         onClick={() => {
                           const basePath =
                             locale === "es" ? "destinos" : "destinations";
@@ -173,7 +188,7 @@ export default function DestinationsSlide() {
                         className="bg-white text-slate-900 px-5 py-2 rounded-full font-semibold hover:bg-slate-100 transition"
                       >
                         {locale === "es" ? "Explorar" : "Explore"}
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>

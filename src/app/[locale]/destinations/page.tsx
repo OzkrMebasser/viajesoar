@@ -1,6 +1,5 @@
 import Destinations from "@/components/Destinations";
-
-const DestinationsPage = () => {
+const AllDestinationsPage = () => {
   return (
     <main>
       <Destinations />
@@ -8,4 +7,4 @@ const DestinationsPage = () => {
   );
 };
 
-export default DestinationsPage;
+export default AllDestinationsPage;
