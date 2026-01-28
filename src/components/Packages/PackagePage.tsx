@@ -28,9 +28,9 @@ export default function PackagePage({ slug, locale }: PackagePageProps) {
         {/* {pkg.visited_cities.map((city) => (
           <li key={city}>{city}</li>
         ))} */}
-        {pkg.visited_cities?.map((city) =>
-          typeof city === "string" ? <li key={city}>{city}</li> : null,
-        )}
+        {/* {pkg.visited_cities?.map((city) =>
+          typeof city. === "string" ? <li key={city}>{city}</li> : null,
+        )} */}
       </ul>
 
       <h3>Países visitados:</h3>
@@ -38,9 +38,9 @@ export default function PackagePage({ slug, locale }: PackagePageProps) {
         {/* {pkg.visited_countries.map((country) => (
           <li key={country}>{country}</li>
         ))} */}
-        {pkg.visited_countries?.map((country) =>
+        {/* {pkg.visited_countries?.map((country) =>
           typeof country === "string" ? <li key={country}>{country}</li> : null,
-        )}
+        )} */}
       </ul>
 
       <h3>Imágenes:</h3>
