@@ -19,20 +19,28 @@ export default function PackagePage({ slug, locale }: PackagePageProps) {
       <h1>{pkg.name}</h1>
       <p>{pkg.description}</p>
       <p>Duración: {pkg.duration}</p>
-      <p>Precio desde: {pkg.price_from} {pkg.currency}</p>
+      <p>
+        Precio desde: {pkg.price_from} {pkg.currency}
+      </p>
 
       <h3>Ciudades visitadas:</h3>
       <ul>
-        {pkg.visited_cities.map((city) => (
+        {/* {pkg.visited_cities.map((city) => (
           <li key={city}>{city}</li>
-        ))}
+        ))} */}
+        {pkg.visited_cities?.map((city) =>
+          typeof city === "string" ? <li key={city}>{city}</li> : null,
+        )}
       </ul>
 
       <h3>Países visitados:</h3>
       <ul>
-        {pkg.visited_countries.map((country) => (
+        {/* {pkg.visited_countries.map((country) => (
           <li key={country}>{country}</li>
-        ))}
+        ))} */}
+        {pkg.visited_countries?.map((country) =>
+          typeof country === "string" ? <li key={country}>{country}</li> : null,
+        )}
       </ul>
 
       <h3>Imágenes:</h3>

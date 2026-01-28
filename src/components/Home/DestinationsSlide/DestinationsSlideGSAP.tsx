@@ -135,7 +135,7 @@ export default function DestinationsSlide() {
       {/* square particles */}
       <ParticlesCanvas />
 
-      <div className="relative w-full mx-auto z-20 mt-10">
+      <div className="relative w-full mx-auto z-20 ">
         {/* Header */}
         <div className="text-center mb-10" ref={titleRef}>
           <SplitText
