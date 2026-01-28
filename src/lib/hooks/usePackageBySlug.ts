@@ -1,3 +1,4 @@
+// src/lib/hooks/usePackageBySlug.ts
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -7,10 +8,8 @@ export interface Package {
   name: string;
   slug: string;
   description: string;
-  //   visited_cities: string[];
-  //   visited_countries: string[];
-  visited_cities?: { id: string; name: string; slug: string }[];
-  visited_countries?: { id: string; name: string; slug: string }[];
+  visited_cities: { id: string; name: string; slug: string }[];
+  visited_countries: { id: string; name: string; slug: string }[];
   optional_activities: string[];
   images: string[];
   duration: string;
@@ -32,7 +31,9 @@ export function usePackageBySlug(slug: string, locale: "es" | "en") {
     async function fetchPackage() {
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        
+        // 1️⃣ Traer el paquete
+        const { data: pkgData, error: pkgError } = await supabase
           .from("packages")
           .select("*")
           .eq("slug", slug)
@@ -40,9 +41,38 @@ export function usePackageBySlug(slug: string, locale: "es" | "en") {
           .eq("is_active", true)
           .single();
 
-        if (error) throw error;
+        if (pkgError) throw pkgError;
+        if (!pkgData) {
+          setPkg(null);
+          return;
+        }
 
-        setPkg(data);
+        // 2️⃣ Traer ciudades
+        const cityIds = pkgData.visited_cities || [];
+        const { data: cities } = await supabase
+          .from("destinations")
+          .select("id, name, slug")
+          .in("id", cityIds);
+
+        // 3️⃣ Traer países
+        const countryIds = pkgData.visited_countries || [];
+        const { data: countries } = await supabase
+          .from("destinations_countries")
+          .select("id, name, slug")
+          .in("id", countryIds);
+
+        // 4️⃣ Combinar todo
+        const formatted = {
+          ...pkgData,
+          visited_cities: cityIds.map(
+            (id: string) => cities?.find(c => c.id === id) || { id, name: "N/A", slug: "" }
+          ),
+          visited_countries: countryIds.map(
+            (id: string) => countries?.find(c => c.id === id) || { id, name: "N/A", slug: "" }
+          ),
+        };
+
+        setPkg(formatted);
       } catch (err: any) {
         setError(err.message || "Error fetching package");
         setPkg(null);

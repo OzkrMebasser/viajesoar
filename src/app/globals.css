@@ -3,6 +3,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+body {
+  font-family: "Oswald", sans-serif;
+}
 
 .nav {
   z-index: 999999999999999999;
@@ -110,12 +113,6 @@ html[data-theme="vibrant"] {
     #fdb756
   );
   --gradient-tertiary: linear-gradient(to top, #f8a736, #ebaf5b, #f8a736);
-}
-body {
-  font-family: "Oswald", sans-serif;
-   background-color: var(--bg);
-  background-image: var(--gradient); /* opcional si quieres gradient de fondo */
-  /* transition: background-color 0.3s ease, background-image 0.3s ease; */
 }
 
 /* Clases reutilizables */

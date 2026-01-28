@@ -1,5 +1,12 @@
 import PackagePage from "@/components/Packages/PackagePage";
 
-export default function Page({ params }: { params: { pkgSlug: string } }) {
-  return <PackagePage slug={params.pkgSlug} locale="es" />;
+export default async function Page({ 
+  params 
+}: { 
+  params: Promise<{ pkgSlug: string }> 
+}) {
+  const { pkgSlug } = await params; // 👈 Await params
+  
+  return <PackagePage slug={pkgSlug} locale="es" />;
 }
+
