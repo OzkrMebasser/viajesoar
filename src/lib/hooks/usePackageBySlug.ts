@@ -7,8 +7,10 @@ export interface Package {
   name: string;
   slug: string;
   description: string;
-  visited_cities: string[];
-  visited_countries: string[];
+  //   visited_cities: string[];
+  //   visited_countries: string[];
+  visited_cities?: { id: string; name: string; slug: string }[];
+  visited_countries?: { id: string; name: string; slug: string }[];
   optional_activities: string[];
   images: string[];
   duration: string;

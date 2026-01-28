@@ -19,33 +19,25 @@ export default function PackagePage({ slug, locale }: PackagePageProps) {
       <h1>{pkg.name}</h1>
       <p>{pkg.description}</p>
       <p>Duración: {pkg.duration}</p>
-      <p>
-        Precio desde: {pkg.price_from} {pkg.currency}
-      </p>
+      <p>Precio desde: {pkg.price_from} {pkg.currency}</p>
 
       <h3>Ciudades visitadas:</h3>
       <ul>
-        {/* {pkg.visited_cities.map((city) => (
-          <li key={city}>{city}</li>
-        ))} */}
-        {/* {pkg.visited_cities?.map((city) =>
-          typeof city. === "string" ? <li key={city}>{city}</li> : null,
-        )} */}
+        {(pkg.visited_cities ?? []).map((city) => (
+          <li key={city.id}>{city.name}</li>
+        ))}
       </ul>
 
       <h3>Países visitados:</h3>
       <ul>
-        {/* {pkg.visited_countries.map((country) => (
-          <li key={country}>{country}</li>
-        ))} */}
-        {/* {pkg.visited_countries?.map((country) =>
-          typeof country === "string" ? <li key={country}>{country}</li> : null,
-        )} */}
+        {(pkg.visited_countries ?? []).map((country) => (
+          <li key={country.id}>{country.name}</li>
+        ))}
       </ul>
 
       <h3>Imágenes:</h3>
       <div style={{ display: "flex", gap: "8px" }}>
-        {pkg.images.map((img) => (
+        {(pkg.images ?? []).map((img) => (
           <img key={img} src={img} alt={pkg.name} width={200} />
         ))}
       </div>
