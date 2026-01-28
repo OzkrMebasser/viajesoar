@@ -5,6 +5,9 @@
 
 body {
   font-family: "Oswald", sans-serif;
+   background-color: var(--bg);
+  background-image: var(--gradient); /* opcional si quieres gradient de fondo */
+  transition: background-color 0.3s ease, background-image 0.3s ease;
 }
 
 .nav {

@@ -140,7 +140,7 @@ export default function DestinationsSlide() {
                       draggable={false}
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t ${region.gradient} opacity-60`}
+                      className={`absolute inset-0 `}
                     />
                   </div>
 
