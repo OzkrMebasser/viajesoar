@@ -2,16 +2,19 @@ import TravelDestinations from "@/components/Home/DestinationsSlide/Destinations
 import TravelSlideshow from "@/components/Home/HeroTravelSlides";
 import CubeEffectSlider from "@/components/CubeEffectSlider";
 import DestinationsSlideGSAP from "@/components/Home/DestinationsSlide/DestinationsSlideGSAP";
-import WorldMapLoader from "@/components/WorldMapLoader";
+
+import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 
 export default function Home() {
   return (
     <div>
-      {/* <AirplaneSoarPreloader /> */}
-      <TravelSlideshow />
-      <DestinationsSlideGSAP />
 
+      <TravelSlideshow />
+      
+      <DestinationsSlideGSAP />
       <CubeEffectSlider />
+      
+      <PackagesSlideGSAP />
     
     </div>
   );
