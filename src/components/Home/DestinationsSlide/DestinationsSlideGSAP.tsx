@@ -88,7 +88,9 @@ export default function DestinationsSlideGSAP() {
       scrollTrigger: {
         trigger: scrollContainer,
         start: "top top",
-        end: () => `+=${scrollDistance * 1.5}`,
+        end: "200% bottom",
+        // markers: true,
+         id: "regions-scroll",
         scrub: 1,
         pin: true,
         anticipatePin: 1,
@@ -115,8 +117,11 @@ export default function DestinationsSlideGSAP() {
 
     // Observer para detectar cuando el carousel es visible
     const observer = new IntersectionObserver(
+      
       ([entry]) => {
+       
         if (entry.isIntersecting && !hasScrolled) {
+          
           // Esperar un poco después de que sea visible
           setTimeout(() => {
             if (!hasScrolled) {

@@ -45,148 +45,206 @@ export default function PackagesSlideGSAP() {
         id: "1",
         name: "Mega Europa iniciando en Barcelona",
         slug: "mega-europa-vs-mt-12017",
-        description: "Circuito europeo de 17 días iniciando en Barcelona, visitando Francia e Italia con visitas panorámicas y tiempo libre.",
-        images: ["https://one.cdnmega.com/images/viajes/covers/12341-mega-europa-desde-barcelona-1024x575-68dc5e3513363_68e0d068b099f.webp"],
+        description:
+          "Circuito europeo de 17 días iniciando en Barcelona, visitando Francia e Italia con visitas panorámicas y tiempo libre.",
+        images: [
+          "https://one.cdnmega.com/images/viajes/covers/12341-mega-europa-desde-barcelona-1024x575-68dc5e3513363_68e0d068b099f.webp",
+        ],
         price_from: 1499,
         currency: "USD",
-        visited_countries: [{ name: "España" }, { name: "Francia" }, { name: "Italia" }]
+        visited_countries: [
+          { name: "España" },
+          { name: "Francia" },
+          { name: "Italia" },
+        ],
       },
       {
         id: "2",
         name: "Maravillas de Asia",
         slug: "maravillas-asia",
-        description: "Descubre los templos ancestrales y la cultura milenaria de Tailandia, Camboya y Vietnam en 14 días inolvidables.",
-        images: ["https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800"],
+        description:
+          "Descubre los templos ancestrales y la cultura milenaria de Tailandia, Camboya y Vietnam en 14 días inolvidables.",
+        images: [
+          "https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800",
+        ],
         price_from: 2199,
         currency: "USD",
-        visited_countries: [{ name: "Tailandia" }, { name: "Camboya" }, { name: "Vietnam" }]
+        visited_countries: [
+          { name: "Tailandia" },
+          { name: "Camboya" },
+          { name: "Vietnam" },
+        ],
       },
       {
         id: "3",
         name: "Safari Africano Premium",
         slug: "safari-africano-premium",
-        description: "Vive la aventura africana con safaris fotográficos en Kenia y Tanzania. Incluye los Big 5 y playas de Zanzíbar.",
-        images: ["https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800"],
+        description:
+          "Vive la aventura africana con safaris fotográficos en Kenia y Tanzania. Incluye los Big 5 y playas de Zanzíbar.",
+        images: [
+          "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800",
+        ],
         price_from: 3499,
         currency: "USD",
-        visited_countries: [{ name: "Kenia" }, { name: "Tanzania" }]
+        visited_countries: [{ name: "Kenia" }, { name: "Tanzania" }],
       },
       {
         id: "4",
         name: "Japón Tradicional y Moderno",
         slug: "japon-tradicional-moderno",
-        description: "Sumérgete en la fascinante mezcla de tradición y tecnología. Tokio, Kioto, Osaka y Monte Fuji en 12 días.",
-        images: ["https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800"],
+        description:
+          "Sumérgete en la fascinante mezcla de tradición y tecnología. Tokio, Kioto, Osaka y Monte Fuji en 12 días.",
+        images: [
+          "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800",
+        ],
         price_from: 2899,
         currency: "USD",
-        visited_countries: [{ name: "Japón" }]
+        visited_countries: [{ name: "Japón" }],
       },
       {
         id: "5",
         name: "Patagonia Extrema",
         slug: "patagonia-extrema",
-        description: "Glaciares milenarios, montañas imponentes y lagos turquesa. Recorre Argentina y Chile en esta aventura de 10 días.",
-        images: ["https://images.unsplash.com/photo-1591642425143-1fb5e1f9682b?w=800"],
+        description:
+          "Glaciares milenarios, montañas imponentes y lagos turquesa. Recorre Argentina y Chile en esta aventura de 10 días.",
+        images: [
+          "https://images.unsplash.com/photo-1591642425143-1fb5e1f9682b?w=800",
+        ],
         price_from: 1899,
         currency: "USD",
-        visited_countries: [{ name: "Argentina" }, { name: "Chile" }]
+        visited_countries: [{ name: "Argentina" }, { name: "Chile" }],
       },
       {
         id: "6",
         name: "Ruta de los Incas",
         slug: "ruta-incas",
-        description: "Machu Picchu, Valle Sagrado, Cusco y el Lago Titicaca. Explora la civilización Inca en 8 días mágicos.",
-        images: ["https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800"],
+        description:
+          "Machu Picchu, Valle Sagrado, Cusco y el Lago Titicaca. Explora la civilización Inca en 8 días mágicos.",
+        images: [
+          "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800",
+        ],
         price_from: 1299,
         currency: "USD",
-        visited_countries: [{ name: "Perú" }]
+        visited_countries: [{ name: "Perú" }],
       },
       {
         id: "7",
         name: "Islas Griegas de Ensueño",
         slug: "islas-griegas",
-        description: "Santorini, Mykonos, Creta y Atenas. Playas de arena blanca, arquitectura única y gastronomía mediterránea.",
-        images: ["https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800"],
+        description:
+          "Santorini, Mykonos, Creta y Atenas. Playas de arena blanca, arquitectura única y gastronomía mediterránea.",
+        images: [
+          "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800",
+        ],
         price_from: 1799,
         currency: "USD",
-        visited_countries: [{ name: "Grecia" }]
-      }
+        visited_countries: [{ name: "Grecia" }],
+      },
     ],
     en: [
       {
         id: "1",
         name: "Mega Europe starting in Barcelona",
         slug: "mega-europa-vs-mt-12017",
-        description: "17-day European tour starting in Barcelona, visiting France and Italy with panoramic tours and free time.",
-        images: ["https://one.cdnmega.com/images/viajes/covers/12341-mega-europa-desde-barcelona-1024x575-68dc5e3513363_68e0d068b099f.webp"],
+        description:
+          "17-day European tour starting in Barcelona, visiting France and Italy with panoramic tours and free time.",
+        images: [
+          "https://one.cdnmega.com/images/viajes/covers/12341-mega-europa-desde-barcelona-1024x575-68dc5e3513363_68e0d068b099f.webp",
+        ],
         price_from: 1499,
         currency: "USD",
-        visited_countries: [{ name: "Spain" }, { name: "France" }, { name: "Italy" }]
+        visited_countries: [
+          { name: "Spain" },
+          { name: "France" },
+          { name: "Italy" },
+        ],
       },
       {
         id: "2",
         name: "Asian Wonders",
         slug: "maravillas-asia",
-        description: "Discover ancient temples and millennial culture in Thailand, Cambodia and Vietnam on an unforgettable 14-day journey.",
-        images: ["https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800"],
+        description:
+          "Discover ancient temples and millennial culture in Thailand, Cambodia and Vietnam on an unforgettable 14-day journey.",
+        images: [
+          "https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800",
+        ],
         price_from: 2199,
         currency: "USD",
-        visited_countries: [{ name: "Thailand" }, { name: "Cambodia" }, { name: "Vietnam" }]
+        visited_countries: [
+          { name: "Thailand" },
+          { name: "Cambodia" },
+          { name: "Vietnam" },
+        ],
       },
       {
         id: "3",
         name: "Premium African Safari",
         slug: "safari-africano-premium",
-        description: "Live the African adventure with photo safaris in Kenya and Tanzania. Includes the Big 5 and Zanzibar beaches.",
-        images: ["https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800"],
+        description:
+          "Live the African adventure with photo safaris in Kenya and Tanzania. Includes the Big 5 and Zanzibar beaches.",
+        images: [
+          "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800",
+        ],
         price_from: 3499,
         currency: "USD",
-        visited_countries: [{ name: "Kenya" }, { name: "Tanzania" }]
+        visited_countries: [{ name: "Kenya" }, { name: "Tanzania" }],
       },
       {
         id: "4",
         name: "Traditional & Modern Japan",
         slug: "japon-tradicional-moderno",
-        description: "Immerse yourself in the fascinating blend of tradition and technology. Tokyo, Kyoto, Osaka and Mount Fuji in 12 days.",
-        images: ["https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800"],
+        description:
+          "Immerse yourself in the fascinating blend of tradition and technology. Tokyo, Kyoto, Osaka and Mount Fuji in 12 days.",
+        images: [
+          "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800",
+        ],
         price_from: 2899,
         currency: "USD",
-        visited_countries: [{ name: "Japan" }]
+        visited_countries: [{ name: "Japan" }],
       },
       {
         id: "5",
         name: "Extreme Patagonia",
         slug: "patagonia-extrema",
-        description: "Ancient glaciers, imposing mountains and turquoise lakes. Explore Argentina and Chile on this 10-day adventure.",
-        images: ["https://images.unsplash.com/photo-1591642425143-1fb5e1f9682b?w=800"],
+        description:
+          "Ancient glaciers, imposing mountains and turquoise lakes. Explore Argentina and Chile on this 10-day adventure.",
+        images: [
+          "https://images.unsplash.com/photo-1591642425143-1fb5e1f9682b?w=800",
+        ],
         price_from: 1899,
         currency: "USD",
-        visited_countries: [{ name: "Argentina" }, { name: "Chile" }]
+        visited_countries: [{ name: "Argentina" }, { name: "Chile" }],
       },
       {
         id: "6",
-        name: "Inca Trail Route",
+        name: "Inca Trail",
         slug: "ruta-incas",
-        description: "Machu Picchu, Sacred Valley, Cusco and Lake Titicaca. Explore the Inca civilization on 8 magical days.",
-        images: ["https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800"],
+        description:
+          "Machu Picchu, Sacred Valley, Cusco and Lake Titicaca. Explore the Inca civilization on an 8-day magical journey.",
+        images: [
+          "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800",
+        ],
         price_from: 1299,
         currency: "USD",
-        visited_countries: [{ name: "Peru" }]
+        visited_countries: [{ name: "Peru" }],
       },
       {
         id: "7",
         name: "Dreamy Greek Islands",
         slug: "islas-griegas",
-        description: "Santorini, Mykonos, Crete and Athens. White sand beaches, unique architecture and Mediterranean cuisine.",
-        images: ["https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800"],
+        description:
+          "Santorini, Mykonos, Crete and Athens. White sandy beaches, unique architecture and Mediterranean cuisine.",
+        images: [
+          "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800",
+        ],
         price_from: 1799,
         currency: "USD",
-        visited_countries: [{ name: "Greece" }]
-      }
-    ]
+        visited_countries: [{ name: "Greece" }],
+      },
+    ],
   };
 
-  const limitedPackages = hardcodedPackages[locale];
+  const limitedPackages = hardcodedPackages[locale].slice(0, 7);
 
   // 🔥 Detectar mobile vs desktop
   useEffect(() => {
@@ -195,13 +253,13 @@ export default function PackagesSlideGSAP() {
       setIsMobile(mobile);
       setIsDesktop(!mobile);
     };
-    
+
     checkDevice();
-    window.addEventListener('resize', checkDevice);
-    return () => window.removeEventListener('resize', checkDevice);
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
-  // 🔥 GSAP Horizontal Scroll - DERECHA A IZQUIERDA EN DESKTOP
+  // 🔥 GSAP Horizontal Scroll RTL (derecha a izquierda) - SOLO EN DESKTOP
   useEffect(() => {
     if (!carouselRef.current || !scrollContainerRef.current || !isDesktop) {
       return;
@@ -209,7 +267,7 @@ export default function PackagesSlideGSAP() {
 
     const carousel = carouselRef.current;
     const scrollContainer = scrollContainerRef.current;
-    
+
     // Calcular distancia de scroll
     const carouselWidth = carousel.scrollWidth;
     const containerWidth = scrollContainer.offsetWidth;
@@ -218,19 +276,19 @@ export default function PackagesSlideGSAP() {
     // Solo crear animación si hay contenido para scrollear
     if (scrollDistance <= 0) return;
 
-    // 🎨 Crear animación GSAP - INVERTIDA (positivo en lugar de negativo)
+    // 🎨 Crear animación GSAP - INVERTIDA (positivo = hacia la derecha)
     const scrollTween = gsap.to(carousel, {
-      x: scrollDistance, // 👈 POSITIVO = se mueve a la DERECHA (contenido entra por derecha)
+      x: scrollDistance, // 👈 POSITIVO para scroll RTL (derecha a izquierda visual)
       ease: "none",
       scrollTrigger: {
         trigger: scrollContainer,
-        start: "bottom bottom",
-        end: () => `+=${scrollDistance * 1.5}`,
+        start: "center top",
+        end: "70% bottom",
+        id: "packages-scroll",
         scrub: 1,
         pin: true,
         anticipatePin: 1,
-        invalidateOnRefresh: true,
-        pinSpacing: true,
+        invalidateOnRefresh: false,
       },
     });
 
@@ -243,9 +301,9 @@ export default function PackagesSlideGSAP() {
         }
       });
     };
-  }, [limitedPackages, isDesktop]);
+  }, [isDesktop, limitedPackages.length]);
 
-  // 🌊 Efecto de Peek/Tilt - SOLO EN MOBILE (invertido también)
+  // 🌊 Efecto de Peek/Tilt/Ola INVERTIDO - SOLO EN MOBILE
   useEffect(() => {
     if (!isMobile || !mobileScrollRef.current || hasScrolled) return;
 
@@ -257,12 +315,16 @@ export default function PackagesSlideGSAP() {
         if (entry.isIntersecting && !hasScrolled) {
           setTimeout(() => {
             if (!hasScrolled) {
-              // 🌊 Animación de "peek" invertida - mueve a la derecha y vuelve
+              // Calcular el ancho total del scroll
+              const maxScroll = scrollElement.scrollWidth - scrollElement.clientWidth;
+              
+              // 🌊 Animación de "peek" INVERTIDA - mueve hacia el final (derecha) y vuelve
               gsap.to(scrollElement, {
-                scrollLeft: -80, // 👈 Negativo para mover a la derecha
+                scrollLeft: -80, // Límite seguro
                 duration: 0.8,
                 ease: "power2.out",
                 onComplete: () => {
+                  // Volver al inicio suavemente
                   gsap.to(scrollElement, {
                     scrollLeft: 0,
                     duration: 0.6,
@@ -281,28 +343,28 @@ export default function PackagesSlideGSAP() {
     observer.observe(scrollElement);
 
     const handleScroll = () => {
-      if (Math.abs(scrollElement.scrollLeft) > 5) {
+      if (scrollElement.scrollLeft < 5) {
         setHasScrolled(true);
       }
     };
 
-    scrollElement.addEventListener('scroll', handleScroll, { passive: true });
+    scrollElement.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       observer.disconnect();
-      scrollElement.removeEventListener('scroll', handleScroll);
+      scrollElement.removeEventListener("scroll", handleScroll);
     };
   }, [isMobile, hasScrolled]);
 
   return (
-    <div 
+    <div
       ref={scrollContainerRef}
-      className="relative  py-16 px-4 overflow-hidden bg-gradient-theme"
+      className="relative min-h-screen py-16 px-4 overflow-hidden bg-gradient-theme"
     >
       {/* Particles Background */}
       <ParticlesCanvas />
 
-      <div className="relative max-w-8xl mx-auto z-20">
+      <div className="relative max-w-8xl mx-auto z-20 ">
         {/* 🎯 Header con SplitText */}
         <div className="text-center mb-10">
           <SplitText
@@ -324,35 +386,27 @@ export default function PackagesSlideGSAP() {
         </div>
 
         {/* 🎨 Carousel - Híbrido: nativo mobile / GSAP desktop */}
-        <div 
+        <div
           ref={isMobile ? mobileScrollRef : undefined}
           className={`
-            ${isMobile ? 'overflow-x-auto overflow-y-hidden' : 'overflow-hidden'}
-            ${isMobile ? 'snap-x snap-mandatory scroll-smooth' : ''}
-            ${isMobile ? '-mx-4 px-4' : ''}
+            ${isMobile ? "overflow-x-auto overflow-y-hidden" : "overflow-hidden"}
+            ${isMobile ? "snap-x snap-mandatory scroll-smooth" : ""}
+            ${isMobile ? "-mx-4 px-4" : ""}
           `}
-          style={isMobile ? {
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-          } : {}}
         >
           <style jsx>{`
             div::-webkit-scrollbar {
               display: none;
             }
           `}</style>
-          
-          <div 
+
+          <div
             ref={carouselRef}
             className={`
-              flex gap-6 md:gap-8
-              ${!isMobile ? 'will-change-transform' : ''}
-              ${isMobile ? 'pb-4' : ''}
+              flex gap-6 md:gap-8 
+              ${!isMobile ? "will-change-transform" : ""}
+              ${isMobile ? "pb-4" : ""}
             `}
-            style={isDesktop ? {
-              transform: `translateX(-${limitedPackages.length > 0 ? 100 : 0}%)` // 👈 Inicia fuera por la DERECHA
-            } : {}}
           >
             {/* 📦 Package Cards */}
             {limitedPackages.map((pkg) => {
@@ -362,11 +416,11 @@ export default function PackagesSlideGSAP() {
                 <div
                   key={pkg.id}
                   className={`
-                    min-w-[280px] w-[280px] 
+                    min-w-[280px] w-[280px]
                     sm:min-w-[300px] sm:w-[300px]
                     md:min-w-[350px] md:w-[350px] 
                     flex-shrink-0
-                    ${isMobile ? 'snap-center' : ''}
+                    ${isMobile ? "snap-center" : ""}
                   `}
                 >
                   <div className="bg-white/5 rounded-2xl overflow-hidden relative group h-full">
@@ -380,12 +434,14 @@ export default function PackagesSlideGSAP() {
                         loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      
+
                       {/* Price Badge */}
                       <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md rounded-full px-4 py-2">
                         <div className="flex items-center gap-1 text-white font-bold">
                           <MdAttachMoney className="text-xl" />
-                          <span>{pkg.price_from.toLocaleString()} {pkg.currency}</span>
+                          <span>
+                            {pkg.price_from.toLocaleString()} {pkg.currency}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -407,21 +463,26 @@ export default function PackagesSlideGSAP() {
                         <p className="text-slate-200 text-sm mb-4 line-clamp-2">
                           {pkg.description}
                         </p>
-                        
+
                         {/* Visited Countries */}
-                        {pkg.visited_countries && pkg.visited_countries.length > 0 && (
-                          <div className="flex items-center gap-1 text-slate-300 text-xs mb-3">
-                            <FaMapMarkedAlt />
-                            <span>
-                              {pkg.visited_countries.slice(0, 2).map(c => c.name).join(", ")}
-                              {pkg.visited_countries.length > 2 && "..."}
-                            </span>
-                          </div>
-                        )}
+                        {pkg.visited_countries &&
+                          pkg.visited_countries.length > 0 && (
+                            <div className="flex items-center gap-1 text-slate-300 text-xs mb-3">
+                              <FaMapMarkedAlt />
+                              <span>
+                                {pkg.visited_countries
+                                  .slice(0, 2)
+                                  .map((c) => c.name)
+                                  .join(", ")}
+                                {pkg.visited_countries.length > 2 && "..."}
+                              </span>
+                            </div>
+                          )}
 
                         <button
                           onClick={() => {
-                            const basePath = locale === "es" ? "paquetes" : "packages";
+                            const basePath =
+                              locale === "es" ? "paquetes" : "packages";
                             router.push(`/${locale}/${basePath}/${pkg.slug}`);
                           }}
                           className="bg-white text-slate-900 px-5 py-2 rounded-full font-semibold hover:bg-slate-100 transition-colors duration-300"
@@ -441,10 +502,7 @@ export default function PackagesSlideGSAP() {
         {isMobile && limitedPackages.length > 2 && (
           <div className="flex justify-center gap-2 mt-6">
             {limitedPackages.map((_, index) => (
-              <div
-                key={index}
-                className="w-2 h-2 rounded-full bg-white/30"
-              />
+              <div key={index} className="w-2 h-2 rounded-full bg-white/30" />
             ))}
           </div>
         )}
