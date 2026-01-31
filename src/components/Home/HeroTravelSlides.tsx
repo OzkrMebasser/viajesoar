@@ -12,7 +12,8 @@ type Locale = "en" | "es";
 
 const HeroTravelSlides = () => {
   //States
-  const [lang, setLang] = useState<"es" | "en">("es");
+  // const [lang, setLang] = useState<"es" | "en">("es");
+  const [ready, setReady] = useState(false);
   const [order, setOrder] = useState<number[]>([]);
   const [detailsEven, setDetailsEven] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
@@ -62,6 +63,13 @@ const HeroTravelSlides = () => {
   /// UseEffects....
 
   useEffect(() => {
+    requestAnimationFrame(() => {
+      setReady(true);
+    });
+  }, []);
+
+  
+  useEffect(() => {
     if (data.length > 0 && order.length === 0) {
       const initialOrder = Array.from({ length: data.length }, (_, i) => i);
       setOrder(initialOrder);
@@ -90,12 +98,11 @@ const HeroTravelSlides = () => {
     };
   }, [data.length, order.length]);
 
-
   // Hook para el fade-out del mapa (loader)
   const showMap = useFadeOutMap({
     selector: ".worldmap-container",
     trigger: !loading && data.length > 0,
-    delay: 2000, // puedes cambiarlo según lo necesites
+    delay: 2000,
     duration: 3, // duración del fade
   });
 
@@ -109,14 +116,14 @@ const HeroTravelSlides = () => {
     const offsetTop = isSmallMobile
       ? height - 160
       : isMobile
-      ? height - 200
-      : height - 330;
+        ? height - 200
+        : height - 330;
 
     const offsetLeft = isSmallMobile
       ? width - 220
       : isMobile
-      ? width - 280
-      : width - 550;
+        ? width - 280
+        : width - 550;
 
     const cardWidth = isSmallMobile ? 90 : isMobile ? 120 : 200;
 
@@ -286,14 +293,14 @@ const HeroTravelSlides = () => {
       const offsetTop = isSmallMobile
         ? height - 160
         : isMobile
-        ? height - 200
-        : height - 330;
+          ? height - 200
+          : height - 330;
 
       const offsetLeft = isSmallMobile
         ? width - 220
         : isMobile
-        ? width - 280
-        : width - 550;
+          ? width - 280
+          : width - 550;
 
       const cardWidth = isSmallMobile ? 90 : isMobile ? 120 : 200;
 
@@ -357,7 +364,7 @@ const HeroTravelSlides = () => {
       if (!data[activeIndex]) {
         console.error(
           `Data at index ${activeIndex} is undefined. Current order:`,
-          newOrder
+          newOrder,
         );
         setIsAnimating(false);
         resolve();
@@ -601,8 +608,17 @@ const HeroTravelSlides = () => {
       className="relative w-full h-screen bg-transparent text-white overflow-hidden"
     >
       {/* Mapa del mundo loader */}
-      {showMap && (
-        <div className="worldmap-container absolute inset-0 z-50 bg-black">
+      {ready && showMap && (
+        <div
+          className="
+      worldmap-container
+      fixed inset-0
+      z-50
+      bg-black
+      pointer-events-none
+      will-change-opacity
+    "
+        >
           <WorldMapLoader />
         </div>
       )}

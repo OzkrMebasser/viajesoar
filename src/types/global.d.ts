@@ -5,6 +5,8 @@ declare global {
   interface IntlMessages extends Messages {}
 }
 
+
+
 // src/types/messages.ts (CREAR ESTE ARCHIVO NUEVO)
 export interface Messages {
   Navigation: {
