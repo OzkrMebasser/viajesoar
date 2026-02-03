@@ -48,3 +48,16 @@ export interface Destination {
   is_active: boolean;
 }
 
+
+export interface DestinationSummary {
+  id: string;
+  locale: string;
+  name: string;
+  slug: string;
+  image: string;
+  country: string;
+  price: number;
+  rating: number;
+  highlights: string[];
+  is_active: boolean;
+}
