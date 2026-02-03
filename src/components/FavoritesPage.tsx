@@ -11,21 +11,21 @@ export default function FavoritesPage() {
   // console.log(` la data de favoritos ${favoritesData}`)
 
   // 🔹 Si no hay usuario autenticado
-  // if (!userId) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
-  //       <div className="text-center">
-  //         <p className="text-lg text-slate-600 mb-4">Debes iniciar sesión para ver tus favoritos</p>
-  //         <button
-  //           onClick={() => router.push("/login")}
-  //           className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-  //         >
-  //           Iniciar sesión
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (!userId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-lg text-slate-600 mb-4">Debes iniciar sesión para ver tus favoritos</p>
+          <button
+            onClick={() => router.push("/login")}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+          >
+            Iniciar sesión
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // 🔹 Si está cargando
   if (loading) {

@@ -5,6 +5,7 @@ import DestinationsSlideGSAP from "@/components/Home/DestinationsSlide/Destinati
 
 import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 
+
 export default function Home() {
   return (
     <div>

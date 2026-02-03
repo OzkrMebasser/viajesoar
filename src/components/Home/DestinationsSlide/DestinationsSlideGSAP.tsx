@@ -21,6 +21,7 @@ import ParticlesCanvas from "@/components/ParticlesCanvas";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+
 gsap.registerPlugin(ScrollTrigger);
 
 // Icon map

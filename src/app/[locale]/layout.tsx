@@ -27,17 +27,19 @@ export default async function LocaleLayout({
   return (
   <html lang={locale} suppressHydrationWarning>
   <body>
+    <FavoritesProvider>
     <ThemeProvider>
       <NextIntlClientProvider messages={messages}>
-        <FavoritesProvider>
+        {/* <FavoritesProvider> */}
           <Navigation />
           <AirplaneCursor />
           {children}
           <Footer />
-        </FavoritesProvider>
+        {/* </FavoritesProvider> */}
         <WhatsAppChat />
       </NextIntlClientProvider>
     </ThemeProvider>
+    </FavoritesProvider>
   </body>
 </html>
 

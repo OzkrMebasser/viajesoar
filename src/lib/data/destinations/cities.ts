@@ -22,6 +22,7 @@ export async function getCityBySlug(
     .eq("is_active", true)
     .single();
 
+    console.log("Data from SSR", data)
   if (error || !data) {
     console.error("Error fetching city:", error);
     return null;

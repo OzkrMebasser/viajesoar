@@ -211,6 +211,35 @@ const toggleFavorite = useCallback(
   },
   [userId, fetchFavorites, removeFavorite]
 );
+// const toggleFavorite = useCallback(
+//   async (destinationId: string) => {
+//     if (!userId) return;
+
+//     const isFavorite = favorites.has(destinationId);
+
+//     // optimistic update
+//     setFavorites((prev) => {
+//       const copy = new Set(prev);
+//       isFavorite ? copy.delete(destinationId) : copy.add(destinationId);
+//       return copy;
+//     });
+
+//     try {
+//       if (isFavorite) {
+//         await removeFavorite(destinationId);
+//       } else {
+//         await supabase.from("favorites").insert({
+//           user_id: userId,
+//           destination_id: destinationId,
+//         });
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       await fetchFavorites(); // rollback seguro
+//     }
+//   },
+//   [userId, favorites, removeFavorite, fetchFavorites]
+// );
 
 
   return (

@@ -1,10 +1,14 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import { Search, Star, MapPin, Clock, DollarSign, Heart as HeartIcon } from "lucide-react";
-import { useDestinations } from "@/lib/hooks/useDestinations";
-import { useLocale } from "next-intl";
+// import { useDestinations } from "@/lib/hooks/useDestinations";
+// import { useLocale } from "next-intl";
 import { useFavorites } from "@/lib/context/FavoritesProvider";
 import { supabase } from "@/lib/supabase";
+import type { Destination } from "@/types/destinations";
+import type { Locale } from "@/types/locale";
+import { Paginator } from "@/components/ui/paginator";
+
 import FavoritesPage from "./FavoritesPage";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // 👈 Estilos del toast
@@ -12,24 +16,43 @@ import "react-toastify/dist/ReactToastify.css"; // 👈 Estilos del toast
 // ==============================
 // Componente principal
 // ==============================
-type Locale = "en" | "es";
+// type Locale = "en" | "es";
 
-const Destinations = () => {
-  const [lang, setLang] = useState<"es" | "en">("es");
+
+interface Props {
+  destinations: Destination[];
+  page: number;
+  totalPages: number;
+  locale: Locale;
+  total: number;
+}
+
+
+const Destinations = ({
+  destinations: data,
+  page,
+  totalPages,
+  locale,
+  total
+}: Props) => {
+  // const [lang, setLang] = useState<"es" | "en">("es");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCountry, setSelectedCountry] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [showFilters, setShowFilters] = useState(false);
 
-  const locale = useLocale() as Locale;
-  const { destinations: data, loading, error } = useDestinations(locale);
+
+  // console.log(total)
+  // const locale = useLocale() as Locale;
+  // const {  loading, error } = useDestinations(locale);
 
   // ==============================
   // 👇 Usuario y favoritos
   // ==============================
   const [user, setUser] = useState<any>(null);
   const { favorites, toggleFavorite } = useFavorites();
+  console.log("Favorites", favorites)
 
   useEffect(() => {
     const getUser = async () => {
@@ -124,27 +147,27 @@ const Destinations = () => {
   };
   const t = translations[locale] || translations.es;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
-        <div className="text-center">
-          <div className="spinner  rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)] mx-auto mb-4"></div>
-          <p className="text-theme">{t.loading}</p>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="spinner  rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)] mx-auto mb-4"></div>
+  //         <p className="text-theme">{t.loading}</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 text-lg font-semibold">{t.error}</p>
-          <p className="text-slate-600 mt-2">{error}</p>
-        </div>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+  //       <div className="text-center">
+  //         <p className="text-red-600 text-lg font-semibold">{t.error}</p>
+  //         <p className="text-slate-600 mt-2">{error}</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // ==============================
   // Render
@@ -160,7 +183,7 @@ const Destinations = () => {
           <h1 className="text-5xl font-bold mb-2">{t.title}</h1>
           <p className="text-lg opacity-90">{t.subtitle}</p>
           <p className="text-sm opacity-75 mt-2">
-            {data.length} {locale === "es" ? "destinos disponibles" : "destinations available"}
+            {total} {locale === "es" ? "destinos disponibles" : "destinations available"}
           </p>
         </div>
       </div>
@@ -220,8 +243,8 @@ const Destinations = () => {
         {filteredDestinations.length > 0 && (
           <p className="text-sm text-slate-600 mb-6">
             {locale === "es"
-              ? `Mostrando ${filteredDestinations.length} de ${data.length} destinos`
-              : `Showing ${filteredDestinations.length} of ${data.length} destinations`}
+              ? `Mostrando ${filteredDestinations.length} de ${data.length} destinos, de la pagina ${page}`
+              : `Showing ${filteredDestinations.length} of ${data.length} destinations, from page ${page}`}
           </p>
         )}
 
@@ -354,7 +377,8 @@ const Destinations = () => {
           </div>
         )}
       </div>
-      {/* <FavoritesPage /> */}
+  {/* Pagination */}
+      <Paginator page={page} totalPages={totalPages} />
     </div>
   );
 };
