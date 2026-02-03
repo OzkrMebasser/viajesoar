@@ -322,46 +322,46 @@ export function useCityBySlug(slug: string, locale: "es" | "en") {
 /**
  * Obtiene todos los destinos activos por idioma
  */
-// export const useDestinations = (locale: "es" | "en" = "es") => {
-//   const [destinations, setDestinations] = useState<Destination[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
+export const useDestinations = (locale: "es" | "en" = "es") => {
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-//   useEffect(() => {
-//     const fetchDestinations = async () => {
-//       setLoading(true);
-//       try {
-//         const { data, error } = await supabase
-//           .from("destinations")
-//           .select("*")
-//           .eq("locale", locale)
-//           .eq("is_active", true)
-//           .order("name", { ascending: true });
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("destinations")
+          .select("*")
+          .eq("locale", locale)
+          .eq("is_active", true)
+          .order("name", { ascending: true });
 
-//         if (error) throw error;
+        if (error) throw error;
 
-//         if (data) {
-//           const formatted = data.map((d: any) => ({
-//             ...d,
-//             highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(
-//               Boolean
-//             ),
-//           }));
-//           setDestinations(formatted);
-//         }
-//       } catch (err: any) {
-//         console.error(err);
-//         setError(err.message || "Error fetching destinations");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+        if (data) {
+          const formatted = data.map((d: any) => ({
+            ...d,
+            highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(
+              Boolean
+            ),
+          }));
+          setDestinations(formatted);
+        }
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || "Error fetching destinations");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-//     fetchDestinations();
-//   }, [locale]);
+    fetchDestinations();
+  }, [locale]);
 
-//   return { destinations, loading, error };
-// };
+  return { destinations, loading, error };
+};
 
 /* =====================================================
    DESTINOS AGRUPADOS POR REGIÓN → PAÍSES → CIUDADES
