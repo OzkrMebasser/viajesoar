@@ -90,13 +90,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     };
   }, [data.length, order.length]);
 
-  // Hook para el fade-out del mapa (loader)
-  // const showMap = useFadeOutMap({
-  //   selector: ".worldmap-container",
-  //   trigger: !loading && data.length > 0,
-  //   delay: 2000,
-  //   duration: 3, // duración del fade
-  // });
+
   const showMap = useFadeOutMap({
     selector: ".worldmap-container",
     trigger: data.length > 0,
