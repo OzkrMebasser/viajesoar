@@ -1,2 +1,7 @@
-export { mapDestination } from "./destination.mapper";
-export { mapActivity } from "./activity.mapper";
+import { mapDestination } from "./destination.mapper";
+// import { mapActivity } from "./activity.mapper";
+
+export {
+    mapDestination,
+    // mapActivity
+}

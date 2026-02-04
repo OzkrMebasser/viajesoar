@@ -1,6 +1,6 @@
 // lib/hooks/useSlideshowDestinations.ts
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export interface SlideshowDestination {
   id?: string;
@@ -16,7 +16,7 @@ export interface SlideshowDestination {
 // ===============================
 // HOOK PRINCIPAL
 // ===============================
-export function useSlideshowDestinations(lang: 'es' | 'en' = 'es') {
+export function useSlideshowDestinations(lang: "es" | "en" = "es") {
   const [destinations, setDestinations] = useState<SlideshowDestination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,14 +27,15 @@ export function useSlideshowDestinations(lang: 'es' | 'en' = 'es') {
         setLoading(true);
 
         const { data, error } = await supabase
-          .from('travel_slideshow_destinations')
-          .select('*')
-          .eq('is_active', true)
-          .eq('locale', lang)
-          .order('order_index', { ascending: true });
+
+          .from("travel_slideshow_destinations")
+          .select("*")
+          .eq("is_active", true)
+          .eq("locale", lang)
+          .order("order_index", { ascending: true });
 
         if (error) throw error;
-
+       
         setDestinations(
           data.map((dest: any) => ({
             id: dest.id,
@@ -45,11 +46,11 @@ export function useSlideshowDestinations(lang: 'es' | 'en' = 'es') {
             description: dest.description,
             image: dest.image,
             orderIndex: dest.order_index,
-          }))
+          })),
         );
       } catch (err) {
-        console.error('Error fetching slideshow destinations:', err);
-        setError(err instanceof Error ? err.message : 'Error desconocido');
+        console.error("Error fetching slideshow destinations:", err);
+        setError(err instanceof Error ? err.message : "Error desconocido");
       } finally {
         setLoading(false);
       }
@@ -57,7 +58,6 @@ export function useSlideshowDestinations(lang: 'es' | 'en' = 'es') {
 
     fetchDestinations();
   }, [lang]);
-  
 
   return { destinations, loading, error };
 }

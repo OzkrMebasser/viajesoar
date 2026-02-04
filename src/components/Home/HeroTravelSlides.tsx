@@ -1,36 +1,29 @@
 "use client";
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { gsap } from "gsap";
-import { useSlideshowDestinations } from "@/lib/hooks/useSlideshowDestinations";
+// import { useSlideshowDestinations } from "@/lib/hooks/useSlideshowDestinations";
 import { Bookmark } from "lucide-react";
 import WorldMapLoader from "@/components/WorldMapLoader";
-import { useLocale } from "next-intl";
+// import { useLocale } from "next-intl";
 import { useFadeOutMap } from "@/lib/hooks/useFadeOutMap";
+import type { Locale } from "@/types/locale";
+import type { SlideshowDestination } from "@/types/heroDestinations";
 
 // lang type
-type Locale = "en" | "es";
+// type Locale = "en" | "es";
 
-const HeroTravelSlides = () => {
+interface Props {
+  locale: Locale;
+  data: SlideshowDestination[];
+}
+
+const HeroTravelSlides = ({ locale, data }: Props) => {
   //States
   // const [lang, setLang] = useState<"es" | "en">("es");
   const [ready, setReady] = useState(false);
   const [order, setOrder] = useState<number[]>([]);
   const [detailsEven, setDetailsEven] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-
-  //Language with Locale
-  const locale = useLocale() as Locale;
-
-  //Data from supabase
-  const {
-    destinations: supabaseDestinations,
-    loading,
-    error,
-  } = useSlideshowDestinations(locale);
-
-  const data = supabaseDestinations;
-
-  // console.log(data);
 
   // All the refs...
   const orderRef = useRef<number[]>([]);
@@ -68,7 +61,6 @@ const HeroTravelSlides = () => {
     });
   }, []);
 
-  
   useEffect(() => {
     if (data.length > 0 && order.length === 0) {
       const initialOrder = Array.from({ length: data.length }, (_, i) => i);
@@ -99,11 +91,17 @@ const HeroTravelSlides = () => {
   }, [data.length, order.length]);
 
   // Hook para el fade-out del mapa (loader)
+  // const showMap = useFadeOutMap({
+  //   selector: ".worldmap-container",
+  //   trigger: !loading && data.length > 0,
+  //   delay: 2000,
+  //   duration: 3, // duración del fade
+  // });
   const showMap = useFadeOutMap({
     selector: ".worldmap-container",
-    trigger: !loading && data.length > 0,
+    trigger: data.length > 0,
     delay: 2000,
-    duration: 3, // duración del fade
+    duration: 3,
   });
 
   // Slides animations
@@ -590,22 +588,15 @@ const HeroTravelSlides = () => {
     }, 100);
   };
 
-  if (error) {
-    return (
-      <div className="relative w-full h-screen bg-gray-900 text-white overflow-hidden flex items-center justify-center">
-        <div className="text-center max-w-md p-6">
-          <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <p className="text-xl mb-2">Error al cargar destinos</p>
-          <p className="text-gray-400 text-sm">{error}</p>
-        </div>
-      </div>
-    );
+  // 🔐 GUARD SSR / DATA
+  if (!data || data.length === 0) {
+    return <div className="h-screen bg-black" />;
   }
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen bg-transparent text-white overflow-hidden"
+      className="relative w-full h-screen text-white overflow-hidden bg-gradient-theme text-theme"
     >
       {/* Mapa del mundo loader */}
       {ready && showMap && (
@@ -625,47 +616,48 @@ const HeroTravelSlides = () => {
 
       {/* Images cards */}
       {data.map((item, index) => (
-        <div key={index}>
+        <Fragment key={item.id ?? index}>
           <div
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
-            className="absolute left-0 top-0 bg-center bg-cover shadow-2xl"
+            className="absolute  left-0 top-0 bg-center bg-cover shadow-2xl w-50"
             style={{ backgroundImage: `url(${item.image})` }}
           >
             {/* Overlay negro transparente */}
-            <div className="absolute inset-0 bg-black/30 rounded-lg"></div>
+            <div className="absolute inset-0 bg-black/40 rounded-lg "></div>
           </div>
+
           <div
             ref={(el) => {
               cardContentRefs.current[index] = el;
             }}
-            className="absolute left-0 -top-8 text-white pl-2 md:pl-4"
+            className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4 "
           >
-            <div className="w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white" />
+            <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white" />
             <div className="mt-1 text-xs font-medium">{item.place}</div>
             <div className="mt-1 text-xs font-medium">{item.country}</div>
-            <div className="font-semibold text-xs sm:text-sm md:text-xl">
+            <div className="font-semibold text-[10px] sm:text-sm md:text-xl">
               {item.title}
             </div>
-            <div className="font-semibold text-xs sm:text-sm md:text-xl">
+            <div className="font-semibold text-[10px] sm:text-sm md:text-xl">
               {item.title2}
             </div>
           </div>
-        </div>
+        </Fragment>
       ))}
 
       {/* Images hero even */}
       <div
         ref={detailsEvenElementRef}
-        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-[9rem] z-20 max-w-xs md:max-w-none py-4"
+        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-36 z-20 max-w-xs md:max-w-none py-4"
       >
         <div className="relative overflow-hidden">
           <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
           <div ref={placeTextEvenRef} className="pt-2 text-sm md:text-xl">
             {data[order[0]]?.place}
           </div>
-          <div ref={countryTextOddRef} className="pb-2 text-sm md:text-xl">
+          <div ref={countryTextEvenRef} className="pb-2 text-sm md:text-xl">
             {data[order[0]]?.country}
           </div>
         </div>
@@ -687,7 +679,7 @@ const HeroTravelSlides = () => {
         </div>
         <div
           ref={descEvenRef}
-          className="mt-2 w-full sm:w-80 md:w-[35rem] text-xs sm:text-sm md:text-base md:text-justify"
+          className="mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify "
         >
           {data[order[0]]?.description}
         </div>
@@ -709,7 +701,7 @@ const HeroTravelSlides = () => {
       {/* Images hero odd */}
       <div
         ref={detailsOddElementRef}
-        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-[9rem] z-20 max-w-xs md:max-w-none py-4"
+        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-36 z-20 max-w-xs md:max-w-none py-4"
       >
         <div className="relative overflow-hidden">
           <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
@@ -744,7 +736,7 @@ const HeroTravelSlides = () => {
         </div>
         <div
           ref={descOddRef}
-          className="mt-2 w-full sm:w-80 md:w-[35rem] text-xs sm:text-sm md:text-base md:text-justify"
+          className="mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify "
         >
           {data[order[0]]?.description}
         </div>
