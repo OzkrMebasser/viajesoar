@@ -2,9 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/app/i18n/navigation";
 import { useTranslations } from "next-intl";
-import ScrollIndicator from "./ScrollIndicator";
 import { useTheme } from "@/lib/context/ThemeContext";
-import ThemeSelector from "./ThemeSelector";
+import { CircleFlag } from "react-circle-flags";
+// Components
+import ScrollIndicator from "@/components/ScrollIndicator";
+import ThemeSelector from "@/components/ThemeSelector";
+import Logo from "@/components/Navigation/Logo";
 
 import {
   Globe,
@@ -17,7 +20,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 // import { useRouter } from "next/navigation";
-import UserMenu from "./Auth/UserMenu";
+import UserMenu from "../Auth/UserMenu";
 import Fuse from "fuse.js";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { usePathname, useRouter } from "@/app/i18n/navigation";
@@ -42,48 +45,6 @@ const routes: Record<string, { [key in Locale]: string }> = {
   blog: { es: "/blog", en: "/blog" },
   contact: { es: "/contacto", en: "/contact" },
 };
-
-const LogoBig = () => {
-  const { theme } = useTheme();
-
-  return (
-    <>
-      <div className="relative">
-        <img
-          src="/VIAJES-soar-logo-blues.png"
-          alt="ViajeSoar Logo"
-          className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
-        />
-
-        <div className="absolute inset-0 accent-hover:hover blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-      </div>
-      <strong>
-        <span className="text-xl lg:text-3xl font-bold tracking-wider transition-colors duration-300 text-theme">
-          VIAJE
-          <span
-            className="soar accent ml-[1px]"
-          >
-            SOAR
-          </span>
-        </span>
-      </strong>
-    </>
-  );
-};
-
-const LogoSmall = () => (
-  <>
-    <div className="relative group">
-      <img
-        src="/VIAJES-soar-logo-blues.png"
-        alt="ViajeSoar Logo"
-        className="mt-8 w-[70px] h-[70px] lg:w-[90px] lg:h-[90px] transition-transform duration-300 group-hover:scale-125 group-hover:rotate-5"
-      />
-
-      <div className="absolute inset-0 bg-teal-400/50 blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-    </div>
-  </>
-);
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -292,7 +253,7 @@ const Navigation = () => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_, session) => {
         setUser(session?.user || null);
-      }
+      },
     );
 
     return () => {
@@ -334,25 +295,20 @@ const Navigation = () => {
               aria-expanded={isMobileMenuOpen ? "true" : "false"}
               aria-controls="mobile-menu"
             >
-              <IndentIncrease className={`w-6 h-6 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
-              {/* {isMobileMenuOpen ? (
-                <IndentDecrease className="w-6 h-6 text-green-500 " />
-              ) : (
-                // <Menu className="w-6 h-6" />
-                <IndentIncrease className="w-6 h-6 text-fuchsia-500" />
-              )} */}
+              <IndentIncrease
+                className={`w-6 h-6 text-nav ${!isScrolled ? "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`}
+              />
             </button>
-
             <Link
               href="/"
               onClick={() => setActiveItem("Home")}
               className="flex items-center gap-2 group cursor-pointer absolute left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
             >
-              {isScrolled ? <LogoBig /> : <LogoSmall />}
+              <Logo isScrolled={isScrolled} />
             </Link>
 
             {/* Área de íconos a la derecha */}
-            <div className="flex items-center gap-3 relative z-[10000] ">
+            <div className="flex items-center gap-3 relative z-[10000] align-middle ">
               {/*Boton búsqueda*/}
               <button
                 type="button"
@@ -364,17 +320,27 @@ const Navigation = () => {
                 }}
                 aria-label="Buscar"
               >
-                <Search className={`w-5 h-5 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
+                <Search
+                  className={`w-5 h-5 text-nav ${!isScrolled ? "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`}
+                />
               </button>
               {/*Boton idioma*/}
-              <button
-                type="button"
+              <div
                 onClick={toggleLanguage}
-                className="p-2 rounded-full transition-all duration-300 hover:scale-110  pointer-events-auto z-[10001] hidden md:block"
+                className="flex items-center justify-center p-2 rounded-full transition-all duration-300 hover:scale-110 pointer-events-auto z-[10001] hidden md:flex"
                 aria-label="Cambiar idioma"
               >
-                <Globe className={`w-5 h-5 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
-              </button>
+                <button
+                  className="w-5 h-5 rounded-full overflow-hidden flex items-center justify-center"
+                  type="button"
+                >
+                  {locale === "es" ? (
+                    <CircleFlag countryCode="mx" />
+                  ) : (
+                    <CircleFlag countryCode="us" />
+                  )}
+                </button>
+              </div>
               {/* 🎨 Selector de tema con <select> y emojis */}
 
               <div className="relative pointer-events-auto z-[10001] ">
@@ -391,16 +357,19 @@ const Navigation = () => {
                     className="p-2 rounded-full transition-all duration-300 hover:scale-110  hover:bg-white/90 pointer-events-auto z-[10002]"
                     aria-label="Iniciar sesión"
                   >
-                    <User className={`w-5 h-5 text-nav ${!isScrolled ?  "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`} />
+                    <User
+                      className={`w-5 h-5 text-nav ${!isScrolled ? "drop-shadow-[0_0_10px_rgba(1,1,1,0.9)]" : ""}`}
+                    />
                   </button>
                 )}
               </div>
             </div>
           </div>
+          {/* Progress Bar */}
           <ScrollIndicator />
         </div>
       </nav>
-
+  {/*Search area */}
       <div
         className={`fixed inset-0 z-50 transition-all duration-300 text-theme  ${
           isSearchOpen
@@ -478,7 +447,7 @@ const Navigation = () => {
                       >
                         {suggestion}
                       </button>
-                    )
+                    ),
                   )}
                 </div>
               </div>
@@ -486,7 +455,7 @@ const Navigation = () => {
           </div>
         </div>
       </div>
-
+  {/*Mobile nav */}
       <div
         className={`nav fixed inset-0 z-40 transition-all duration-500  ${
           isMobileMenuOpen
@@ -515,7 +484,7 @@ const Navigation = () => {
           }`}
         >
           {/*Border mobile nav  */}
-          <div className="flex items-center justify-between p-4 border-b border-[var(--text)]">
+          <div className="flex items-center justify-between p-4 border-b border-(--text)">
             {/*Hide Menu */}
             <button
               type="button"
@@ -539,29 +508,28 @@ const Navigation = () => {
             >
               <Search className="w-5 h-5" />
             </button>
-            {/* Language Selector */}
+            {/*Boton idioma*/}
+
             <button
               type="button"
               onClick={toggleLanguage}
               className={`p-2 text-theme  rounded-lg transition-colors hover:bg-[var(--bg-secondary)]`}
               aria-label="Cambiar idioma"
             >
-              <Globe className="w-5 h-5" />
+              {locale === "es" ? (
+                <CircleFlag className="w-5 h-5" countryCode="mx" />
+              ) : (
+                <CircleFlag className="w-5 h-5" countryCode="us" />
+              )}
             </button>
 
             {/* Theme Selector */}
             <ThemeSelector />
           </div>
 
-          <div className="px-5 flex flex-col justify-evenly h-full relative z-50">
-            {/* <div className="flex items-center justify-between mb-6">
-              <span className="text-theme-secondary font-medium text-sm tracking-wider uppercase">
-                Navigation
-              </span>
-            </div> */}
-
+          <div className="px-5 flex flex-col justify-evenly h-full relative z-50 ">
             {/* Navigation Items */}
-            <div className="space-y-12 lg:space-y-6  relative z-50 ">
+            <div className="space-y-12 lg:space-y-10 bottom-20 lg:bottom-14  relative z-50 ">
               {navItems.map((item, index) => (
                 <Link
                   key={index}
@@ -588,38 +556,7 @@ const Navigation = () => {
                 </Link>
               ))}
             </div>
-
-            <div className=" ">
-              {/* <button
-                type="button"
-                onClick={toggleLanguage}
-                className="p-2 mt-4 rounded-full transition-all duration-300 hover:scale-110 text-white hover:bg-white/10 pointer-events-auto z-50"
-                aria-label="Cambiar idioma"
-              >
-                <Globe className="w-5 h-5" />
-              </button> */}
-              {/* {user ? (
-                <UserMenu isMobile={true} />
-              ) : (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleLoginRedirect();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 p-3 mt-4 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-300 pointer-events-auto z-50 font-medium"
-                >
-                  <User className="w-5 h-5" />
-                  <span>Iniciar Sesión</span>
-                </button>
-              )} */}
-            </div>
           </div>
-          {/* <div className="relative mx-auto h-44 w-44 bg-gray-600">
-            <p className="text-white text-center">Logo aqui</p>
-          </div> */}
         </div>
       </div>
     </>

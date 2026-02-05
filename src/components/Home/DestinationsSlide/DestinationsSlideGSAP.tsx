@@ -23,7 +23,6 @@ import ParticlesCanvas from "@/components/ParticlesCanvas";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-
 gsap.registerPlugin(ScrollTrigger);
 
 // Icon map
@@ -63,21 +62,26 @@ export default function DestinationsSlideGSAP() {
       setIsMobile(mobile);
       setIsDesktop(!mobile);
     };
-    
+
     checkDevice();
-    window.addEventListener('resize', checkDevice);
-    return () => window.removeEventListener('resize', checkDevice);
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
   // 🔥 GSAP Horizontal Scroll - SOLO EN DESKTOP
   useEffect(() => {
-    if (!carouselRef.current || !scrollContainerRef.current || loading || !isDesktop) {
+    if (
+      !carouselRef.current ||
+      !scrollContainerRef.current ||
+      loading ||
+      !isDesktop
+    ) {
       return;
     }
 
     const carousel = carouselRef.current;
     const scrollContainer = scrollContainerRef.current;
-    
+
     const carouselWidth = carousel.scrollWidth;
     const containerWidth = scrollContainer.offsetWidth;
     const scrollDistance = carouselWidth - containerWidth;
@@ -110,61 +114,61 @@ export default function DestinationsSlideGSAP() {
   }, [loading, regions, isDesktop]);
 
   // 👆 Detectar scroll y posición - SOLO EN MOBILE
-useEffect(() => {
-  if (!isMobile || loading) return;
-  
-  const timeoutId = setTimeout(() => {
-    const scrollElement = mobileScrollRef.current;
-    
-    if (!scrollElement) {
-      console.log('❌ No scrollElement después del timeout');
-      return;
-    }
+  useEffect(() => {
+    if (!isMobile || loading) return;
 
-    console.log('✅ ScrollElement encontrado!');
+    const timeoutId = setTimeout(() => {
+      const scrollElement = mobileScrollRef.current;
 
-    const handleScroll = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
-      const maxScroll = scrollWidth - clientWidth;
-      
-      // Calcular índice activo
-      const cardWidth = 300; // Ajusta según el ancho de tus cards
-      const newActiveIndex = Math.round(scrollLeft / cardWidth);
-      setActiveCardIndex(Math.min(newActiveIndex, regions.length - 1));
-      
-      console.log('📊 ScrollLeft:', scrollLeft, 'MaxScroll:', maxScroll);
-      
-      // Al final del scroll
-      if (scrollLeft >= maxScroll - 5) {
-        console.log('🏁 Al final');
-        setIsAtEnd(true);
-        setShowScrollIndicator(true);
-      } 
-      // Al inicio del scroll
-      else if (scrollLeft <= 5) {
-        console.log('🏁 Al inicio');
-        setIsAtEnd(false);
-        setShowScrollIndicator(true);
+      if (!scrollElement) {
+        console.log("❌ No scrollElement después del timeout");
+        return;
       }
-      // En el medio
-      else {
-        console.log('⏸️ En el medio');
-        setShowScrollIndicator(false);
-      }
-    };
 
-    scrollElement.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+      console.log("✅ ScrollElement encontrado!");
+
+      const handleScroll = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
+        const maxScroll = scrollWidth - clientWidth;
+
+        // Calcular índice activo
+        const cardWidth = 300; // Ajusta según el ancho de tus cards
+        const newActiveIndex = Math.round(scrollLeft / cardWidth);
+        setActiveCardIndex(Math.min(newActiveIndex, regions.length - 1));
+
+        console.log("📊 ScrollLeft:", scrollLeft, "MaxScroll:", maxScroll);
+
+        // Al final del scroll
+        if (scrollLeft >= maxScroll - 5) {
+          console.log("🏁 Al final");
+          setIsAtEnd(true);
+          setShowScrollIndicator(true);
+        }
+        // Al inicio del scroll
+        else if (scrollLeft <= 5) {
+          console.log("🏁 Al inicio");
+          setIsAtEnd(false);
+          setShowScrollIndicator(true);
+        }
+        // En el medio
+        else {
+          console.log("⏸️ En el medio");
+          setShowScrollIndicator(false);
+        }
+      };
+
+      scrollElement.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
+
+      return () => {
+        scrollElement.removeEventListener("scroll", handleScroll);
+      };
+    }, 200);
 
     return () => {
-      scrollElement.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
     };
-  }, 200);
-
-  return () => {
-    clearTimeout(timeoutId);
-  };
-}, [isMobile, loading, regions.length]);
+  }, [isMobile, loading, regions.length]);
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
@@ -182,7 +186,7 @@ useEffect(() => {
   }
 
   return (
-    <div 
+    <div
       ref={scrollContainerRef}
       className="relative min-h-screen py-16 px-4 overflow-hidden bg-gradient-theme"
     >
@@ -213,11 +217,11 @@ useEffect(() => {
         <div className="relative">
           {/* 👉 Indicador de Scroll - SOLO MOBILE */}
           {isMobile && showScrollIndicator && (
-            <div 
+            <div
               className={`
                 absolute top-1/2 -translate-y-1/2 z-30 pointer-events-none
                 transition-all duration-300
-                ${isAtEnd ? 'left-0' : 'right-0'}
+                ${isAtEnd ? "left-0" : "right-0"}
               `}
             >
               <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg animate-pulse">
@@ -231,31 +235,35 @@ useEffect(() => {
           )}
 
           {/* 🎨 Carousel - Híbrido: nativo mobile / GSAP desktop */}
-          <div 
-            ref={mobileScrollRef} 
+          <div
+            ref={mobileScrollRef}
             className={`
-              ${isMobile ? 'overflow-x-auto overflow-y-hidden' : 'overflow-hidden'}
-              ${isMobile ? 'snap-x snap-mandatory scroll-smooth' : ''}
-              ${isMobile ? '-mx-4 px-4' : ''}
+              ${isMobile ? "overflow-x-auto overflow-y-hidden" : "overflow-hidden"}
+              ${isMobile ? "snap-x snap-mandatory scroll-smooth" : ""}
+              ${isMobile ? "-mx-4 px-4" : ""}
             `}
-            style={isMobile ? {
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch',
-            } : {}}
+            style={
+              isMobile
+                ? {
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    WebkitOverflowScrolling: "touch",
+                  }
+                : {}
+            }
           >
             <style jsx>{`
               div::-webkit-scrollbar {
                 display: none;
               }
             `}</style>
-            
-            <div 
+
+            <div
               ref={carouselRef}
               className={`
                 flex gap-6 md:gap-8
-                ${!isMobile ? 'will-change-transform' : ''}
-                ${isMobile ? 'pb-4' : ''}
+                ${!isMobile ? "will-change-transform" : ""}
+                ${isMobile ? "pb-4" : ""}
               `}
             >
               {/* 🗺️ Regions Cards */}
@@ -270,7 +278,7 @@ useEffect(() => {
                       sm:min-w-[300px] sm:w-[300px]
                       md:min-w-[350px] md:w-[350px] 
                       flex-shrink-0
-                      ${isMobile ? 'snap-center' : ''}
+                      ${isMobile ? "snap-center" : ""}
                     `}
                   >
                     <div className="bg-white/5 rounded-2xl overflow-hidden relative group h-full">
@@ -301,8 +309,11 @@ useEffect(() => {
                           </p>
                           <button
                             onClick={() => {
-                              const basePath = locale === "es" ? "destinos" : "destinations";
-                              router.push(`/${locale}/${basePath}/${region.slug}`);
+                              const basePath =
+                                locale === "es" ? "destinos" : "destinations";
+                              router.push(
+                                `/${locale}/${basePath}/${region.slug}`,
+                              );
                             }}
                             className="bg-white text-slate-900 px-5 py-2 rounded-full font-semibold hover:bg-slate-100 transition-colors duration-300"
                           >
@@ -319,27 +330,34 @@ useEffect(() => {
         </div>
 
         {/* 📱 Mobile scroll indicator */}
-\{isMobile && regions.length > 2 && (
-  <div className="flex justify-center gap-3 mt-6">
-    {regions.map((_, index) => {
-      const isActive = index === activeCardIndex;
-      
-      return (
-        <div
-          key={index}
-          className={`
-            rounded-full transition-all duration-300
-            ${isActive 
-              ? 'w-3 h-3 bg-white shadow-lg' 
-              : 'w-2.5 h-2.5 bg-white/40'
-            }
-          `}
-        />
-      );
-    })}
-  </div>
-)}
-       
+        {isMobile && regions.length > 2 && (
+          <div className="flex justify-center gap-3 mt-6">
+            {regions.map((_, index) => {
+              const isActive = index === activeCardIndex;
+
+              // Cálculo automático: 22.5 grados por cada index
+              const rotation = index + 45 - index;
+
+              return (
+                <div
+                  key={index}
+                  style={{
+                    transform: isActive
+                      ? `rotate(${rotation}deg)`
+                      : "rotate(0deg)",
+                  }}
+                  className={`
+            transition-all duration-500 ease-in-out
+            ${
+              isActive
+                ? "w-3 h-3 bg-theme-accent shadow-lg scale-110"
+                : "w-2.5 h-2.5 bg-white/40"
+            }`}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
