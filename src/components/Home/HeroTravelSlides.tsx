@@ -24,6 +24,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   const [order, setOrder] = useState<number[]>([]);
   const [detailsEven, setDetailsEven] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [animationsReady, setAnimationsReady] = useState(false);
 
   // All the refs...
   const orderRef = useRef<number[]>([]);
@@ -77,24 +78,42 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     detailsEvenRef.current = detailsEven;
   }, [detailsEven]);
 
-  useEffect(() => {
-    // Solo inicializar si tenemos datos y orden configurado
-    // if (data.length > 0 && order.length > 0) {
-    //   initializeAnimations();
-    // }
-    if (!containerRef.current) return;
-    if (data.length === 0) return;
-    if (order.length === 0) return;
+  // useEffect(() => {
+  //   // Solo inicializar si tenemos datos y orden configurado
+  //   // if (data.length > 0 && order.length > 0) {
+  //   //   initializeAnimations();
+  //   // }
+  //   if (!containerRef.current) return;
+  //   if (data.length === 0) return;
+  //   if (order.length === 0) return;
 
-    initializeAnimations();
+  //   initializeAnimations();
 
-    return () => {
-      if (loopTimeoutRef.current) {
-        clearTimeout(loopTimeoutRef.current);
-      }
-    };
-  }, [data.length, order.length]);
+  //   return () => {
+  //     if (loopTimeoutRef.current) {
+  //       clearTimeout(loopTimeoutRef.current);
+  //     }
+  //   };
+  // }, [data.length, order.length]);
   // }, [data, order]);
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      initializeAnimations();
+    }, containerRef);
+
+    return () => ctx.revert(); // 🔥 LIMPIA TODO
+    // return () => {
+    //   ctx.revert(); // Limpia GSAP
+
+    //   // 🔥 Agregar esto también
+    //   if (loopTimeoutRef.current) {
+    //     clearTimeout(loopTimeoutRef.current);
+    //     loopTimeoutRef.current = null;
+    //   }
+    // };
+  }, [data.length, order.length]);
 
   const showMap = useFadeOutMap({
     selector: ".worldmap-container",
@@ -289,7 +308,26 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     });
 
     gsap.to(navRef.current, { y: 0, opacity: 1, ease, delay: startDelay });
-    gsap.to(detailsActive, { opacity: 1, x: 0, ease, delay: startDelay });
+    //   gsap.to(detailsActive, { opacity: 1, x: 0, ease, delay: startDelay });
+
+    //    loopTimeoutRef.current = setTimeout(() => {
+    //   loop();
+    // }, 1500);
+    gsap.to(detailsActive, {
+      opacity: 1,
+      x: 0,
+      ease,
+      delay: startDelay,
+      onComplete: () => {
+        // 🔥 Marcar que las animaciones iniciales terminaron
+        setAnimationsReady(true);
+
+        // Iniciar el loop
+        loopTimeoutRef.current = setTimeout(() => {
+          loop();
+        }, 500);
+      },
+    });
   };
 
   const step = (direction: "next" | "prev" = "next"): Promise<void> => {
