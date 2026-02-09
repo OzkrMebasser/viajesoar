@@ -1,4 +1,4 @@
-import TravelSlideshow from "@/components/Home/HeroTravelSlides";
+import TravelSlideshow from "@/components/Home/Hero/HeroTravelSlides";
 import CubeEffectSlider from "@/components/CubeEffectSlider";
 import DestinationsSlideGSAP from "@/components/Home/DestinationsSlide/DestinationsSlideGSAP";
 import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";

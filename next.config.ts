@@ -7,8 +7,13 @@ const withNextIntl = createNextIntlPlugin('./src/app/i18n/request.ts');
 const nextConfig = {
     allowedDevOrigins: [
     "http://localhost:3000",
-    "http://192.168.100.9:3000",
+    "http://192.168.100.6:3000",
+    "firebasestorage.googleapis.com"
   ],
+  images:{
+    
+  }
+  
 };
 
 export default withNextIntl(nextConfig);
