@@ -37,7 +37,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   const indicatorRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
-  const coverRef = useRef<HTMLDivElement>(null);
+  // const coverRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const slideNumberRefs = useRef<(HTMLDivElement | null)[]>([]);
   const placeTextEvenRef = useRef<HTMLDivElement>(null);
@@ -246,24 +246,24 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     //     }, 500);
     //   },
     // });
-    gsap.to(coverRef.current, {
-      x: width + coverXOffset,
-      delay: 0.5,
-      ease,
-      onComplete: () => {
-        // 🔥 IMPORTANTE: Ocultar el cover después de la animación
+    // gsap.to(coverRef.current, {
+    //   x: width + coverXOffset,
+    //   delay: 0.5,
+    //   ease,
+    //   onComplete: () => {
+    //     // 🔥 IMPORTANTE: Ocultar el cover después de la animación
 
-        loopTimeoutRef.current = setTimeout(() => {
-          loop();
-        }, 500);
+    //     loopTimeoutRef.current = setTimeout(() => {
+    //       loop();
+    //     }, 500);
 
-        // 🔥 Con null check
-        if (coverRef.current) {
-          gsap.killTweensOf(coverRef.current);
-          coverRef.current.style.display = "none";
-        }
-      },
-    });
+    //     // 🔥 Con null check
+    //     if (coverRef.current) {
+    //       gsap.killTweensOf(coverRef.current);
+    //       coverRef.current.style.display = "none";
+    //     }
+    //   },
+    // });
 
     rest.forEach((i, index) => {
       gsap.to(cardRefs.current[i], {
@@ -787,10 +787,10 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
       <nav ref={navRef} className="opacity-0" />
 
-      <div
+      {/* <div
         ref={coverRef}
         className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
-      />
+      /> */}
     </div>
   );
 };
