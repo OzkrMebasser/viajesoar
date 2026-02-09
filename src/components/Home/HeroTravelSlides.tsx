@@ -13,7 +13,6 @@ import { useFadeOutMap } from "@/lib/hooks/useFadeOutMap";
 import type { Locale } from "@/types/locale";
 import type { SlideshowDestination } from "@/types/heroDestinations";
 
-
 interface Props {
   locale: Locale;
   data: SlideshowDestination[];
@@ -237,14 +236,32 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     const startDelay = 0.6;
     const coverXOffset = isSmallMobile ? 150 : isMobile ? 200 : 400;
 
+    // gsap.to(coverRef.current, {
+    //   x: width + coverXOffset,
+    //   delay: 0.5,
+    //   ease,
+    //   onComplete: () => {
+    //     loopTimeoutRef.current = setTimeout(() => {
+    //       loop();
+    //     }, 500);
+    //   },
+    // });
     gsap.to(coverRef.current, {
       x: width + coverXOffset,
       delay: 0.5,
       ease,
       onComplete: () => {
+        // 🔥 IMPORTANTE: Ocultar el cover después de la animación
+
         loopTimeoutRef.current = setTimeout(() => {
           loop();
         }, 500);
+
+        // 🔥 Con null check
+        if (coverRef.current) {
+          gsap.killTweensOf(coverRef.current);
+          coverRef.current.style.display = "none";
+        }
       },
     });
 
@@ -588,7 +605,6 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     }, 100);
   };
 
-
   // console.log("Data", data)
   // 🔐 GUARD SSR / DATA
   if (!ready || !data || data.length === 0) {
@@ -733,7 +749,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           >
             {data[order[0]]?.title}
           </div>
-           <div
+          <div
             ref={title2OddRef}
             className="text-2xl sm:text-4xl md:text-7xl font-semibold leading-tight"
           >

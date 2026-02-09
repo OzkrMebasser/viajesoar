@@ -4,6 +4,7 @@ import DestinationsSlideGSAP from "@/components/Home/DestinationsSlide/Destinati
 import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 import { getHeroDestinations } from "@/lib/data/destinations/heroSlide";
 import type { Locale } from "@/types/locale"
+import DestinationsSlideGSAPSkeleton from "@/components/Home/DestinationsSlide/DestinationsSlideGSAPSkeleton";
 
 
 export default async function Home(props: {
@@ -19,6 +20,7 @@ export default async function Home(props: {
     <div>
       <TravelSlideshow locale={params.locale} data={data} />
       <DestinationsSlideGSAP />
+      <DestinationsSlideGSAPSkeleton/>
       <PackagesSlideGSAP />
       <CubeEffectSlider />
     </div>
