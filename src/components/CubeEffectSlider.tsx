@@ -11,6 +11,7 @@ import "swiper/css";
 import "swiper/css/effect-cube";
 import ParticlesCanvas from "./ParticlesCanvas";
 import ButtonArrow from "./ui/ButtonArrow";
+import SplitTextVanilla from "./SplitTextVanilla";
 
 
 type Locale = "es" | "en";
@@ -111,7 +112,7 @@ export default function CubeEffectSlider(): React.ReactNode {
   if (!mounted) return null;
 
   return (
-    <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12 overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12 ">
       {/* Animated Particles Background */}
       <ParticlesCanvas />
 
@@ -122,7 +123,7 @@ export default function CubeEffectSlider(): React.ReactNode {
           {/* <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
             Let's Travel The World Together!
           </h1> */}
-          <SplitText
+          <SplitTextVanilla
             text={locale === "es" ? "Aventuras SOARprendentes" : "SOARprising Tours"}
             className="text-2xl sm:text-4xl md:text-7xl font-semibold text-theme-tittles mb-4 uppercase"
             delay={100}

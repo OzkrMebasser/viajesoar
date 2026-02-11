@@ -156,7 +156,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       wordWrap: 'break-word',
       willChange: 'transform, opacity'
     };
-    const classes = `split-parent overflow-hidden inline-block whitespace-normal ${className}`;
+    const classes = `split-parent  inline-block whitespace-normal ${className}`;
     switch (tag) {
       case 'h1': return <h1 ref={ref} style={style} className={classes}>{text}</h1>;
       case 'h2': return <h2 ref={ref} style={style} className={classes}>{text}</h2>;

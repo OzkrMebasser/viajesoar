@@ -20,6 +20,7 @@ import {
   useCountriesByRegion,
 } from "@/lib/hooks/useDestinations";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
+import DestinationsSlideGSAPSkeleton from "./DestinationsSlideGSAPSkeleton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -42,9 +43,9 @@ type Locale = "es" | "en";
 export default function DestinationsSlideGSAP() {
   const locale = useLocale() as Locale;
   const { regions, loading, error } = useDestinationRegions(locale);
-  const { countries } = useCountriesByRegion(locale);
+  // const { countries } = useCountriesByRegion(locale);
   const router = useRouter();
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -69,49 +70,88 @@ export default function DestinationsSlideGSAP() {
   }, []);
 
   // 🔥 GSAP Horizontal Scroll - SOLO EN DESKTOP
-  useEffect(() => {
-    if (
-      !carouselRef.current ||
-      !scrollContainerRef.current ||
-      loading ||
-      !isDesktop
-    ) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (
+  //     !carouselRef.current ||
+  //     !scrollContainerRef.current ||
+  //     loading ||
+  //     !isDesktop
+  //   ) {
+  //     return;
+  //   }
 
-    const carousel = carouselRef.current;
-    const scrollContainer = scrollContainerRef.current;
+  //   const carousel = carouselRef.current;
+  //   const scrollContainer = scrollContainerRef.current;
 
-    const carouselWidth = carousel.scrollWidth;
-    const containerWidth = scrollContainer.offsetWidth;
-    const scrollDistance = carouselWidth - containerWidth;
+  //   const carouselWidth = carousel.scrollWidth;
+  //   const containerWidth = scrollContainer.offsetWidth;
+  //   const scrollDistance = carouselWidth - containerWidth;
 
-    if (scrollDistance <= 0) return;
+  //   if (scrollDistance <= 0) return;
 
-    const scrollTween = gsap.to(carousel, {
-      x: -scrollDistance,
-      ease: "none",
-      scrollTrigger: {
-        trigger: scrollContainer,
-        start: "top top",
-        end: "200% bottom",
-        id: "regions-scroll",
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
+  //   const scrollTween = gsap.to(carousel, {
+  //     x: -scrollDistance,
+  //     ease: "none",
+  //     scrollTrigger: {
+  //       trigger: scrollContainer,
+  //       start: "top top",
+  //       end: "200% bottom",
+  //       id: "regions-scroll",
+  //       scrub: 1,
+  //       pin: true,
+  //       anticipatePin: 1,
+  //       invalidateOnRefresh: true,
+  //     },
+  //   });
+
+  //   return () => {
+  //     scrollTween.kill();
+  //     ScrollTrigger.getAll().forEach((trigger) => {
+  //       if (trigger.trigger === scrollContainer) {
+  //         trigger.kill();
+  //       }
+  //     });
+  //   };
+  // }, [loading, regions, isDesktop]);
+
+useEffect(() => {
+  if (!carouselRef.current || !scrollContainerRef.current || loading || !isDesktop) {
+    return;
+  }
+
+  const carousel = carouselRef.current;
+  const scrollContainer = scrollContainerRef.current;
+
+  const carouselWidth = carousel.scrollWidth;
+  const containerWidth = scrollContainer.offsetWidth;
+  const scrollDistance = carouselWidth - containerWidth;
+
+  if (scrollDistance <= 0) return;
+
+  const scrollTween = gsap.to(carousel, {
+    x: -scrollDistance, // 👈 Scroll izquierda a derecha
+    ease: "none",
+    scrollTrigger: {
+      trigger: scrollContainer,
+      start: "top top",
+      end: () => `+=${scrollDistance}`,
+      id: "destinations-scroll", // 👈 ID único
+      scrub: 1,
+      pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  return () => {
+    scrollTween.kill();
+    ScrollTrigger.getAll().forEach((trigger) => {
+      if (trigger.trigger === scrollContainer) {
+        trigger.kill();
+      }
     });
-
-    return () => {
-      scrollTween.kill();
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.trigger === scrollContainer) {
-          trigger.kill();
-        }
-      });
-    };
-  }, [loading, regions, isDesktop]);
+  };
+}, [loading, regions, isDesktop]);
 
   // 👆 Detectar scroll y posición - SOLO EN MOBILE
   useEffect(() => {
@@ -125,7 +165,7 @@ export default function DestinationsSlideGSAP() {
         return;
       }
 
-      console.log("✅ ScrollElement encontrado!");
+      // console.log("✅ ScrollElement encontrado!");
 
       const handleScroll = () => {
         const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
@@ -136,7 +176,7 @@ export default function DestinationsSlideGSAP() {
         const newActiveIndex = Math.round(scrollLeft / cardWidth);
         setActiveCardIndex(Math.min(newActiveIndex, regions.length - 1));
 
-        console.log("📊 ScrollLeft:", scrollLeft, "MaxScroll:", maxScroll);
+        // console.log("📊 ScrollLeft:", scrollLeft, "MaxScroll:", maxScroll);
 
         // Al final del scroll
         if (scrollLeft >= maxScroll - 5) {
@@ -169,13 +209,13 @@ export default function DestinationsSlideGSAP() {
       clearTimeout(timeoutId);
     };
   }, [isMobile, loading, regions.length]);
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
-        {locale === "es" ? "Cargando regiones..." : "Loading destinations..."}
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+  //       {locale === "es" ? "Cargando regiones..." : "Loading destinations..."}
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -186,25 +226,37 @@ export default function DestinationsSlideGSAP() {
   }
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="relative min-h-screen py-16 px-4 overflow-hidden bg-gradient-theme"
-    >
-      <ParticlesCanvas />
+    // <div
+    //   ref={scrollContainerRef}
+    //   // className="relative min-h-screen py-16 px-4 overflow-hidden bg-gradient-theme"
+    //    className="w-screen h-screen py-16 px-4 bg-gradient-theme"
+    // >
+ <div
+    ref={scrollContainerRef}
+    className="relative pb-20 px-4  bg-red-300  "
+  >
 
-      <div className="relative max-w-8xl mx-auto z-20">
+      {loading ? (
+    <DestinationsSlideGSAPSkeleton />
+  ) : (
+    <>
+    <ParticlesCanvas />
+     
+      <div className="relativel mx-auto z-20">
         {/* 🎯 Header con SplitText */}
         <div className="text-center mb-10">
           <SplitText
             text={locale === "es" ? "Descubre el Mundo" : "Discover the World"}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold text-theme-tittles mb-4 uppercase"
-            delay={50}
+         className="text-2xl sm:text-4xl md:text-7xl font-semibold text-theme-tittles mb-4 uppercase"
+            delay={25}
             duration={0.5}
             ease="power2.out"
             splitType="chars"
             from={{ opacity: 0, y: 20 }}
             to={{ opacity: 1, y: 0 }}
             textAlign="center"
+            threshold={0.3} // 🔥 Más alto para que active antes
+            rootMargin="-50px"
           />
           <p className="text-[var(--accent)] text-base md:text-xl px-6">
             {locale === "es"
@@ -359,6 +411,9 @@ export default function DestinationsSlideGSAP() {
           </div>
         )}
       </div>
+    </>
+  )}
+      
     </div>
   );
 }

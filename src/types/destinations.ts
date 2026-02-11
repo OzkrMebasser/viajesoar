@@ -15,6 +15,8 @@ export interface DestinationRegion {
   slug: string;
 }
 
+
+
 export interface DestinationCountry {
   id: string;
   locale: "es" | "en";

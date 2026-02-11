@@ -415,3 +415,33 @@ html[data-theme="vibrant"] {
     transform: perspective(720px) rotateX(0deg) rotateY(720deg);
   }
 }
+/* Locomotive Scroll Horizontal */
+html.has-scroll-smooth {
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+  will-change: transform;
+}
+
+[data-scroll-direction="horizontal"] {
+  will-change: transform;
+}
+
+/* Escritura vertical para el título en desktop */
+@media (min-width: 768px) {
+  .writing-mode-vertical-rl {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
