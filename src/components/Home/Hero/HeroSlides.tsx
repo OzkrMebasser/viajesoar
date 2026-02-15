@@ -1,12 +1,14 @@
-
 "use client";
 import React, { useState, useEffect, useRef, Fragment } from "react";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { Bookmark } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // Components
 import WorldMapLoader from "@/components/WorldMapLoader";
-import HeroSkeleton from "./HeroSkeleton";
+import HeroSlidesSkeleton from "./HeroSlidesSkeleton";
+import GhostButtonArrow from "@/components/ui/GhostButtonArrow";
 // Hooks
 import { useFadeOutMap } from "@/lib/hooks/useFadeOutMap";
 
@@ -28,6 +30,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
 
+  const router = useRouter();
   // All the refs...
   const orderRef = useRef<number[]>([]);
   const detailsEvenRef = useRef<boolean>(true);
@@ -59,6 +62,10 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   // Ref para rastrear si el componente está montado
   const isMountedRef = useRef<boolean>(true);
   // console.log("componente montado?: ", isMountedRef)
+  const viewportRef = useRef<{ width: number; height: number }>({
+    width: 0,
+    height: 0,
+  });
 
   /// UseEffects
   // Effect para manejar el mounted state
@@ -72,7 +79,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   // efecto que se ejecuta SOLO en el cliente
   // garantiza que el DOM esté listo antes de marcar como listo.
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // Forzamos un microtask para asegurar que el DOM esté pintado
       Promise.resolve().then(() => {
         if (isMountedRef.current) {
@@ -100,13 +107,18 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
   // ✅ CORRECCIÓN CLAVE: Reemplazamos el setTimeout por un bucle de verificación activa
   useEffect(() => {
-    if (!containerRef.current || data.length === 0 || order.length === 0 || !clientReady) {
+    if (
+      !containerRef.current ||
+      data.length === 0 ||
+      order.length === 0 ||
+      !clientReady
+    ) {
       return;
     }
 
     // Matar todas las animaciones previas antes de inicializar
     gsap.killTweensOf("*");
-    
+
     // Reset del estado de inicialización
     setInitialized(false);
     setIsAnimating(false);
@@ -146,7 +158,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       if (checkInterval) {
         clearInterval(checkInterval);
       }
-      
+
       // Limpiar timeout del loop
       if (loopTimeoutRef.current) {
         clearTimeout(loopTimeoutRef.current);
@@ -155,7 +167,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
       // Matar todas las animaciones GSAP
       gsap.killTweensOf("*");
-      
+
       // Reset de estados
       setIsAnimating(false);
       setInitialized(false);
@@ -173,7 +185,11 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   const initializeAnimations = (): void => {
     if (!isMountedRef.current) return;
 
-    const { innerHeight: height, innerWidth: width } = window;
+    // const { innerHeight: height, innerWidth: width } = window;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    viewportRef.current = { width, height };
     const isSmallMobile = width <= 480;
     const isMobile = width <= 768;
 
@@ -198,6 +214,37 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
     const currentOrder = orderRef.current;
     const [active, ...rest] = currentOrder;
+    const activeIndex = active;
+    const firstData = data[activeIndex];
+
+    const initialRefs = detailsEvenRef.current
+      ? [
+          placeTextEvenRef,
+          countryTextEvenRef,
+          title1EvenRef,
+          title2EvenRef,
+          descEvenRef,
+        ]
+      : [
+          placeTextOddRef,
+          countryTextOddRef,
+          title1OddRef,
+          title2OddRef,
+          descOddRef,
+        ];
+
+    if (firstData) {
+      if (initialRefs[0].current)
+        initialRefs[0].current.textContent = firstData.place;
+      if (initialRefs[1].current)
+        initialRefs[1].current.textContent = firstData.country;
+      if (initialRefs[2].current)
+        initialRefs[2].current.textContent = firstData.title;
+      if (initialRefs[3].current)
+        initialRefs[3].current.textContent = firstData.title2;
+      if (initialRefs[4].current)
+        initialRefs[4].current.textContent = firstData.description;
+    }
 
     const detailsActive = detailsEvenRef.current
       ? detailsEvenElementRef.current
@@ -348,16 +395,28 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     gsap.to(navRef.current, { y: 0, opacity: 1, ease, delay: startDelay });
     gsap.to(detailsActive, { opacity: 1, x: 0, ease, delay: startDelay });
   };
-   const step = (direction: "next" | "prev" = "next"): Promise<void> => {
+  const step = (direction: "next" | "prev" = "next"): Promise<void> => {
     return new Promise((resolve) => {
       if (isAnimating || !isMountedRef.current) {
         resolve();
         return;
       }
 
+      const currentDetails = detailsEvenRef.current
+        ? detailsEvenElementRef.current
+        : detailsOddElementRef.current;
+
+      if (currentDetails) {
+        const fixedHeight = currentDetails.offsetHeight;
+        gsap.set(currentDetails, {
+          height: fixedHeight,
+        });
+      }
+
       setIsAnimating(true);
 
-      const { innerHeight: height, innerWidth: width } = window;
+      // const { innerHeight: height, innerWidth: width } = window;
+      const { width, height } = viewportRef.current;
       const isSmallMobile = width <= 480;
       const isMobile = width <= 768;
 
@@ -485,7 +544,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
       gsap.set(cardRefs.current[prv], { zIndex: 10 });
       gsap.set(cardRefs.current[active], { zIndex: 20 });
-      gsap.to(cardRefs.current[prv], { scale: 1.5, ease, duration: 1 });
+      gsap.to(cardRefs.current[prv], { scale: 1, ease, duration: 1 });
 
       gsap.to(cardContentRefs.current[active], {
         y: offsetTop + cardHeight - (isSmallMobile ? 5 : 10),
@@ -586,6 +645,10 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           gsap.set(inactiveRefs[4].current, { y: yOffset3 });
           gsap.set(inactiveRefs[5].current, { y: yOffset3 });
 
+          if (detailsActive) {
+            gsap.set(detailsActive, { height: "auto" });
+          }
+
           setIsAnimating(false);
           resolve();
         },
@@ -669,17 +732,15 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     }, 100);
   };
 
-  
-
   // 🔐 GUARD SSR / DATA
   if (!clientReady || !data || data.length === 0) {
-    return <HeroSkeleton />;
+    return <HeroSlidesSkeleton />;
   }
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen text-white overflow-hidden bg-gradient-theme"
+      className="relative w-auto h-dvh text-white overflow-hidden bg-gradient-theme"
     >
       {/* Mapa del mundo loader */}
       {clientReady && showMap && (
@@ -704,11 +765,11 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
-            className="absolute left-0 top-0 bg-center bg-cover shadow-2xl w-50"
+            className="absolute left-0 top-0 bg-center bg-cover shadow-2xl w-50 [box-shadow:2px_2px_3px_#000000]"
             style={{ backgroundImage: `url(${item.image})` }}
           >
             {/* Overlay negro transparente */}
-            <div className="absolute inset-0 bg-black/40 rounded-lg"></div>
+            <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
           </div>
 
           <div
@@ -716,14 +777,15 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
               cardContentRefs.current[index] = el;
             }}
             className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4"
+            
           >
-            <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white" />
-            <div className="mt-1 text-xs font-medium">{item.place}</div>
-            <div className="mt-1 text-xs font-medium">{item.country}</div>
-            <div className="font-semibold text-[10px] sm:text-sm md:text-xl">
+            <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
+            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">{item.place}</div>
+            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">{item.country}</div>
+            <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
               {item.title}
             </div>
-            <div className="font-semibold text-[10px] sm:text-sm md:text-xl">
+            <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
               {item.title2}
             </div>
           </div>
@@ -733,103 +795,105 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       {/* Images hero even */}
       <div
         ref={detailsEvenElementRef}
-        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
+        className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
       >
         <div className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div ref={placeTextEvenRef} className="pt-2 text-sm md:text-xl">
-            {data[order[0]]?.place}
+          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white [box-shadow:2px_2px_3px_#000000] rounded-full" />
+          <div ref={placeTextEvenRef} className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.place} */}
           </div>
-          <div ref={countryTextEvenRef} className="pb-2 text-sm md:text-xl">
-            {data[order[0]]?.country}
+          <div ref={countryTextEvenRef} className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.country} */}
           </div>
         </div>
         <div className="mb-1 overflow-hidden">
           <div
             ref={title1EvenRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold"
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
           >
-            {data[order[0]]?.title}
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.title} */}
           </div>
           <div
             ref={title2EvenRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight"
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
           >
-            {data[order[0]]?.title2}
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.title2} */}
           </div>
         </div>
         <div
           ref={descEvenRef}
-          className="mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify"
+          className="min-h- mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
         >
-          {data[order[0]]?.description}
+          {" "}
+          {/* content controlled by GSAP */}
+          {/* {data[order[0]]?.description} */}
         </div>
         <div
           ref={ctaEvenRef}
           className="relative pt-4 w-full flex items-center"
         >
-          <button
-            className="bg-yellow-500 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
-            title="Bookmark"
+          <GhostButtonArrow
+            href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
           >
-            <Bookmark className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-          </button>
-          <button className="border border-white bg-transparent h-7 sm:h-8 md:h-9 rounded-full text-white px-3 sm:px-4 md:px-6 text-xs ml-2 md:ml-4 uppercase">
-            Discover Location
-          </button>
+            {locale === "es" ? "Ver más" : "See more"}
+          </GhostButtonArrow>
         </div>
       </div>
 
       {/* Images hero odd */}
       <div
         ref={detailsOddElementRef}
-        className="absolute left-3 sm:left-4 md:left-15 top-20 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
+        className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
       >
         <div className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white rounded-full" />
-          <div
-            ref={placeTextOddRef}
-            className="pt-2 text-xs sm:text-sm md:text-xl"
-          >
-            {data[order[0]]?.place}
+          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 [box-shadow:2px_2px_3px_#000000] bg-white rounded-full" />
+          <div ref={placeTextOddRef} className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.place} */}
           </div>
-          <div
-            ref={countryTextOddRef}
-            className="pb-2 text-xs sm:text-sm md:text-xl"
-          >
-            {data[order[0]]?.country}
+          <div ref={countryTextOddRef} className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.country} */}
           </div>
         </div>
         <div className="mb-1 overflow-hidden">
           <div
             ref={title1OddRef}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold"
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
           >
-            {data[order[0]]?.title}
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.title} */}
           </div>
           <div
             ref={title2OddRef}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold leading-tight"
+            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
           >
-            {data[order[0]]?.title2}
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.title2} */}
           </div>
         </div>
         <div
           ref={descOddRef}
-          className="mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify"
+          className="min-h- mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
         >
-          {data[order[0]]?.description}
+          {" "}
+          {/* content controlled by GSAP */}
+          {/* {data[order[0]]?.description} */}
         </div>
         <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
-          <button
-            className="bg-yellow-500 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full text-white grid place-items-center border-none"
-            title="Bookmark"
+          <GhostButtonArrow
+            href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
           >
-            <Bookmark className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-          </button>
-          <button className="border border-white bg-transparent h-7 sm:h-8 md:h-9 rounded-full text-white px-3 sm:px-4 md:px-6 text-xs ml-2 md:ml-4 uppercase">
-            Discover Location
-          </button>
+            {locale === "es" ? "Ver más" : "See more"}
+          </GhostButtonArrow>
         </div>
       </div>
 

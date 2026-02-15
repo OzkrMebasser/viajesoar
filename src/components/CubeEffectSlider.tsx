@@ -13,7 +13,6 @@ import ParticlesCanvas from "./ParticlesCanvas";
 import ButtonArrow from "./ui/ButtonArrow";
 import SplitTextVanilla from "./SplitTextVanilla";
 
-
 type Locale = "es" | "en";
 
 interface Tour {
@@ -87,11 +86,14 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   for (let i = 0; i < 5; i++) {
     if (i < Math.floor(rating)) {
       stars.push(
-        <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+        <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />,
       );
     } else if (i < rating) {
       stars.push(
-        <StarHalf key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+        <StarHalf
+          key={i}
+          className="w-4 h-4 fill-yellow-500 text-yellow-500"
+        />,
       );
     } else {
       stars.push(<Star key={i} className="w-4 h-4 text-gray-400" />);
@@ -102,14 +104,16 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
 
 export default function CubeEffectSlider(): React.ReactNode {
   const [mounted, setMounted] = useState<boolean>(false);
-    const locale = useLocale() as Locale;
-  
+  const locale = useLocale() as Locale;
 
   useEffect((): void => {
     setMounted(true);
   }, []);
 
   if (!mounted) return null;
+
+
+
 
   return (
     <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12 ">
@@ -119,18 +123,32 @@ export default function CubeEffectSlider(): React.ReactNode {
       {/* Content */}
       <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         {/* Text Section */}
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center ">
           {/* <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
             Let's Travel The World Together!
           </h1> */}
           <SplitTextVanilla
-            text={locale === "es" ? "Aventuras SOARprendentes" : "SOARprising Tours"}
-            className="text-2xl sm:text-4xl md:text-7xl font-semibold text-theme-tittles mb-4 uppercase"
-            delay={100}
-            duration={0.6}
-            ease="power3.out"
+            text={
+              locale === "es" ? "Aventuras " : "SOARprising"
+            }
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-theme-tittles mb-3 uppercase"
+            delay={25}
+            duration={0.5}
+            ease="power2.out"
             splitType="chars"
-            from={{ opacity: 0, y: 40 }}
+            from={{ opacity: 0, y: 20 }}
+            to={{ opacity: 1, y: 0 }}
+            textAlign="center"
+          />   <SplitTextVanilla
+            text={
+              locale === "es" ? "SOARprendentes" : "Adventures"
+            }
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-theme-tittles mb-3 uppercase"
+            delay={25}
+            duration={0.5}
+            ease="power2.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 20 }}
             to={{ opacity: 1, y: 0 }}
             textAlign="center"
           />
@@ -146,7 +164,9 @@ export default function CubeEffectSlider(): React.ReactNode {
             <ArrowRight className="w-4 h-4 " />
           </button> */}
 
-          <ButtonArrow title={locale === "es" ? "Explorar Tours" : "Explore Tours"} />
+          <ButtonArrow
+            title={locale === "es" ? "Explorar Tours" : "Explore Tours"}
+          />
         </div>
 
         {/* Swiper Slider */}

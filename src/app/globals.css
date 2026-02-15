@@ -3,8 +3,25 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-body {
+/* body {
+  
+} */
+
+/* Prevenir scroll horizontal y márgenes no deseados */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* width: 100%;
+  height: 100%; */
   font-family: "Oswald", sans-serif;
+}
+
+/* Si usas un contenedor para el canvas */
+#__next {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .nav {
@@ -415,33 +432,40 @@ html[data-theme="vibrant"] {
     transform: perspective(720px) rotateX(0deg) rotateY(720deg);
   }
 }
-/* Locomotive Scroll Horizontal */
-html.has-scroll-smooth {
+
+.hero-page {
   overflow: hidden;
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-.has-scroll-smooth body {
-  overflow: hidden;
+/* .button-glower {
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #ffffff80;
+  text-shadow: none;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #ffffff80;
+  transition: 0.5s ease;
+  user-select: none;
 }
 
-.has-scroll-smooth [data-scroll-container] {
-  min-height: 100vh;
-  will-change: transform;
+#btn:hover,
+:focus {
+  color: #ffffff;
+  background: #0ef;
+  border: 1px solid #0ef;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+  box-shadow: 0 0 5px #0ef, 0 0 20px #0ef, 0 0 50px #0ef, 0 0 100px #0ef;
+  scale: 1.1;
 }
 
-[data-scroll-direction="horizontal"] {
-  will-change: transform;
-}
-
-/* Escritura vertical para el título en desktop */
-@media (min-width: 768px) {
-  .writing-mode-vertical-rl {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-  }
-}
+#btn:active {
+  transform: scale(0.8);
+} */

@@ -17,7 +17,7 @@ import {
 } from "@/lib/hooks/useDestinations";
 import SplitText from "@/components/SplitText";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
-import DestinationsSlideGSAPSkeleton from "./DestinationsSlideGSAPSkeleton";
+import DestinationsSlideGSAPSkeleton from "./DestinationsSlideHomeSkeleton";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -51,168 +51,176 @@ export default function DestinationsSlideLocomotive() {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
   // 🔥 Detectar mobile vs desktop
-  useEffect(() => {
-    const checkDevice = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      setIsDesktop(!mobile);
-    };
+// 🔥 Detectar mobile vs desktop
+useEffect(() => {
+  const checkDevice = () => {
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    setIsDesktop(!mobile);
+  };
 
-    checkDevice();
-    window.addEventListener("resize", checkDevice);
-    return () => window.removeEventListener("resize", checkDevice);
-  }, []);
+  checkDevice();
+  window.addEventListener("resize", checkDevice);
+  return () => window.removeEventListener("resize", checkDevice);
+}, []);
 
-  // 🚂 Scroll horizontal terminando en #finish-scroll + 200px
-  useEffect(() => {
-    if (isMobile || !scrollContainerRef.current || !carouselRef.current || !sectionRef.current || !finishScrollRef.current || loading) return;
+// 🚂 Scroll horizontal terminando en #finish-scroll + 200px - SOLO DESKTOP
+useEffect(() => {
+  // 🔥 Salir si no es desktop o está cargando
+  if (!isDesktop || loading) return;
+  
+  if (!scrollContainerRef.current || !carouselRef.current || !sectionRef.current || !finishScrollRef.current) return;
 
-    const section = sectionRef.current;
-    const container = scrollContainerRef.current;
-    const carousel = carouselRef.current;
-    const finishElement = finishScrollRef.current;
+  const section = sectionRef.current;
+  const container = scrollContainerRef.current;
+  const carousel = carouselRef.current;
+  const finishElement = finishScrollRef.current;
+  
+  const OVERSCROLL_BUFFER = 300;
+
+  const calculateBounds = () => {
+    // 🔥 AGREGAR ESTA VERIFICACIÓN
+    if (window.innerWidth < 768) {
+      section.style.height = "auto";
+      return { scrollDistance: 0, scrollStart: 0, scrollEnd: 0 };
+    }
     
-    const OVERSCROLL_BUFFER = 300; // 🔥 200px después de #finish-scroll
+    const sectionRect = section.getBoundingClientRect();
+    const finishRect = finishElement.getBoundingClientRect();
+    const sectionTop = window.scrollY + sectionRect.top;
+    const finishTop = window.scrollY + finishRect.top;
+    
+    const scrollDistance = carousel.scrollWidth - container.offsetWidth;
+    const carouselScrollHeight = scrollDistance;
+    const finishDistance = finishTop - sectionTop + finishRect.height + OVERSCROLL_BUFFER;
+    const totalHeight = Math.max(carouselScrollHeight + window.innerHeight, finishDistance);
+    
+    section.style.height = `${totalHeight}px`;
+    
+    const scrollStart = sectionTop;
+    const scrollEnd = sectionTop + totalHeight;
+    
+    return { scrollDistance, scrollStart, scrollEnd };
+  };
 
-    const calculateBounds = () => {
-      const sectionRect = section.getBoundingClientRect();
-      const finishRect = finishElement.getBoundingClientRect();
-      const sectionTop = window.scrollY + sectionRect.top;
-      const finishTop = window.scrollY + finishRect.top;
-      
-      // 🔥 Distancia total del scroll horizontal (ESTO ES CLAVE)
-      const scrollDistance = carousel.scrollWidth - container.offsetWidth;
-      
-      // 🔥 El scroll del carousel necesita esta altura para completarse
-      const carouselScrollHeight = scrollDistance;
-      
-      // 🔥 Después del carousel, añadimos espacio hasta #finish-scroll + 200px
-      const finishDistance = finishTop - sectionTop + finishRect.height + OVERSCROLL_BUFFER;
-      
-      // 🔥 La altura total es lo que sea mayor
-      const totalHeight = Math.max(carouselScrollHeight + window.innerHeight, finishDistance);
-      section.style.height = `${totalHeight}px`;
-      
-      const scrollStart = sectionTop;
-      const scrollEnd = sectionTop + totalHeight;
-      
-      return { scrollDistance, scrollStart, scrollEnd };
-    };
+  let bounds = calculateBounds();
 
-    let bounds = calculateBounds();
+  const handleScroll = () => {
+    // 🔥 AGREGAR ESTA VERIFICACIÓN
+    if (window.innerWidth < 768) return;
+    
+    const currentScroll = window.scrollY;
+    const { scrollDistance, scrollStart, scrollEnd } = bounds;
+    
+    const totalScrollDistance = scrollEnd - scrollStart;
+    const scrolled = currentScroll - scrollStart;
+    const progress = Math.max(0, Math.min(scrolled / totalScrollDistance, 1));
+
+    const carouselScrollDistance = scrollDistance;
+    const carouselProgress = Math.min(scrolled / carouselScrollDistance, 1);
+
+    if (progress > 0 && progress < 1) {
+      container.style.position = "sticky";
+      container.style.top = "0";
+      
+      const translateX = -carouselProgress * scrollDistance;
+      carousel.style.transform = `translate3d(${translateX}px, 0, 0)`;
+      carousel.style.willChange = "transform";
+      
+      if (carouselProgress >= 1) {
+        const overscrollProgress = (scrolled - carouselScrollDistance) / (totalScrollDistance - carouselScrollDistance);
+        const fadeAmount = Math.min(Math.max(overscrollProgress, 0), 1);
+        container.style.opacity = `${1 - fadeAmount * 0.4}`;
+        
+        const scale = 1 - (fadeAmount * 0.03);
+        carousel.style.transform = `translate3d(-${scrollDistance}px, 0, 0) scale(${scale})`;
+      } else {
+        container.style.opacity = "1";
+      }
+      
+    } else if (progress <= 0) {
+      container.style.position = "relative";
+      carousel.style.transform = "translate3d(0, 0, 0)";
+      container.style.opacity = "1";
+    } else {
+      container.style.position = "relative";
+      carousel.style.transform = `translate3d(-${scrollDistance}px, 0, 0)`;
+      container.style.opacity = "0.6";
+    }
+  };
+
+  const handleResize = () => {
+    // 🔥 AGREGAR ESTA VERIFICACIÓN
+    if (window.innerWidth < 768) {
+      if (section) section.style.height = "auto";
+      return;
+    }
+    
+    bounds = calculateBounds();
+    handleScroll();
+  };
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener("resize", handleResize);
+  
+  setTimeout(() => handleScroll(), 100);
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("resize", handleResize);
+    if (carousel) {
+      carousel.style.transform = "";
+      carousel.style.willChange = "";
+    }
+    if (container) {
+      container.style.position = "";
+      container.style.opacity = "";
+    }
+    if (section) {
+      section.style.height = "";
+    }
+  };
+}, [isDesktop, loading, regions.length]);
+
+// 👆 Scroll mobile
+useEffect(() => {
+  if (!isMobile || loading) return;
+
+  const timeoutId = setTimeout(() => {
+    const scrollElement = mobileScrollRef.current;
+    if (!scrollElement) return;
 
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      const { scrollDistance, scrollStart, scrollEnd } = bounds;
-      
-      // 🔥 Progreso total (0 a 1)
-      const totalScrollDistance = scrollEnd - scrollStart;
-      const scrolled = currentScroll - scrollStart;
-      const progress = Math.max(0, Math.min(scrolled / totalScrollDistance, 1));
+      const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
+      const maxScroll = scrollWidth - clientWidth;
 
-      // 🔥 Progreso del carousel (considerando todo el ancho)
-      const carouselScrollDistance = scrollDistance;
-      const carouselProgress = Math.min(scrolled / carouselScrollDistance, 1);
+      const cardWidth = 300;
+      const newActiveIndex = Math.round(scrollLeft / cardWidth);
+      setActiveCardIndex(Math.min(newActiveIndex, regions.length - 1));
 
-      // 🔥 Aplicar sticky
-      if (progress > 0 && progress < 1) {
-        container.style.position = "sticky";
-        container.style.top = "0";
-        
-        // Transformación horizontal
-        const translateX = -carouselProgress * scrollDistance;
-        carousel.style.transform = `translate3d(${translateX}px, 0, 0)`;
-        carousel.style.willChange = "transform";
-        
-        // 🔥 Fade out después de terminar el carousel
-        if (carouselProgress >= 1) {
-          const overscrollProgress = (scrolled - carouselScrollDistance) / (totalScrollDistance - carouselScrollDistance);
-          const fadeAmount = Math.min(Math.max(overscrollProgress, 0), 1);
-          container.style.opacity = `${1 - fadeAmount * 0.4}`;
-          
-          // Zoom out sutil
-          const scale = 1 - (fadeAmount * 0.03);
-          carousel.style.transform = `translate3d(-${scrollDistance}px, 0, 0) scale(${scale})`;
-        } else {
-          container.style.opacity = "1";
-        }
-        
-      } else if (progress <= 0) {
-        container.style.position = "relative";
-        carousel.style.transform = "translate3d(0, 0, 0)";
-        container.style.opacity = "1";
+      if (scrollLeft >= maxScroll - 5) {
+        setIsAtEnd(true);
+        setShowScrollIndicator(true);
+      } else if (scrollLeft <= 5) {
+        setIsAtEnd(false);
+        setShowScrollIndicator(true);
       } else {
-        container.style.position = "relative";
-        carousel.style.transform = `translate3d(-${scrollDistance}px, 0, 0)`;
-        container.style.opacity = "0.6";
+        setShowScrollIndicator(false);
       }
     };
 
-    const handleResize = () => {
-      bounds = calculateBounds();
-      handleScroll();
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize);
-    
-    setTimeout(() => handleScroll(), 100);
+    scrollElement.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-      if (carousel) {
-        carousel.style.transform = "";
-        carousel.style.willChange = "";
-      }
-      if (container) {
-        container.style.position = "";
-        container.style.opacity = "";
-      }
-      if (section) {
-        section.style.height = "";
-      }
+      scrollElement.removeEventListener("scroll", handleScroll);
     };
-  }, [isMobile, loading, regions.length]);
+  }, 200);
 
-  // 👆 Scroll mobile
-  useEffect(() => {
-    if (!isMobile || loading) return;
+  return () => clearTimeout(timeoutId);
+}, [isMobile, loading, regions.length]);
 
-    const timeoutId = setTimeout(() => {
-      const scrollElement = mobileScrollRef.current;
-      if (!scrollElement) return;
-
-      const handleScroll = () => {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
-        const maxScroll = scrollWidth - clientWidth;
-
-        const cardWidth = 300;
-        const newActiveIndex = Math.round(scrollLeft / cardWidth);
-        setActiveCardIndex(Math.min(newActiveIndex, regions.length - 1));
-
-        if (scrollLeft >= maxScroll - 5) {
-          setIsAtEnd(true);
-          setShowScrollIndicator(true);
-        } else if (scrollLeft <= 5) {
-          setIsAtEnd(false);
-          setShowScrollIndicator(true);
-        } else {
-          setShowScrollIndicator(false);
-        }
-      };
-
-      scrollElement.addEventListener("scroll", handleScroll, { passive: true });
-      handleScroll();
-
-      return () => {
-        scrollElement.removeEventListener("scroll", handleScroll);
-      };
-    }, 200);
-
-    return () => clearTimeout(timeoutId);
-  }, [isMobile, loading, regions.length]);
-
+// 🔥 CAMBIO: Usar isDesktop en vez de isMobile
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900 text-red-400">
@@ -224,7 +232,9 @@ export default function DestinationsSlideLocomotive() {
   return (
     <div
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-theme"
+      className="relative h-auto py-4 lg:py-0 lg:h-[700px]  bg-red-500" // SOLO PARA DEBUG - ELIMINAR DESPUÉS
+          // style={isMobile ? { height: 'auto' } : { height: '700px' } } // 👈 AGREGAR ESTA LÍNEA
+
     >
       {loading ? (
         <div className="min-h-screen">
@@ -234,8 +244,8 @@ export default function DestinationsSlideLocomotive() {
         <>
           <div
             ref={scrollContainerRef}
-            className="relative px-4 py-8"
-            style={{ minHeight: isDesktop ? "100vh" : "auto" }}
+            className="relative px-4 py-2 lg:py-8 overflow-hidden" // 👈 Agregar overflow-hidden
+          style={{ minHeight: isDesktop ? "100vh" : "" }}
           >
             <ParticlesCanvas />
 
@@ -252,8 +262,7 @@ export default function DestinationsSlideLocomotive() {
                   from={{ opacity: 0, y: 20 }}
                   to={{ opacity: 1, y: 0 }}
                   textAlign="center"
-                  threshold={0.3}
-                  rootMargin="-50px"
+                
                 />
                 <p className="text-[var(--accent)] text-sm md:text-lg px-6">
                   {locale === "es"

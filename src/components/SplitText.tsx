@@ -1,29 +1,24 @@
 "use client";
 import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText as GSAPSplitText } from 'gsap/SplitText';
-import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, GSAPSplitText, useGSAP);
+gsap.registerPlugin(GSAPSplitText);
 
-export interface SplitTextProps {
+interface SimpleSplitTextProps {
   text: string;
   className?: string;
   delay?: number;
   duration?: number;
-  ease?: string | ((t: number) => number);
-  splitType?: 'chars' | 'words' | 'lines' | 'words, chars';
+  ease?: string;
+  splitType?: 'chars' | 'words' | 'lines';
   from?: gsap.TweenVars;
   to?: gsap.TweenVars;
-  threshold?: number;
-  rootMargin?: string;
   tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
   textAlign?: React.CSSProperties['textAlign'];
-  onLetterAnimationComplete?: () => void;
 }
 
-const SplitText: React.FC<SplitTextProps> = ({
+const SplitText: React.FC<SimpleSplitTextProps> = ({
   text,
   className = '',
   delay = 100,
@@ -32,143 +27,90 @@ const SplitText: React.FC<SplitTextProps> = ({
   splitType = 'chars',
   from = { opacity: 0, y: 40 },
   to = { opacity: 1, y: 0 },
-  threshold = 0.1,
-  rootMargin = '-100px',
   tag = 'p',
   textAlign = 'center',
-  onLetterAnimationComplete
 }) => {
   const ref = useRef<HTMLParagraphElement>(null);
-  const animationCompletedRef = useRef(false);
-  const [fontsLoaded, setFontsLoaded] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const animatedRef = useRef(false);
 
+  // Intersection Observer para detectar cuando es visible
   useEffect(() => {
-    if (document.fonts.status === 'loaded') {
-      setFontsLoaded(true);
-    } else {
-      document.fonts.ready.then(() => setFontsLoaded(true));
-    }
+    if (!ref.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !animatedRef.current) {
+            setIsVisible(true);
+          }
+        });
+      },
+      {
+        threshold: 0.3, // Activa cuando el 30% es visible
+        rootMargin: '-50px', // Offset para activar un poco antes
+      }
+    );
+
+    observer.observe(ref.current);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
-  useGSAP(
-    () => {
-      if (!ref.current || !text || !fontsLoaded) return;
-      const el = ref.current as HTMLElement & { _rbsplitInstance?: GSAPSplitText };
+  // Animación GSAP cuando se hace visible
+  useEffect(() => {
+    if (!ref.current || !text || !isVisible || animatedRef.current) return;
 
-      if (el._rbsplitInstance) {
-        try { el._rbsplitInstance.revert(); } catch (_) {}
-        el._rbsplitInstance = undefined;
+    const el = ref.current;
+    const splitInstance = new GSAPSplitText(el, {
+      type: splitType,
+      charsClass: 'split-char',
+      wordsClass: 'split-word',
+      linesClass: 'split-line',
+    });
+
+    const targets = splitType === 'chars' ? splitInstance.chars : 
+                    splitType === 'words' ? splitInstance.words : 
+                    splitInstance.lines;
+
+    // Animación
+    gsap.fromTo(
+      targets,
+      { ...from },
+      { 
+        ...to, 
+        duration, 
+        ease, 
+        stagger: delay / 1000,
       }
+    );
 
-      const startPct = (1 - threshold) * 100;
-      const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
-      const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
-      const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
-      const sign =
-        marginValue === 0
-          ? ''
-          : marginValue < 0
-          ? `-=${Math.abs(marginValue)}${marginUnit}`
-          : `+=${marginValue}${marginUnit}`;
-      const start = `top ${startPct}%${sign}`;
+    animatedRef.current = true;
 
-      let targets: Element[] = [];
-      const assignTargets = (self: GSAPSplitText) => {
-        if (splitType.includes('chars') && (self as GSAPSplitText).chars?.length)
-          targets = (self as GSAPSplitText).chars;
-        if (!targets.length && splitType.includes('words') && self.words.length)
-          targets = self.words;
-        if (!targets.length && splitType.includes('lines') && self.lines.length)
-          targets = self.lines;
-        if (!targets.length) targets = self.chars || self.words || self.lines;
-      };
-
-      const splitInstance = new GSAPSplitText(el, {
-        type: splitType,
-        smartWrap: true,
-        autoSplit: splitType === 'lines',
-        linesClass: 'split-line',
-        wordsClass: 'split-word',
-        charsClass: 'split-char',
-        reduceWhiteSpace: false,
-        onSplit: (self: GSAPSplitText) => {
-          assignTargets(self);
-
-          const tween = gsap.fromTo(
-            targets,
-            { ...from },
-            { ...to, duration, ease, stagger: delay / 1000, paused: true }
-          );
-
-          ScrollTrigger.create({
-            trigger: el,
-            start,
-            end: 'bottom top',
-            animation: tween,
-            scrub: false,
-            toggleActions: 'play reverse play reverse', // 🔥 esto hace que entre=play, salga=reverse
-            fastScrollEnd: true,
-            anticipatePin: 0.4,
-            onEnter: () => tween.play(),
-            onLeave: () => tween.reverse(),
-            onEnterBack: () => tween.play(),
-            onLeaveBack: () => tween.reverse(),
-          });
-
-          tween.eventCallback('onComplete', () => {
-            animationCompletedRef.current = true;
-            onLetterAnimationComplete?.();
-          });
-        }
-      });
-
-      el._rbsplitInstance = splitInstance;
-
-      return () => {
-        ScrollTrigger.getAll().forEach(st => {
-          if (st.trigger === el) st.kill();
-        });
-        try { splitInstance.revert(); } catch (_) {}
-        el._rbsplitInstance = undefined;
-      };
-    },
-    {
-      dependencies: [
-        text,
-        delay,
-        duration,
-        ease,
-        splitType,
-        JSON.stringify(from),
-        JSON.stringify(to),
-        threshold,
-        rootMargin,
-        fontsLoaded,
-        onLetterAnimationComplete
-      ],
-      scope: ref
-    }
-  );
-
-  const renderTag = () => {
-    const style: React.CSSProperties = {
-      textAlign,
-      wordWrap: 'break-word',
-      willChange: 'transform, opacity'
+    return () => {
+      splitInstance.revert();
     };
-    const classes = `split-parent  inline-block whitespace-normal ${className}`;
-    switch (tag) {
-      case 'h1': return <h1 ref={ref} style={style} className={classes}>{text}</h1>;
-      case 'h2': return <h2 ref={ref} style={style} className={classes}>{text}</h2>;
-      case 'h3': return <h3 ref={ref} style={style} className={classes}>{text}</h3>;
-      case 'h4': return <h4 ref={ref} style={style} className={classes}>{text}</h4>;
-      case 'h5': return <h5 ref={ref} style={style} className={classes}>{text}</h5>;
-      case 'h6': return <h6 ref={ref} style={style} className={classes}>{text}</h6>;
-      default: return <p ref={ref} style={style} className={classes}>{text}</p>;
-    }
+  }, [text, delay, duration, ease, isVisible, splitType]);
+
+  const style: React.CSSProperties = {
+    textAlign,
+    wordWrap: 'break-word',
+    willChange: 'transform, opacity',
   };
 
-  return renderTag();
+  const classes = `split-parent inline-block whitespace-normal ${className}`;
+
+  switch (tag) {
+    case 'h1': return <h1 ref={ref} style={style} className={classes}>{text}</h1>;
+    case 'h2': return <h2 ref={ref} style={style} className={classes}>{text}</h2>;
+    case 'h3': return <h3 ref={ref} style={style} className={classes}>{text}</h3>;
+    case 'h4': return <h4 ref={ref} style={style} className={classes}>{text}</h4>;
+    case 'h5': return <h5 ref={ref} style={style} className={classes}>{text}</h5>;
+    case 'h6': return <h6 ref={ref} style={style} className={classes}>{text}</h6>;
+    default: return <p ref={ref} style={style} className={classes}>{text}</p>;
+  }
 };
 
 export default SplitText;

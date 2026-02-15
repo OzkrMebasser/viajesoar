@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaSuitcase, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import SplitTextVanilla from "@/components/SplitTextVanilla";
+import SplitText from "@/components/SplitText";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import { supabase } from "@/lib/supabase";
@@ -363,7 +363,7 @@ export default function PackagesSlideLocomotive() {
           <div className="relative mx-auto z-20 max-w-7xl">
             {/* 🎯 Header compacto */}
             <div className="text-center mb-8">
-              <SplitTextVanilla
+              <SplitText
                 text={locale === "es" ? "Nuestros Paquetes" : "Our Packages"}
                 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-theme-tittles mb-3 uppercase"
                 delay={25}

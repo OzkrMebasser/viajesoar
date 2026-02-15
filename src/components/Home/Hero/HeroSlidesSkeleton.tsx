@@ -1,8 +1,11 @@
 "use client";
 
+import GhostButtonArrowSkeleton from "@/components/ui/GhostButtonArrowSkeleton";
+
 export default function HeroSkeleton() {
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black text-white z-999999">
+    <div className="relative w-full h-screen overflow-hidden bg-black text-white z-50">
+      
       {/* Fondo / imagen hero */}
       <div className="absolute inset-0 bg-gray-800 animate-pulse" />
 
@@ -14,18 +17,22 @@ export default function HeroSkeleton() {
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="w-[90px] h-[140px] md:w-[120px] md:h-[180px] lg:w-[200px] lg:h-[300px]
-                       bg-gray-700 rounded-lg animate-pulse"
+            className="
+              w-[90px] h-[140px]
+              md:w-[120px] md:h-[180px]
+              lg:w-[200px] lg:h-[300px]
+              bg-gray-700 rounded-lg animate-pulse
+            "
           />
         ))}
       </div>
 
       {/* Texto principal */}
-      <div className="absolute left-4 sm:left-4 md:left-18 top-20 sm:top-24 md:top-24 z-20 max-w-xl ">
+      <div className="absolute left-4 sm:left-4 md:left-18 top-20 sm:top-24 md:top-24 z-20 max-w-xl">
+        
         {/* place + country */}
         <div className="mb-4 space-y-2">
-          <div className=" top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-gray-600 rounded-full animate-pulse " />
-
+          <div className="w-4 sm:w-6 md:w-8 h-1 bg-gray-600 rounded-full animate-pulse" />
           <div className="w-20 h-3 bg-gray-600 rounded animate-pulse" />
           <div className="w-32 h-3 bg-gray-600 rounded animate-pulse" />
         </div>
@@ -45,15 +52,11 @@ export default function HeroSkeleton() {
 
         {/* botones */}
         <div className="flex items-center gap-4">
-          <div className="w-9 h-9 rounded-full bg-gray-500 animate-pulse" />
-          <div className="w-40 h-9 rounded-full bg-gray-600 animate-pulse" />
+       
+          {/* Ghost button skeleton */}
+          <GhostButtonArrowSkeleton />
         </div>
       </div>
-
-      {/* Barra de progreso fake
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-64 md:w-96 h-1 bg-gray-700 overflow-hidden">
-        <div className="h-full w-1/3 bg-gray-500 animate-pulse" />
-      </div> */}
     </div>
   );
 }

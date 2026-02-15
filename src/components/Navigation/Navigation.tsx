@@ -273,9 +273,9 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`nav fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out  ${
+        className={`nav   backdrop-blur-[2px] fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out  ${
           isScrolled
-            ? "backdrop-blur-sm bg-gradient-theme text-theme shadow-md  "
+            ? " bg-gradient-theme text-theme shadow-md  "
             : "text-theme-nav  "
         }`}
         role="navigation"
