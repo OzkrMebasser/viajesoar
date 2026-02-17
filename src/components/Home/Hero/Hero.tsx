@@ -800,7 +800,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           {/* content controlled by GSAP */}
           {/* {data[order[0]]?.description} */}
         </div>
-        <div
+        {/* <div
           ref={ctaEvenRef}
           className="relative pt-4 w-full flex items-center"
         >
@@ -809,6 +809,13 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           >
             {locale === "es" ? "Ver más" : "See more"}
           </GhostButtonArrow>
+        </div> */}
+          <div ref={ctaEvenRef} className="relative pt-4 w-full flex items-center">
+          <ButtonGlower
+          href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
+        >
+          {locale === "es" ? "Ver más" : "See more"}{" "}
+        </ButtonGlower>
         </div>
       </div>
 

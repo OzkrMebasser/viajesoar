@@ -15,6 +15,19 @@ export interface DestinationRegion {
   slug: string;
 }
 
+export interface RegionHome {
+  id: string;
+  locale: string;
+  name: string;
+  icon: string;
+  images: string[]; // Array de imágenes
+  gradient: string;
+  description: string;
+  order_index: number;
+  is_active: boolean;
+  created_at: string;
+  slug: string;
+}
 
 
 export interface DestinationCountry {

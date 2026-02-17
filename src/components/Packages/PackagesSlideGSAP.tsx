@@ -331,13 +331,12 @@ export default function PackagesSlideGSAP() {
         x: 0,
         ease: "none",
       }).to(
-        container,
+      container,
         {
-          opacity: 0.6,
-          scale: 0.97,
-          ease: "power1.in",
+          scale: 0,
+          ease: "power1.in"
         },
-        "-=0.3",
+        "-=0.02",
       );
     }, 100);
 
@@ -390,7 +389,7 @@ export default function PackagesSlideGSAP() {
 
   if (loading) {
     return (
-      <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center">
+      <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center py-8">
         <div className="text-white text-xl">
           {locale === "es" ? "Cargando paquetes..." : "Loading packages..."}
         </div>

@@ -19,38 +19,39 @@ type ButtonGlowerButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 type ButtonGlowerProps = ButtonGlowerLinkProps | ButtonGlowerButtonProps;
 
 const ButtonGlower = (props: ButtonGlowerProps) => {
-  const baseClasses = `
-    group
-    w-fit px-6 py-2 sm:px-8 sm:py-3
+const baseClasses = `
+    group relative
+    w-fit px-[calc(1.5rem-1px)] py-[calc(0.5rem-1px)] sm:px-[calc(2rem-1px)] sm:py-[calc(0.75rem-1px)]
     rounded-lg text-[17px] font-medium
-    select-none cursor-pointer
-    flex items-center gap-2
+    select-none cursor-pointer overflow-hidden
+    flex items-center gap-2 isolation-auto
     
-    text-[color-mix(in_srgb,var(--text)_50%,transparent)]
-    bg-transparent
-    border border-[color-mix(in_srgb,var(--text)_50%,transparent)]
-    [box-shadow:0px_-1px_12px_8px_rgba(0,0,0,0.4)]
+    text-white bg-transparent border border-white
+    transition-all duration-300
     
-    transition-all duration-500 ease-in-out
-    
-    hover:text-theme-btn
+    hover:text-[var(--text-btn)]
     hover:bg-[var(--accent)]
-    hover:border-[var(--accent)]
-    hover:[text-shadow:0_0_3px_var(--text-btn),0_0_8px_var(--accent-secondary)]
-    hover:[box-shadow:0_0_8px_var(--accent-secondary),0_0_15px_var(--accent),0_0_25px_var(--accent-hover)]
-    hover:scale-105
+    hover:border-transparent
     hover:gap-3
+    hover:[box-shadow:0_0_20px_var(--accent),inset_0_0_20px_rgba(255,255,255,0.1)]
+    hover:scale-105
     
-    focus:text-theme-btn
-    focus:bg-[var(--accent)]
-    focus:border-[var(--accent)]
-    focus:[text-shadow:0_0_3px_var(--text-btn),0_0_8px_var(--accent-secondary)]
-    focus:[box-shadow:0_0_8px_var(--accent-secondary),0_0_15px_var(--accent),0_0_25px_var(--accent-hover)]
-    focus:scale-105
+    before:content-['']
+    before:absolute
+    before:top-0
+    before:left-[-100%]
+    before:w-full
+    before:h-full
+    before:bg-gradient-to-r
+    before:from-transparent
+    before:via-white/30
+    before:to-transparent
+    before:transition-all
+    before:duration-500
+    hover:before:left-[100%]
     
-    active:scale-90
+    active:scale-95
   `;
-
   if ('href' in props) {
     const { href, children, className, ...rest } = props;
     return (

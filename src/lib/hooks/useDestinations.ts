@@ -18,6 +18,22 @@ export interface DestinationRegion {
   slug: string;
 }
 
+
+// En tu archivo de tipos (e.g., types/destinations.ts)
+export interface RegionHome {
+  id: string;
+  locale: string;
+  name: string;
+  icon: string;
+  images: string[]; // 👈 Array de imágenes
+  gradient: string;
+  description: string;
+  order_index: number;
+  is_active: boolean;
+  created_at: string;
+  slug: string;
+}
+
 export interface DestinationCountry {
   id: string;
   locale: "es" | "en";
@@ -98,6 +114,47 @@ export function useDestinationRegions(locale: "es" | "en" = "es") {
       } catch (err) {
         console.error("Error fetching regions:", err);
         setError(err instanceof Error ? err.message : "Error desconocido");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRegions();
+  }, [locale]);
+
+  return { regions, loading, error };
+}
+
+// lib/hooks/useDestinations.ts
+export function useRegionsHome(locale: string) {
+  const [regions, setRegions] = useState<RegionHome[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchRegions() {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("regions_home")
+          .select("*")
+          .eq("locale", locale)
+          .eq("is_active", true)
+          .order("order_index", { ascending: true });
+          console.log("data from hook", data)
+        if (error) throw error;
+        
+        // 🔥 PARSEAR EL ARRAY DE IMÁGENES SI ES STRING
+        const parsedData = (data || []).map((region) => ({
+          ...region,
+          images: typeof region.images === 'string' 
+            ? JSON.parse(region.images) 
+            : region.images,
+        }));
+        
+        setRegions(parsedData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error loading regions");
       } finally {
         setLoading(false);
       }

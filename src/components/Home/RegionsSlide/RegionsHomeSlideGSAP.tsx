@@ -12,13 +12,16 @@ import { GiEarthAmerica, GiPalmTree, GiAztecCalendarSun } from "react-icons/gi";
 import { MdTravelExplore } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import { useDestinationRegions } from "@/lib/hooks/useDestinations";
+// import { useDestinationRegions, useRegionsHome } from "@/lib/hooks/useDestinations";
+import { useRegionsHome } from "@/lib/hooks/Useregionshome";
 import SplitText from "@/components/SplitText";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
-import DestinationsSlideGSAPSkeleton from "./DestinationsSlideHomeSkeleton";
+import RegionsHomeSlideGSAPSkeleton from "./RegionsHomeSlideGSAPSkeleton";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import CompactCircularSlideshow from "@/components/CircularSlideshow";
+import ButtonGlower from "@/components/ui/ButtonGlower";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,9 +38,10 @@ const iconMap: Record<string, React.ComponentType<any>> = {
 
 type Locale = "es" | "en";
 
-export default function DestinationsSlideGSAP() {
+export default function RegionsHomeSlideGSAP() {
   const locale = useLocale() as Locale;
-  const { regions, loading, error } = useDestinationRegions(locale);
+  const { regions, loading, error } = useRegionsHome(locale);
+  // console.log(regions)
   const router = useRouter();
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -106,11 +110,10 @@ export default function DestinationsSlideGSAP() {
       }).to(
         container,
         {
-          opacity: 0.6,
-          scale: 0.97,
-          ease: "power1.in",
+          scale: 0,
+          ease: "power1.in"
         },
-        "-=0.3",
+        "-=0.02",
       );
     }, 100);
 
@@ -170,11 +173,34 @@ export default function DestinationsSlideGSAP() {
     );
   }
 
+  // / Justo antes del return, agrega esto:
+  useEffect(() => {
+    if (regions.length > 0) {
+      console.log("🔍 DEBUGGING REGIONS:");
+      regions.forEach((region, index) => {
+        // console.log(`\n📍 Region ${index}:`, region.name);
+        // console.log("   images type:", typeof region.images);
+        // console.log("   images value:", region.images);
+        // console.log("   is array?:", Array.isArray(region.images));
+
+        if (typeof region.images === "string") {
+          console.log("   ⚠️ images es STRING, necesita parsearse");
+          try {
+            const parsed = JSON.parse(region.images);
+            console.log("   ✅ parsed:", parsed);
+          } catch (e) {
+            console.log("   ❌ parse error:", e);
+          }
+        }
+      });
+    }
+  }, [regions]);
+
   return (
-    <div ref={sectionRef} className="relative pt-8  lg:pt-4 bg-gradient-theme">
+    <div ref={sectionRef} className="relative pt-8 lg:pt-4 bg-gradient-theme">
       {loading ? (
         <div className="min-h-screen">
-          <DestinationsSlideGSAPSkeleton />
+          <RegionsHomeSlideGSAPSkeleton />
         </div>
       ) : (
         <div
@@ -271,7 +297,7 @@ export default function DestinationsSlideGSAP() {
                           `}
                       >
                         <div className="bg-white/5 rounded-2xl overflow-hidden relative group h-full">
-                          <div className="relative h-80">
+                          {/* <div className="relative h-80">
                             <img
                               src={region.image}
                               alt={region.name}
@@ -280,6 +306,14 @@ export default function DestinationsSlideGSAP() {
                               loading={index < 3 ? "eager" : "lazy"}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                          </div> */}
+                          <div className="relative h-80">
+                            <CompactCircularSlideshow
+                              images={region.images}
+                              interval={4000}
+                              className="w-full h-full"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
                           </div>
 
                           <div className="absolute inset-0 p-6 flex flex-col justify-between">
@@ -296,7 +330,7 @@ export default function DestinationsSlideGSAP() {
                               <p className="text-slate-200 text-sm mb-4 line-clamp-2">
                                 {region.description}
                               </p>
-                              <button
+                              {/* <button
                                 onClick={() => {
                                   const basePath =
                                     locale === "es"
@@ -309,7 +343,21 @@ export default function DestinationsSlideGSAP() {
                                 className="bg-white text-slate-900 px-5 py-2 rounded-full font-semibold hover:bg-slate-100 transition-colors duration-300"
                               >
                                 {locale === "es" ? "Explorar" : "Explore"}
-                              </button>
+                              </button> */}
+                              <ButtonGlower
+                                // href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
+                                onClick={() => {
+                                  const basePath =
+                                    locale === "es"
+                                      ? "destinos"
+                                      : "destinations";
+                                  router.push(
+                                    `/${locale}/${basePath}/${region.slug}`,
+                                  );
+                                }}
+                              >
+                                {locale === "es" ? "Ver más" : "See more"}{" "}
+                              </ButtonGlower>
                             </div>
                           </div>
                         </div>
@@ -321,7 +369,7 @@ export default function DestinationsSlideGSAP() {
             </div>
 
             {/* 📱 Mobile scroll indicator */}
-            {isMobile && regions.length > 2 && (
+            {/* {isMobile && regions.length > 2 && (
               <div className="flex justify-center gap-3 mt-6">
                 {regions.map((_, index) => {
                   const isActive = index === activeCardIndex;
@@ -339,6 +387,30 @@ export default function DestinationsSlideGSAP() {
         : "w-2 h-2 bg-gray-200 scale-100 rotate-0"
     }
   `}
+                    />
+                  );
+                })}
+              </div>
+            )} */}
+            {/* 📱 Mobile scroll indicator - Estilo slideshow */}
+            {isMobile && regions.length > 2 && (
+              <div className="flex justify-center gap-1.5 mt-6">
+                {regions.map((_, index) => {
+                  const isActive = index === activeCardIndex;
+
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        width: isActive ? "6px" : "6px",
+                        height: "6px",
+                        transition: "all 0.3s ease-in-out",
+                        rotate: isActive ? "45deg" : "0deg",
+                      }}
+                      className={`
+            
+            ${isActive ? "bg-theme-accent shadow-lg scale-105" : "bg-gray-200"}
+          `}
                     />
                   );
                 })}

@@ -8,7 +8,8 @@
 } */
 
 /* Prevenir scroll horizontal y márgenes no deseados */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -206,7 +207,8 @@ html[data-theme="vibrant"] {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: repeating-linear-gradient(
+  background-image:
+    repeating-linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.05),
       rgba(255, 255, 255, 0.05) 20px,
@@ -440,32 +442,30 @@ html[data-theme="vibrant"] {
   height: 100%;
 }
 
-/* .button-glower {
-  padding: 10px 20px;
-  text-transform: uppercase;
-  border-radius: 8px;
-  font-size: 17px;
-  font-weight: 500;
-  color: #ffffff80;
-  text-shadow: none;
-  background: transparent;
-  cursor: pointer;
-  box-shadow: transparent;
-  border: 1px solid #ffffff80;
-  transition: 0.5s ease;
-  user-select: none;
+.progress-ring {
+  border-radius: 9999px;
+  background: conic-gradient(
+    #00FFAA 0deg,
+    #00FFAA 0deg,
+    transparent 0deg
+  );
+  animation: ring-progress 5s linear forwards;
 }
 
-#btn:hover,
-:focus {
-  color: #ffffff;
-  background: #0ef;
-  border: 1px solid #0ef;
-  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
-  box-shadow: 0 0 5px #0ef, 0 0 20px #0ef, 0 0 50px #0ef, 0 0 100px #0ef;
-  scale: 1.1;
+@keyframes ring-progress {
+  from {
+    background: conic-gradient(
+      #00FFAA 0deg,
+      #00FFAA 0deg,
+      transparent 0deg
+    );
+  }
+  to {
+    background: conic-gradient(
+      #00FFAA 360deg,
+      transparent 360deg
+    );
+  }
 }
 
-#btn:active {
-  transform: scale(0.8);
-} */
+
