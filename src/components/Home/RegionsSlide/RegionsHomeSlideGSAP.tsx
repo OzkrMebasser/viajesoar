@@ -196,6 +196,43 @@ export default function RegionsHomeSlideGSAP() {
     }
   }, [regions]);
 
+  // 🔍 Zoom out/in effect SOLO MOBILE - ligado al scroll de página
+useEffect(() => {
+  if (!isMobile || loading) return;
+
+  const section = scrollContainerRef.current;
+  if (!section) return;
+
+  section.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+  section.style.transformOrigin = "center center";
+
+  const handleScroll = () => {
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Qué tanto ha salido del viewport hacia arriba (0 = justo entrando, 1 = completamente fuera)
+    const progress = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.5)));
+
+    const scale = 1 - progress * 1; // De 1 a 0
+    const opacity = 1 - progress;   // De 1 a 0
+
+    section.style.transform = `scale(${scale})`;
+    section.style.opacity = String(opacity);
+  };
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  handleScroll();
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+    if (section) {
+      section.style.transform = "";
+      section.style.opacity = "";
+      section.style.transition = "";
+    }
+  };
+}, [isMobile, loading]);
+
   return (
     <div ref={sectionRef} className="relative pt-8 lg:pt-4 bg-gradient-theme">
       {loading ? (

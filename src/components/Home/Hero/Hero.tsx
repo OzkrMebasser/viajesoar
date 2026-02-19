@@ -654,20 +654,25 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="hero-page  relative inset-0 w-screen h-screen text-white overflow-hidden" // 👈 CAMBIO: fixed inset-0 y h-screen
+    <>
+      {!initialized && <HeroSlidesSkeleton />}
+
+      <div
+        ref={containerRef}
+        className="hero-page  relative inset-0 w-screen h-screen text-white overflow-hidden" // 👈 CAMBIO: fixed inset-0 y h-screen
       style={{
         width: "100vw",
         height: "100vh",
         maxWidth: "100vw",
         maxHeight: "100svh",
+        opacity: initialized ? 1 : 0,        // 👈 invisible hasta que GSAP esté listo
+        transition: "opacity 0.3s ease",     // 👈 fade in suave al aparecer
       }}
-    >
-      {/* Mapa del mundo loader */}
-      {clientReady && showMap && (
-        <div
-          className="
+      >
+        {/* Mapa del mundo loader */}
+        {clientReady && showMap && (
+          <div
+            className="
       worldmap-container
       fixed inset-0
       z-50
@@ -675,13 +680,13 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       pointer-events-none
       will-change-opacity
     "
-        >
-          <WorldMapLoader />
-        </div>
-      )}
+          >
+            <WorldMapLoader />
+          </div>
+        )}
 
-      {/* Images cards */}
-      {/* {data.map((item, index) => (
+        {/* Images cards */}
+        {/* {data.map((item, index) => (
         <Fragment key={item.id ?? index}>
           <div
             ref={(el) => {
@@ -691,7 +696,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
             // style={{ backgroundImage: `url(${item.image})` }}
           >
             {/* Overlay negro transparente */}
-      {/* <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
+        {/* <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
           </div>
 
           <div
@@ -717,90 +722,90 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
         </Fragment>
       ))} */}
 
-      {data.map((item, index) => (
-        <Fragment key={item.id ?? index}>
-          <div
-            ref={(el) => {
-              cardRefs.current[index] = el;
-            }}
-            className="absolute inset-0 w-full h-full bg-center bg-cover shadow-[0px_-1px_12px_8px_rgba(0,_0,_0,_0.3)]" // 👈 Agregué w-full h-full
-            style={{ backgroundImage: `url(${item.image})` }}
-          >
-            <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
-          </div>
+        {data.map((item, index) => (
+          <Fragment key={item.id ?? index}>
+            <div
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
+              className="absolute inset-0 w-full h-full bg-center bg-cover shadow-[0px_-1px_12px_8px_rgba(0,_0,_0,_0.3)]" // 👈 Agregué w-full h-full
+              style={{ backgroundImage: `url(${item.image})` }}
+            >
+              <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
+            </div>
 
-          <div
-            ref={(el) => {
-              cardContentRefs.current[index] = el;
-            }}
-            className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4 bg-red-700500"
-          >
-            <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
-            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
-              {item.place}
+            <div
+              ref={(el) => {
+                cardContentRefs.current[index] = el;
+              }}
+              className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4 bg-red-700500"
+            >
+              <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
+              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+                {item.place}
+              </div>
+              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+                {item.country}
+              </div>
+              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+                {item.title}
+              </div>
+              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+                {item.title2}
+              </div>
             </div>
-            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
-              {item.country}
-            </div>
-            <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-              {item.title}
-            </div>
-            <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-              {item.title2}
-            </div>
-          </div>
-        </Fragment>
-      ))}
+          </Fragment>
+        ))}
 
-      {/* Images hero even */}
-      <div
-        ref={detailsEvenElementRef}
-        className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
-      >
-        <div className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white [box-shadow:2px_2px_3px_#000000] rounded-full" />
-          <div
-            ref={placeTextEvenRef}
-            className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
-          >
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.place} */}
-          </div>
-          <div
-            ref={countryTextEvenRef}
-            className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
-          >
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.country} */}
-          </div>
-        </div>
-        <div className="mb-1 overflow-hidden">
-          <div
-            ref={title1EvenRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title} */}
-          </div>
-          <div
-            ref={title2EvenRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title2} */}
-          </div>
-        </div>
+        {/* Images hero even */}
         <div
-          ref={descEvenRef}
-          className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          ref={detailsEvenElementRef}
+          className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
         >
-          {" "}
-          {/* content controlled by GSAP */}
-          {/* {data[order[0]]?.description} */}
-        </div>
-        {/* <div
+          <div className="relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white [box-shadow:2px_2px_3px_#000000] rounded-full" />
+            <div
+              ref={placeTextEvenRef}
+              className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.place} */}
+            </div>
+            <div
+              ref={countryTextEvenRef}
+              className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.country} */}
+            </div>
+          </div>
+          <div className="mb-1 overflow-hidden">
+            <div
+              ref={title1EvenRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title} */}
+            </div>
+            <div
+              ref={title2EvenRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title2} */}
+            </div>
+          </div>
+          <div
+            ref={descEvenRef}
+            className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          >
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.description} */}
+          </div>
+          {/* <div
           ref={ctaEvenRef}
           className="relative pt-4 w-full flex items-center"
         >
@@ -810,64 +815,67 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
             {locale === "es" ? "Ver más" : "See more"}
           </GhostButtonArrow>
         </div> */}
-          <div ref={ctaEvenRef} className="relative pt-4 w-full flex items-center">
-          <ButtonGlower
-          href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
-        >
-          {locale === "es" ? "Ver más" : "See more"}{" "}
-        </ButtonGlower>
+          <div
+            ref={ctaEvenRef}
+            className="relative pt-4 w-full flex items-center"
+          >
+            <ButtonGlower
+              href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
+            >
+              {locale === "es" ? "Ver más" : "See more"}{" "}
+            </ButtonGlower>
+          </div>
         </div>
-      </div>
 
-      {/* Images hero odd */}
-      <div
-        ref={detailsOddElementRef}
-        className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
-      >
-        <div className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 [box-shadow:2px_2px_3px_#000000] bg-white rounded-full" />
-          <div
-            ref={placeTextOddRef}
-            className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
-          >
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.place} */}
-          </div>
-          <div
-            ref={countryTextOddRef}
-            className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
-          >
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.country} */}
-          </div>
-        </div>
-        <div className="mb-1 overflow-hidden">
-          <div
-            ref={title1OddRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title} */}
-          </div>
-          <div
-            ref={title2OddRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title2} */}
-          </div>
-        </div>
+        {/* Images hero odd */}
         <div
-          ref={descOddRef}
-          className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          ref={detailsOddElementRef}
+          className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
         >
-          {" "}
-          {/* content controlled by GSAP */}
-          {/* {data[order[0]]?.description} */}
-        </div>
-        {/* <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
+          <div className="relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 [box-shadow:2px_2px_3px_#000000] bg-white rounded-full" />
+            <div
+              ref={placeTextOddRef}
+              className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.place} */}
+            </div>
+            <div
+              ref={countryTextOddRef}
+              className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.country} */}
+            </div>
+          </div>
+          <div className="mb-1 overflow-hidden">
+            <div
+              ref={title1OddRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title} */}
+            </div>
+            <div
+              ref={title2OddRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title2} */}
+            </div>
+          </div>
+          <div
+            ref={descOddRef}
+            className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          >
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.description} */}
+          </div>
+          {/* <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
           <GhostButtonArrow
             href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
           >
@@ -875,24 +883,27 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           </GhostButtonArrow>
         </div> */}
 
-        <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
-          <ButtonGlower
-          href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
-        >
-          {locale === "es" ? "Ver más" : "See more"}{" "}
-        </ButtonGlower>
+          <div
+            ref={ctaOddRef}
+            className="relative pt-4 w-full flex items-center"
+          >
+            <ButtonGlower
+              href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
+            >
+              {locale === "es" ? "Ver más" : "See more"}{" "}
+            </ButtonGlower>
+          </div>
         </div>
-        
+
+        {/* Hidden elements for GSAP references */}
+        <nav ref={navRef} className="opacity-0" />
+
+        <div
+          ref={coverRef}
+          className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
+        />
       </div>
-
-      {/* Hidden elements for GSAP references */}
-      <nav ref={navRef} className="opacity-0" />
-
-      <div
-        ref={coverRef}
-        className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
-      />
-    </div>
+    </>
   );
 };
 
