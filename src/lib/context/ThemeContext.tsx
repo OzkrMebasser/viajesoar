@@ -11,14 +11,10 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>("dark");
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
-    if (savedTheme && ["dark", "light", "vibrant"].includes(savedTheme)) {
-      setTheme(savedTheme);
-    }
-  }, []);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "dark";
+    return (document.documentElement.getAttribute("data-theme") as Theme) ?? "dark";
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);

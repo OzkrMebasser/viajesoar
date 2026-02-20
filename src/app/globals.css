@@ -63,6 +63,9 @@ body {
   --gradient: linear-gradient(to bottom, #000000, #080808, #000000);
   --gradient-secondary: linear-gradient(to top, #000000, #100818, #000000);
   --gradient-tertiary: linear-gradient(to bottom, #080808, #141414, #080808);
+  --skeleton-base: #1e293b;
+  --skeleton-shine: #2d3f55;
+  --skeleton-border:var(--accent)
 
   /* hex logo */
   /* --cerulean: #0c95ea;
@@ -100,6 +103,8 @@ html[data-theme="light"] {
   --gradient: linear-gradient(to bottom, #ffffff, #f1f5f9, #ffffff);
   --gradient-secondary: linear-gradient(to top, #ffffff, #dee6ee, #ffffff);
   --gradient-tertiary: linear-gradient(to bottom, #f1f5f9, #ffffff, #f1f5f9);
+  --skeleton-base: #cbd5e1;
+  --skeleton-shine: #e2e8f0;
 }
 
 /* Tema vibrant */
@@ -131,6 +136,8 @@ html[data-theme="vibrant"] {
     #fdb756
   );
   --gradient-tertiary: linear-gradient(to top, #f8a736, #ebaf5b, #f8a736);
+  --skeleton-base: #f1b663;
+  --skeleton-shine: #ffe0b2;
 }
 
 /* Clases reutilizables */
@@ -148,6 +155,12 @@ html[data-theme="vibrant"] {
 }
 .bg-theme-accent {
   background-color: var(--bg-accent);
+}
+.bg-skeleton-base {
+  background-color: var(--skeleton-base);
+}
+.bg-skeleton-shine {
+  background-color: var(--skeleton-shine);
 }
 .text-theme {
   color: var(--text);
@@ -444,27 +457,16 @@ html[data-theme="vibrant"] {
 
 .progress-ring {
   border-radius: 9999px;
-  background: conic-gradient(
-    #00FFAA 0deg,
-    #00FFAA 0deg,
-    transparent 0deg
-  );
+  background: conic-gradient(#00ffaa 0deg, #00ffaa 0deg, transparent 0deg);
   animation: ring-progress 5s linear forwards;
 }
 
 @keyframes ring-progress {
   from {
-    background: conic-gradient(
-      #00FFAA 0deg,
-      #00FFAA 0deg,
-      transparent 0deg
-    );
+    background: conic-gradient(#00ffaa 0deg, #00ffaa 0deg, transparent 0deg);
   }
   to {
-    background: conic-gradient(
-      #00FFAA 360deg,
-      transparent 360deg
-    );
+    background: conic-gradient(#00ffaa 360deg, transparent 360deg);
   }
 }
 

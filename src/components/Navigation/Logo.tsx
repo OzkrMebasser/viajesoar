@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useTheme } from "@/lib/context/ThemeContext";
+import { useState, useEffect } from "react";
 
 interface LogoProps {
   isScrolled: boolean;
@@ -9,34 +10,18 @@ interface LogoProps {
 
 const Logo = ({ isScrolled, className = "" }: LogoProps) => {
   const { theme } = useTheme();
-  
-  // Shadow para SOAR (blanco en vibrant, negro en otros)
-  const getSoarText = () => {
-    if (theme === "vibrant") {
-      return "text-[#ff9f1a]";
-    }
-    if (theme === "light") {
-      return "text-[#0891b2]";
-    }
-    if (theme === "dark") {
-      return "text-[#01ac9d]";
-    }
-    return "accent";
-  };
+  const [mounted, setMounted] = useState(false);
 
-  // Shadow para VIAJE (blanco en light, negro en otros)
-  const getViajeShadow = () => {
-    if (theme === "light") {
-      return "[text-shadow:_3px_0px_20px_#d6d6d6]";
-    }
-    return "[text-shadow:_3px_0px_20px_#000000]";
+  useEffect(() => setMounted(true), []);
+
+  const getSoarText = () => {
+    if (theme === "vibrant") return "text-[#ff9f1a]";
+    if (theme === "light") return "text-[#0891b2]";
+    return "text-[#01ac9d]";
   };
 
   return (
-    <div
-      className={`flex items-center   ${className}`}
-    >
-      {/* Imagen - tamaño pequeño fijo */}
+    <div className={`flex items-center ${className}`}>
       <div className="relative">
         <Image
           src="/VIAJES-soar-logo-blues.png"
@@ -48,29 +33,10 @@ const Logo = ({ isScrolled, className = "" }: LogoProps) => {
         />
       </div>
 
-      {/* Texto - tamaño pequeño fijo */}
       <strong>
-        <span className={`text-[25px] lg:text-3xl font-bold tracking-wider ${
-              isScrolled 
-                ? "" 
-                : "[text-shadow:_2px_1px_6px_#000000]"
-            }`}>
-          {/* VIAJE - shadow blanco en light, negro en otros */}
-          <span 
-            // className={
-            //   isScrolled 
-            //     ? "" 
-            //     : "[text-shadow:_3px_10px_20px_#000000]"
-            // }
-          >
-            VIAJE
-          </span>
-          {/* SOAR - shadow blanco en vibrant, negro en otros */}
-          <span 
-            className={`soar  ml-px ${
-              isScrolled ? "accent" : getSoarText()
-            }`}
-          >
+        <span className={`text-[25px] lg:text-3xl font-bold tracking-wider ${isScrolled ? "" : "[text-shadow:_2px_1px_6px_#000000]"}`}>
+          <span>VIAJE</span>
+          <span className={`soar ml-px ${isScrolled ? "accent" : mounted ? getSoarText() : "text-[#01ac9d]"}`}>
             SOAR
           </span>
         </span>
@@ -80,4 +46,3 @@ const Logo = ({ isScrolled, className = "" }: LogoProps) => {
 };
 
 export default Logo;
-

@@ -1,20 +1,31 @@
 "use client";
 import React, { useState, useEffect, useRef, Fragment } from "react";
-import Link from "next/link";
 import { gsap } from "gsap";
-import { Bookmark } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // Components
 import WorldMapLoader from "@/components/WorldMapLoader";
 import HeroSlidesSkeleton from "./HeroSlidesSkeleton";
 import GhostButtonArrow from "@/components/ui/GhostButtonArrow";
+import ButtonGlower from "@/components/ui/ButtonGlower";
+
 // Hooks
 import { useFadeOutMap } from "@/lib/hooks/useFadeOutMap";
 
 // Types
 import type { Locale } from "@/types/locale";
 import type { SlideshowDestination } from "@/types/heroDestinations";
+import type { TextRefs } from "./types";
+
+// Helpers & Constants
+import {
+  getResponsiveValues,
+  getTextRefs,
+  updateTextContent,
+  resetInactiveYPositions,
+  animateActiveRefs,
+} from "./helpers";
+import { ANIMATION_CONSTANTS, ACTIVE_ANIMATION_DELAYS } from "./constants";
 
 // Props
 interface Props {
@@ -22,15 +33,16 @@ interface Props {
   data: SlideshowDestination[];
 }
 
-const HeroTravelSlides = ({ locale, data }: Props) => {
-  //States
-  const [clientReady, setClientReady] = useState(false); // Renamed for clarity
+const HeroSlides = ({ locale, data }: Props) => {
+  // States
+  const [clientReady, setClientReady] = useState(false);
   const [order, setOrder] = useState<number[]>([]);
   const [detailsEven, setDetailsEven] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
 
   const router = useRouter();
+
   // All the refs...
   const orderRef = useRef<number[]>([]);
   const detailsEvenRef = useRef<boolean>(true);
@@ -58,17 +70,36 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   const title2OddRef = useRef<HTMLDivElement>(null);
   const descOddRef = useRef<HTMLDivElement>(null);
   const ctaOddRef = useRef<HTMLDivElement>(null);
-
-  // Ref para rastrear si el componente está montado
   const isMountedRef = useRef<boolean>(true);
-  // console.log("componente montado?: ", isMountedRef)
   const viewportRef = useRef<{ width: number; height: number }>({
     width: 0,
     height: 0,
   });
 
-  /// UseEffects
-  // Effect para manejar el mounted state
+  // Helper para crear objeto de refs reutilizable
+  const createTextRefsObject = (): {
+    evenRefs: TextRefs;
+    oddRefs: TextRefs;
+  } => ({
+    evenRefs: {
+      place: placeTextEvenRef,
+      country: countryTextEvenRef,
+      title1: title1EvenRef,
+      title2: title2EvenRef,
+      desc: descEvenRef,
+      cta: ctaEvenRef,
+    },
+    oddRefs: {
+      place: placeTextOddRef,
+      country: countryTextOddRef,
+      title1: title1OddRef,
+      title2: title2OddRef,
+      desc: descOddRef,
+      cta: ctaOddRef,
+    },
+  });
+
+  // UseEffects
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
@@ -76,11 +107,8 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     };
   }, []);
 
-  // efecto que se ejecuta SOLO en el cliente
-  // garantiza que el DOM esté listo antes de marcar como listo.
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Forzamos un microtask para asegurar que el DOM esté pintado
       Promise.resolve().then(() => {
         if (isMountedRef.current) {
           setClientReady(true);
@@ -105,7 +133,6 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     detailsEvenRef.current = detailsEven;
   }, [detailsEven]);
 
-  // ✅ CORRECCIÓN CLAVE: Reemplazamos el setTimeout por un bucle de verificación activa
   useEffect(() => {
     if (
       !containerRef.current ||
@@ -116,17 +143,13 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       return;
     }
 
-    // Matar todas las animaciones previas antes de inicializar
     gsap.killTweensOf("*");
-
-    // Reset del estado de inicialización
     setInitialized(false);
     setIsAnimating(false);
 
     let checkInterval: NodeJS.Timeout | null = null;
 
     const tryInitialize = () => {
-      // Verificamos que los elementos críticos del DOM estén disponibles
       const currentOrder = orderRef.current;
       const activeIndex = currentOrder[0];
       const detailsActive = detailsEvenRef.current
@@ -139,7 +162,6 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
         detailsOddElementRef.current &&
         cardRefs.current[activeIndex]
       ) {
-        // Si están listos, detenemos el intervalo e inicializamos
         if (checkInterval) {
           clearInterval(checkInterval);
           checkInterval = null;
@@ -151,7 +173,6 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       }
     };
 
-    // Iniciamos el intervalo de verificación
     checkInterval = setInterval(tryInitialize, 50);
 
     return () => {
@@ -159,16 +180,12 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
         clearInterval(checkInterval);
       }
 
-      // Limpiar timeout del loop
       if (loopTimeoutRef.current) {
         clearTimeout(loopTimeoutRef.current);
         loopTimeoutRef.current = null;
       }
 
-      // Matar todas las animaciones GSAP
       gsap.killTweensOf("*");
-
-      // Reset de estados
       setIsAnimating(false);
       setInitialized(false);
     };
@@ -185,65 +202,29 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
   const initializeAnimations = (): void => {
     if (!isMountedRef.current) return;
 
-    // const { innerHeight: height, innerWidth: width } = window;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const container = containerRef.current;
+    if (!container) return;
 
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
     viewportRef.current = { width, height };
-    const isSmallMobile = width <= 480;
-    const isMobile = width <= 768;
 
-    // Responsive values with small mobile support
-    const offsetTop = isSmallMobile
-      ? height - 160
-      : isMobile
-        ? height - 200
-        : height - 330;
-
-    const offsetLeft = isSmallMobile
-      ? width - 220
-      : isMobile
-        ? width - 280
-        : width - 550;
-
-    const cardWidth = isSmallMobile ? 90 : isMobile ? 120 : 200;
-    const cardHeight = isSmallMobile ? 140 : isMobile ? 180 : 300;
-    const gap = isSmallMobile ? 15 : isMobile ? 20 : 40;
-    const numberSize = isSmallMobile ? 25 : isMobile ? 30 : 50;
-    const ease = "sine.inOut";
+    // ✅ Usando helper
+    const responsive = getResponsiveValues(width, height);
+    const ease = ANIMATION_CONSTANTS.EASE;
 
     const currentOrder = orderRef.current;
     const [active, ...rest] = currentOrder;
     const activeIndex = active;
     const firstData = data[activeIndex];
 
-    const initialRefs = detailsEvenRef.current
-      ? [
-          placeTextEvenRef,
-          countryTextEvenRef,
-          title1EvenRef,
-          title2EvenRef,
-          descEvenRef,
-        ]
-      : [
-          placeTextOddRef,
-          countryTextOddRef,
-          title1OddRef,
-          title2OddRef,
-          descOddRef,
-        ];
+    // ✅ Usando helper
+    const { evenRefs, oddRefs } = createTextRefsObject();
+    const initialRefs = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
 
+    // ✅ Usando helper
     if (firstData) {
-      if (initialRefs[0].current)
-        initialRefs[0].current.textContent = firstData.place;
-      if (initialRefs[1].current)
-        initialRefs[1].current.textContent = firstData.country;
-      if (initialRefs[2].current)
-        initialRefs[2].current.textContent = firstData.title;
-      if (initialRefs[3].current)
-        initialRefs[3].current.textContent = firstData.title2;
-      if (initialRefs[4].current)
-        initialRefs[4].current.textContent = firstData.description;
+      updateTextContent(initialRefs, firstData);
     }
 
     const detailsActive = detailsEvenRef.current
@@ -254,23 +235,22 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       ? detailsOddElementRef.current
       : detailsEvenElementRef.current;
 
-    // ✅ Ya no necesitamos esta verificación porque el bucle de arriba lo garantiza
-    // Pero la dejamos como fallback de seguridad
     if (!detailsActive || !detailsInactive || !cardRefs.current[active]) {
       console.warn("Required refs not available yet (fallback)");
       return;
     }
 
     gsap.set(paginationRef.current, {
-      top: offsetTop + (isSmallMobile ? 160 : isMobile ? 200 : 330),
-      left: offsetLeft,
-      y: isSmallMobile ? 80 : isMobile ? 100 : 200,
+      top:
+        responsive.offsetTop +
+        (responsive.isSmallMobile ? 40 : responsive.isMobile ? 50 : 0),
+      y: responsive.paginationOffset,
       opacity: 0,
       zIndex: 30,
     });
 
     gsap.set(navRef.current, {
-      y: isSmallMobile ? -80 : isMobile ? -100 : -200,
+      y: responsive.navOffset,
       opacity: 0,
     });
 
@@ -285,55 +265,40 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     gsap.set(detailsActive, {
       opacity: 0,
       zIndex: 22,
-      x: isSmallMobile ? -80 : isMobile ? -100 : -200,
+      x: responsive.detailsXOffset,
     });
     gsap.set(detailsInactive, { opacity: 0, zIndex: 12 });
 
-    const inactiveRefs = detailsEvenRef.current
-      ? [
-          placeTextOddRef,
-          countryTextOddRef,
-          title1OddRef,
-          title2OddRef,
-          descOddRef,
-          ctaOddRef,
-        ]
-      : [
-          placeTextEvenRef,
-          countryTextEvenRef,
-          title1EvenRef,
-          title2EvenRef,
-          descEvenRef,
-          ctaEvenRef,
-        ];
+    const inactiveRefs = getTextRefs(
+      !detailsEvenRef.current,
+      evenRefs,
+      oddRefs,
+    );
 
-    const yOffset1 = isSmallMobile ? 40 : isMobile ? 50 : 100;
-    const yOffset2 = isSmallMobile ? 25 : isMobile ? 30 : 50;
-    const yOffset3 = isSmallMobile ? 30 : isMobile ? 40 : 60;
+    // ✅ Usando helper
+    resetInactiveYPositions(
+      inactiveRefs,
+      responsive.yOffset1,
+      responsive.yOffset2,
+      responsive.yOffset3,
+    );
 
-    gsap.set(inactiveRefs[0].current, { y: yOffset1 });
-    gsap.set(inactiveRefs[1].current, { y: yOffset1 });
-    gsap.set(inactiveRefs[2].current, { y: yOffset1 });
-    gsap.set(inactiveRefs[3].current, { y: yOffset2 });
-    gsap.set(inactiveRefs[4].current, { y: yOffset3 });
-    gsap.set(inactiveRefs[5].current, { y: yOffset3 });
-
-    const progressWidth = isSmallMobile ? 250 : isMobile ? 300 : 500;
     gsap.set(progressRef.current, {
-      width: progressWidth * (1 / currentOrder.length) * (active + 1),
+      width:
+        responsive.progressWidth * (1 / currentOrder.length) * (active + 1),
     });
 
     rest.forEach((i, index) => {
       const cardX =
-        offsetLeft +
-        (isSmallMobile ? 150 : isMobile ? 200 : 400) +
-        index * (cardWidth + gap);
+        responsive.offsetLeft +
+        responsive.coverXOffset +
+        index * (responsive.cardWidth + responsive.gap);
 
       gsap.set(cardRefs.current[i], {
         x: cardX,
-        y: offsetTop,
-        width: cardWidth,
-        height: cardHeight,
+        y: responsive.offsetTop,
+        width: responsive.cardWidth,
+        height: responsive.cardHeight,
         zIndex: 30,
         borderRadius: 10,
       });
@@ -341,22 +306,24 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       gsap.set(cardContentRefs.current[i], {
         x: cardX,
         zIndex: 30,
-        y: offsetTop + cardHeight - (isSmallMobile ? 50 : isMobile ? 60 : 100),
+        y:
+          responsive.offsetTop +
+          responsive.cardHeight -
+          responsive.cardContentOffset,
       });
 
       if (slideNumberRefs.current[i]) {
-        gsap.set(slideNumberRefs.current[i], { x: (index + 1) * numberSize });
+        gsap.set(slideNumberRefs.current[i], {
+          x: (index + 1) * responsive.numberSize,
+        });
       }
     });
 
     gsap.set(indicatorRef.current, { x: -width });
 
-    const startDelay = 0.6;
-    const coverXOffset = isSmallMobile ? 150 : isMobile ? 200 : 400;
-
     gsap.to(coverRef.current, {
-      x: width + coverXOffset,
-      delay: 0.5,
+      x: width + responsive.coverXOffset,
+      delay: ANIMATION_CONSTANTS.COVER_DELAY,
       ease,
       onComplete: () => {
         if (isMountedRef.current) {
@@ -364,23 +331,27 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
             if (isMountedRef.current) {
               loop();
             }
-          }, 500);
+          }, ANIMATION_CONSTANTS.LOOP_TIMEOUT);
         }
       },
     });
 
     rest.forEach((i, index) => {
       gsap.to(cardRefs.current[i], {
-        x: offsetLeft + index * (cardWidth + gap),
+        x:
+          responsive.offsetLeft +
+          index * (responsive.cardWidth + responsive.gap),
         zIndex: 30,
-        delay: startDelay + 0.05 * index,
+        delay: ANIMATION_CONSTANTS.START_DELAY + 0.05 * index,
         ease,
       });
 
       gsap.to(cardContentRefs.current[i], {
-        x: offsetLeft + index * (cardWidth + gap),
+        x:
+          responsive.offsetLeft +
+          index * (responsive.cardWidth + responsive.gap),
         zIndex: 30,
-        delay: startDelay + 0.05 * index,
+        delay: ANIMATION_CONSTANTS.START_DELAY + 0.05 * index,
         ease,
       });
     });
@@ -389,12 +360,23 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       y: 0,
       opacity: 1,
       ease,
-      delay: startDelay,
+      delay: ANIMATION_CONSTANTS.START_DELAY,
     });
 
-    gsap.to(navRef.current, { y: 0, opacity: 1, ease, delay: startDelay });
-    gsap.to(detailsActive, { opacity: 1, x: 0, ease, delay: startDelay });
+    gsap.to(navRef.current, {
+      y: 0,
+      opacity: 1,
+      ease,
+      delay: ANIMATION_CONSTANTS.START_DELAY,
+    });
+    gsap.to(detailsActive, {
+      opacity: 1,
+      x: 0,
+      ease,
+      delay: ANIMATION_CONSTANTS.START_DELAY,
+    });
   };
+
   const step = (direction: "next" | "prev" = "next"): Promise<void> => {
     return new Promise((resolve) => {
       if (isAnimating || !isMountedRef.current) {
@@ -415,28 +397,11 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
       setIsAnimating(true);
 
-      // const { innerHeight: height, innerWidth: width } = window;
       const { width, height } = viewportRef.current;
-      const isSmallMobile = width <= 480;
-      const isMobile = width <= 768;
 
-      const offsetTop = isSmallMobile
-        ? height - 160
-        : isMobile
-          ? height - 200
-          : height - 330;
-
-      const offsetLeft = isSmallMobile
-        ? width - 220
-        : isMobile
-          ? width - 280
-          : width - 550;
-
-      const cardWidth = isSmallMobile ? 90 : isMobile ? 120 : 200;
-      const cardHeight = isSmallMobile ? 140 : isMobile ? 180 : 300;
-      const gap = isSmallMobile ? 15 : isMobile ? 20 : 40;
-      const numberSize = isSmallMobile ? 25 : isMobile ? 30 : 50;
-      const ease = "sine.inOut";
+      // ✅ Usando helper
+      const responsive = getResponsiveValues(width, height);
+      const ease = ANIMATION_CONSTANTS.EASE;
 
       const currentOrder = [...orderRef.current];
       let newOrder: number[];
@@ -467,23 +432,9 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
         ? detailsOddElementRef.current
         : detailsEvenElementRef.current;
 
-      const activeRefs = detailsEvenRef.current
-        ? [
-            placeTextEvenRef,
-            countryTextEvenRef,
-            title1EvenRef,
-            title2EvenRef,
-            descEvenRef,
-            ctaEvenRef,
-          ]
-        : [
-            placeTextOddRef,
-            countryTextOddRef,
-            title1OddRef,
-            title2OddRef,
-            descOddRef,
-            ctaOddRef,
-          ];
+      // ✅ Usando helper
+      const { evenRefs, oddRefs } = createTextRefsObject();
+      const activeRefs = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
 
       const activeIndex = newOrder[0];
 
@@ -497,45 +448,18 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
         return;
       }
 
-      if (activeRefs[0].current)
-        activeRefs[0].current.textContent = data[activeIndex].place;
-      if (activeRefs[1].current)
-        activeRefs[1].current.textContent = data[activeIndex].country;
-      if (activeRefs[2].current)
-        activeRefs[2].current.textContent = data[activeIndex].title;
-      if (activeRefs[3].current)
-        activeRefs[3].current.textContent = data[activeIndex].title2;
-      if (activeRefs[4].current)
-        activeRefs[4].current.textContent = data[activeIndex].description;
+      // ✅ Usando helper
+      updateTextContent(activeRefs, data[activeIndex]);
 
       gsap.set(detailsActive, { zIndex: 22 });
-      gsap.to(detailsActive, { opacity: 1, delay: 0.4, ease });
-      gsap.to(activeRefs[0].current, { y: 0, delay: 0.1, duration: 0.7, ease });
-      gsap.to(activeRefs[1].current, {
-        y: 0,
-        delay: 0.15,
-        duration: 0.7,
+      gsap.to(detailsActive, {
+        opacity: 1,
+        delay: ACTIVE_ANIMATION_DELAYS.DETAILS,
         ease,
       });
-      gsap.to(activeRefs[2].current, {
-        y: 0,
-        delay: 0.15,
-        duration: 0.7,
-        ease,
-      });
-      gsap.to(activeRefs[3].current, { y: 0, delay: 0.3, duration: 0.4, ease });
-      gsap.to(activeRefs[4].current, {
-        y: 0,
-        delay: 0.35,
-        duration: 0.4,
-        ease,
-      });
-      gsap.to(activeRefs[5].current, {
-        y: 0,
-        delay: 0.4,
-        duration: 0.4,
-        ease,
-      });
+
+      // ✅ Usando helper
+      animateActiveRefs(activeRefs, ease);
 
       gsap.set(detailsInactive, { zIndex: 12 });
 
@@ -547,7 +471,10 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       gsap.to(cardRefs.current[prv], { scale: 1, ease, duration: 1 });
 
       gsap.to(cardContentRefs.current[active], {
-        y: offsetTop + cardHeight - (isSmallMobile ? 5 : 10),
+        y:
+          responsive.offsetTop +
+          responsive.cardHeight -
+          responsive.cardContentFinalY,
         opacity: 0,
         duration: 0.6,
         ease,
@@ -559,15 +486,14 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
       if (slideNumberRefs.current[prv]) {
         gsap.to(slideNumberRefs.current[prv], {
-          x: -numberSize,
+          x: -responsive.numberSize,
           ease,
           duration: 1,
         });
       }
 
-      const progressWidth = isSmallMobile ? 250 : isMobile ? 300 : 500;
       gsap.to(progressRef.current, {
-        width: progressWidth * (1 / newOrder.length) * (active + 1),
+        width: responsive.progressWidth * (1 / newOrder.length) * (active + 1),
         ease,
         duration: 1,
       });
@@ -586,13 +512,15 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
             return;
           }
 
-          const xNew = offsetLeft + (rest.length - 1) * (cardWidth + gap);
+          const xNew =
+            responsive.offsetLeft +
+            (rest.length - 1) * (responsive.cardWidth + responsive.gap);
 
           gsap.set(cardRefs.current[prv], {
             x: xNew,
-            y: offsetTop,
-            width: cardWidth,
-            height: cardHeight,
+            y: responsive.offsetTop,
+            width: responsive.cardWidth,
+            height: responsive.cardHeight,
             zIndex: 30,
             borderRadius: 10,
             scale: 1,
@@ -601,49 +529,34 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           gsap.set(cardContentRefs.current[prv], {
             x: xNew,
             y:
-              offsetTop +
-              cardHeight -
-              (isSmallMobile ? 50 : isMobile ? 60 : 100),
+              responsive.offsetTop +
+              responsive.cardHeight -
+              responsive.cardContentOffset,
             opacity: 1,
             zIndex: 40,
           });
 
           if (slideNumberRefs.current[prv]) {
             gsap.set(slideNumberRefs.current[prv], {
-              x: rest.length * numberSize,
+              x: rest.length * responsive.numberSize,
             });
           }
 
           gsap.set(detailsInactive, { opacity: 0 });
 
-          const inactiveRefs = detailsEvenRef.current
-            ? [
-                placeTextOddRef,
-                countryTextOddRef,
-                title1OddRef,
-                title2OddRef,
-                descOddRef,
-                ctaOddRef,
-              ]
-            : [
-                placeTextEvenRef,
-                countryTextEvenRef,
-                title1EvenRef,
-                title2EvenRef,
-                descEvenRef,
-                ctaEvenRef,
-              ];
+          const inactiveRefs = getTextRefs(
+            !detailsEvenRef.current,
+            evenRefs,
+            oddRefs,
+          );
 
-          const yOffset1 = isSmallMobile ? 40 : isMobile ? 50 : 100;
-          const yOffset2 = isSmallMobile ? 25 : isMobile ? 30 : 50;
-          const yOffset3 = isSmallMobile ? 30 : isMobile ? 40 : 60;
-
-          gsap.set(inactiveRefs[0].current, { y: yOffset1 });
-          gsap.set(inactiveRefs[1].current, { y: yOffset1 });
-          gsap.set(inactiveRefs[2].current, { y: yOffset1 });
-          gsap.set(inactiveRefs[3].current, { y: yOffset2 });
-          gsap.set(inactiveRefs[4].current, { y: yOffset3 });
-          gsap.set(inactiveRefs[5].current, { y: yOffset3 });
+          // ✅ Usando helper
+          resetInactiveYPositions(
+            inactiveRefs,
+            responsive.yOffset1,
+            responsive.yOffset2,
+            responsive.yOffset3,
+          );
 
           if (detailsActive) {
             gsap.set(detailsActive, { height: "auto" });
@@ -656,14 +569,16 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
       rest.forEach((i, index) => {
         if (i !== prv) {
-          const xNew = offsetLeft + index * (cardWidth + gap);
+          const xNew =
+            responsive.offsetLeft +
+            index * (responsive.cardWidth + responsive.gap);
 
           gsap.set(cardRefs.current[i], { zIndex: 30 });
           gsap.to(cardRefs.current[i], {
             x: xNew,
-            y: offsetTop,
-            width: cardWidth,
-            height: cardHeight,
+            y: responsive.offsetTop,
+            width: responsive.cardWidth,
+            height: responsive.cardHeight,
             ease,
             delay: 0.1 * (index + 1),
             duration: 1,
@@ -672,9 +587,9 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           gsap.to(cardContentRefs.current[i], {
             x: xNew,
             y:
-              offsetTop +
-              cardHeight -
-              (isSmallMobile ? 50 : isMobile ? 60 : 100),
+              responsive.offsetTop +
+              responsive.cardHeight -
+              responsive.cardContentOffset,
             opacity: 1,
             zIndex: 40,
             ease,
@@ -684,7 +599,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
 
           if (slideNumberRefs.current[i]) {
             gsap.to(slideNumberRefs.current[i], {
-              x: (index + 1) * numberSize,
+              x: (index + 1) * responsive.numberSize,
               ease,
               duration: 1,
             });
@@ -693,6 +608,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       });
     });
   };
+
   const loop = async (): Promise<void> => {
     if (isAnimating || !isMountedRef.current) return;
 
@@ -701,7 +617,7 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     await new Promise((resolve) => {
       gsap.to(indicatorRef.current, {
         x: 0,
-        duration: 3,
+        duration: ANIMATION_CONSTANTS.INDICATOR_DURATION,
         onComplete: resolve,
       });
     });
@@ -711,8 +627,8 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
     await new Promise((resolve) => {
       gsap.to(indicatorRef.current, {
         x: width,
-        duration: 1.2,
-        delay: 0.3,
+        duration: ANIMATION_CONSTANTS.INDICATOR_EXIT_DURATION,
+        delay: ANIMATION_CONSTANTS.INDICATOR_EXIT_DELAY,
         onComplete: resolve,
       });
     });
@@ -729,59 +645,73 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
       if (isMountedRef.current) {
         loop();
       }
-    }, 100);
+    }, ANIMATION_CONSTANTS.STEP_TIMEOUT);
   };
 
-  // 🔐 GUARD SSR / DATA
+  // SSR Guard
   if (!clientReady || !data || data.length === 0) {
     return <HeroSlidesSkeleton />;
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-auto h-dvh text-white overflow-hidden bg-gradient-theme"
-    >
-      {/* Mapa del mundo loader */}
-      {clientReady && showMap && (
-        <div
-          className="
+    <>
+      {!initialized && <HeroSlidesSkeleton />}
+
+      <div
+        ref={containerRef}
+        className="hero-page  relative inset-0 w-screen h-screen text-white overflow-hidden" 
+        style={{
+          width: "100vw",
+          height: "100vh",
+          maxWidth: "100vw",
+          maxHeight: "100svh",
+          opacity: initialized ? 1 : 0, //  invisible hasta que GSAP esté listo
+          transition: "opacity 0.3s ease", // 👈 fade al pintarse
+        }}
+      >
+        {/* Mapa del mundo loader */}
+        {clientReady && showMap && (
+          <div
+            className="
       worldmap-container
       fixed inset-0
       z-50
-      bg-black
+      
       pointer-events-none
       will-change-opacity
     "
-        >
-          <WorldMapLoader />
-        </div>
-      )}
+          >
+            <WorldMapLoader />
+          </div>
+        )}
 
-      {/* Images cards */}
-      {data.map((item, index) => (
+        {/* Images cards */}
+        {/* {data.map((item, index) => (
         <Fragment key={item.id ?? index}>
           <div
             ref={(el) => {
               cardRefs.current[index] = el;
             }}
-            className="absolute left-0 top-0 bg-center bg-cover shadow-2xl w-50 [box-shadow:2px_2px_3px_#000000]"
-            style={{ backgroundImage: `url(${item.image})` }}
+            className="absolute left-0 top-0 w-full h-screen bg-center bg-cover bg-red-400 shadow-[0px_-1px_12px_8px_rgba(0,_0,_0,_0.3)]"
+            // style={{ backgroundImage: `url(${item.image})` }}
           >
             {/* Overlay negro transparente */}
-            <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
+        {/* <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
           </div>
 
           <div
             ref={(el) => {
               cardContentRefs.current[index] = el;
             }}
-            className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4"
-            
+            className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4 bg-red-700500"
           >
             <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
-            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">{item.place}</div>
-            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">{item.country}</div>
+            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+              {item.place}
+            </div>
+            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+              {item.country}
+            </div>
             <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
               {item.title}
             </div>
@@ -790,51 +720,92 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
             </div>
           </div>
         </Fragment>
-      ))}
+      ))} */}
 
-      {/* Images hero even */}
-      <div
-        ref={detailsEvenElementRef}
-        className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
-      >
-        <div className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white [box-shadow:2px_2px_3px_#000000] rounded-full" />
-          <div ref={placeTextEvenRef} className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.place} */}
-          </div>
-          <div ref={countryTextEvenRef} className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.country} */}
-          </div>
-        </div>
-        <div className="mb-1 overflow-hidden">
-          <div
-            ref={title1EvenRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title} */}
-          </div>
-          <div
-            ref={title2EvenRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title2} */}
-          </div>
-        </div>
+        {data.map((item, index) => (
+          <Fragment key={item.id ?? index}>
+            <div
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
+              className="absolute inset-0 w-full h-full bg-center bg-cover shadow-[0px_-1px_12px_8px_rgba(0,_0,_0,_0.3)]" // 👈 Agregué w-full h-full
+              style={{ backgroundImage: `url(${item.image})` }}
+            >
+              <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
+            </div>
+
+            <div
+              ref={(el) => {
+                cardContentRefs.current[index] = el;
+              }}
+              className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4 bg-red-700500"
+            >
+              <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
+              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+                {item.place}
+              </div>
+              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+                {item.country}
+              </div>
+              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+                {item.title}
+              </div>
+              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+                {item.title2}
+              </div>
+            </div>
+          </Fragment>
+        ))}
+
+        {/* Images hero even */}
         <div
-          ref={descEvenRef}
-          className="min-h- mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          ref={detailsEvenElementRef}
+          className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
         >
-          {" "}
-          {/* content controlled by GSAP */}
-          {/* {data[order[0]]?.description} */}
-        </div>
-        <div
+          <div className="relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 bg-white [box-shadow:2px_2px_3px_#000000] rounded-full" />
+            <div
+              ref={placeTextEvenRef}
+              className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.place} */}
+            </div>
+            <div
+              ref={countryTextEvenRef}
+              className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.country} */}
+            </div>
+          </div>
+          <div className="mb-1 overflow-hidden">
+            <div
+              ref={title1EvenRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title} */}
+            </div>
+            <div
+              ref={title2EvenRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title2} */}
+            </div>
+          </div>
+          <div
+            ref={descEvenRef}
+            className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          >
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.description} */}
+          </div>
+          {/* <div
           ref={ctaEvenRef}
           className="relative pt-4 w-full flex items-center"
         >
@@ -843,69 +814,97 @@ const HeroTravelSlides = ({ locale, data }: Props) => {
           >
             {locale === "es" ? "Ver más" : "See more"}
           </GhostButtonArrow>
+        </div> */}
+          <div
+            ref={ctaEvenRef}
+            className="relative pt-4 w-full flex items-center"
+          >
+            <ButtonGlower
+              href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
+            >
+              {locale === "es" ? "Ver más" : "See more"}{" "}
+            </ButtonGlower>
+          </div>
         </div>
-      </div>
 
-      {/* Images hero odd */}
-      <div
-        ref={detailsOddElementRef}
-        className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
-      >
-        <div className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 [box-shadow:2px_2px_3px_#000000] bg-white rounded-full" />
-          <div ref={placeTextOddRef} className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.place} */}
-          </div>
-          <div ref={countryTextOddRef} className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.country} */}
-          </div>
-        </div>
-        <div className="mb-1 overflow-hidden">
-          <div
-            ref={title1OddRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title} */}
-          </div>
-          <div
-            ref={title2OddRef}
-            className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
-          >
-            {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.title2} */}
-          </div>
-        </div>
+        {/* Images hero odd */}
         <div
-          ref={descOddRef}
-          className="min-h- mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          ref={detailsOddElementRef}
+          className=" absolute left-3 sm:left-4 md:left-15 top-50 sm:top-24 md:top-20 z-20 max-w-xs md:max-w-none py-4"
         >
-          {" "}
-          {/* content controlled by GSAP */}
-          {/* {data[order[0]]?.description} */}
-        </div>
-        <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
+          <div className="relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-4 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 [box-shadow:2px_2px_3px_#000000] bg-white rounded-full" />
+            <div
+              ref={placeTextOddRef}
+              className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.place} */}
+            </div>
+            <div
+              ref={countryTextOddRef}
+              className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
+            >
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.country} */}
+            </div>
+          </div>
+          <div className="mb-1 overflow-hidden">
+            <div
+              ref={title1OddRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title} */}
+            </div>
+            <div
+              ref={title2OddRef}
+              className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
+            >
+              {" "}
+              {/* content controlled by GSAP */}
+              {/* {data[order[0]]?.title2} */}
+            </div>
+          </div>
+          <div
+            ref={descOddRef}
+            className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
+          >
+            {" "}
+            {/* content controlled by GSAP */}
+            {/* {data[order[0]]?.description} */}
+          </div>
+          {/* <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
           <GhostButtonArrow
             href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
           >
             {locale === "es" ? "Ver más" : "See more"}
           </GhostButtonArrow>
+        </div> */}
+
+          <div
+            ref={ctaOddRef}
+            className="relative pt-4 w-full flex items-center"
+          >
+            <ButtonGlower
+              href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
+            >
+              {locale === "es" ? "Ver más" : "See more"}{" "}
+            </ButtonGlower>
+          </div>
         </div>
+
+        {/* Hidden elements for GSAP references */}
+        <nav ref={navRef} className="opacity-0" />
+
+        <div
+          ref={coverRef}
+          className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
+        />
       </div>
-
-      {/* Hidden elements for GSAP references */}
-      <nav ref={navRef} className="opacity-0" />
-
-      <div
-        ref={coverRef}
-        className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
-      />
-    </div>
+    </>
   );
 };
 
-export default HeroTravelSlides;
+export default HeroSlides;
