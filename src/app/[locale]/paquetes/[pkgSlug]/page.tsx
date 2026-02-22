@@ -1,4 +1,4 @@
-import PackagePage from "@/components/Packages/PackagePage";
+import PackageInfoFull from "@/components/Packages/PackageInfoFull";
 
 export default async function Page({ 
   params 
@@ -7,6 +7,6 @@ export default async function Page({
 }) {
   const { pkgSlug } = await params; // 👈 Await params
   
-  return <PackagePage slug={pkgSlug} locale="es" />;
+  return <PackageInfoFull slug={pkgSlug} locale="es" />;
 }
 

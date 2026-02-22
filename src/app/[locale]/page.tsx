@@ -1,11 +1,12 @@
 import { getHeroDestinations } from "@/lib/data/destinations/heroSlide";
 import type { Locale } from "@/types/locale";
 import type { Metadata } from "next"; 
-import Hero from "@/components/Home/Hero/HeroSlides";
+import HeroSlides from "@/components/Home/Hero/HeroSlides";
 import RegionsHomeSlideGSAP from "@/components/Home/RegionsSlide/RegionsHomeSlideGSAP";
 import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 import CubeEffectSlider from "@/components/CubeEffectSlider";
 import HeroSkeleton from "@/components/Home/Hero/HeroSlidesSkeleton";
+import RegionsHomeSlideGSAPSkeleton from "@/components/Home/RegionsSlide/RegionsHomeSlideGSAPSkeleton";
 
 
 export async function generateMetadata(props: {
@@ -35,8 +36,7 @@ export default async function Home(props: {
 
   return (
     <div>
-      <Hero locale={params.locale} data={data} />
-      <HeroSkeleton />
+      <HeroSlides locale={params.locale} data={data} />
       <RegionsHomeSlideGSAP />
       <PackagesSlideGSAP />
       <CubeEffectSlider />

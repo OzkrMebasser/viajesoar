@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import "../app/globals.css"; // Asegúrate de que Tailwind esté importado
-interface CompactCircularSlideshowProps {
+interface CardsSlideShowProps {
   images: string[];
   interval?: number;
   className?: string;
 }
 
-const CompactCircularSlideshow: React.FC<CompactCircularSlideshowProps> = ({
+const CardsSlideShow: React.FC<CardsSlideShowProps> = ({
   images,
   interval = 2000,
   className = "",
@@ -180,4 +180,4 @@ useEffect(() => {
   );
 };
 
-export default CompactCircularSlideshow;
+export default CardsSlideShow;
