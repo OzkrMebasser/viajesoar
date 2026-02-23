@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { FaSuitcase, FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { FaSuitcase } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import SplitText from "@/components/SplitText";
@@ -403,6 +403,45 @@ export default function PackagesSlideGSAP() {
 
     return () => clearTimeout(timeoutId);
   }, [isMobile, packages.length, loading]);
+  // 🔍 Zoom out/in effect SOLO MOBILE - ligado al scroll de página
+  useEffect(() => {
+    if (!isMobile || loading) return;
+
+    const section = scrollContainerRef.current;
+    if (!section) return;
+
+    section.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+    section.style.transformOrigin = "center center";
+
+    const handleScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Qué tanto ha salido del viewport hacia arriba (0 = justo entrando, 1 = completamente fuera)
+      const progress = Math.max(
+        0,
+        Math.min(1, -rect.top / (rect.height * 0.5)),
+      );
+
+      const scale = 1 - progress * 1; // De 1 a 0
+      const opacity = 1 - progress; // De 1 a 0
+
+      section.style.transform = `scale(${scale})`;
+      section.style.opacity = String(opacity);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (section) {
+        section.style.transform = "";
+        section.style.opacity = "";
+        section.style.transition = "";
+      }
+    };
+  }, [isMobile, loading]);
 
   if (loading) {
     return (
@@ -464,11 +503,11 @@ export default function PackagesSlideGSAP() {
                   isAtEnd ? "left-0" : "right-0"
                 }`}
               >
-                <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg animate-pulse">
+                <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg h-12 w-12">
                   {isAtEnd ? (
-                    <FaChevronLeft className="text-slate-900 text-xl" />
+                    <img src="/swipe-right.svg" alt="Swipe right indicator" className="text-2xl hand-icon-right " />
                   ) : (
-                    <FaChevronRight className="text-slate-900 text-xl" />
+                    <img src="/swipe-left.svg" alt="Swipe left indicator" className="text-2xl hand-icon-left"/>
                   )}
                 </div>
               </div>

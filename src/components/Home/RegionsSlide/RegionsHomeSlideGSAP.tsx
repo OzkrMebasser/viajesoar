@@ -282,13 +282,13 @@ export default function RegionsHomeSlideGSAP() {
                     isAtEnd ? "left-0" : "right-0"
                   }`}
                 >
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg animate-pulse">
-                    {isAtEnd ? (
-                      <FaChevronLeft className="text-slate-900 text-xl" />
-                    ) : (
-                      <FaChevronRight className="text-slate-900 text-xl" />
-                    )}
-                  </div>
+                <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg h-12 w-12">
+                  {isAtEnd ? (
+                    <img src="/swipe-right.svg" alt="Swipe right indicator" className="text-2xl hand-icon-right " />
+                  ) : (
+                    <img src="/swipe-left.svg" alt="Swipe left indicator" className="text-2xl hand-icon-left"/>
+                  )}
+                </div>
                 </div>
               )}
 
@@ -352,6 +352,7 @@ export default function RegionsHomeSlideGSAP() {
                               images={region.images}
                               interval={4000}
                               className="w-full h-full"
+                              maxImages={5}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
                           </div>

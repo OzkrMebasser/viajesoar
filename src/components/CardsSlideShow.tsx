@@ -6,65 +6,66 @@ interface CardsSlideShowProps {
   images: string[];
   interval?: number;
   className?: string;
+  maxImages?: number;
 }
 
 const CardsSlideShow: React.FC<CardsSlideShowProps> = ({
   images,
   interval = 2000,
   className = "",
+  maxImages,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [progress, setProgress] = useState(0);
 
-
   // Validar que images sea un array válido
   const validImages = Array.isArray(images)
     ? images.filter(
         (img) => img && typeof img === "string" && img.trim() !== "",
-      )
+      ).slice(0, maxImages ?? undefined)
+
     : [];
 
+  // ELIMINA el useEffect del progress que estaba arriba
 
-// ELIMINA el useEffect del progress que estaba arriba
-
-useEffect(() => {
-  if (validImages.length === 0) {
-    console.warn("⚠️ No valid images provided to CompactCircularSlideshow");
-    return;
-  }
-
-  // Precargar la primera imagen
-  const img = new Image();
-  img.src = validImages[0];
-  img.onload = () => setIsLoaded(true);
-
-  // Reiniciar progress DENTRO del useEffect
-  let currentProgress = 0;
-  setProgress(0);
-
-  // Timer para el progress
-  const intervalTime = 20;
-  const increment = 100 / (interval / intervalTime);
-
-  const progressTimer = setInterval(() => {
-    currentProgress += increment;
-    if (currentProgress >= 100) {
-      currentProgress = 100;
+  useEffect(() => {
+    if (validImages.length === 0) {
+      console.warn("⚠️ No valid images provided to CompactCircularSlideshow");
+      return;
     }
-    setProgress(currentProgress);
-  }, intervalTime);
 
-  // Timer para cambiar la imagen
-  const slideTimer = setTimeout(() => {
-    setCurrentIndex((prev) => (prev + 1) % validImages.length);
-  }, interval);
+    // Precargar la primera imagen
+    const img = new Image();
+    img.src = validImages[0];
+    img.onload = () => setIsLoaded(true);
 
-  return () => {
-    clearInterval(progressTimer);
-    clearTimeout(slideTimer);
-  };
-}, [currentIndex, validImages.length, interval]);
+    // Reiniciar progress DENTRO del useEffect
+    let currentProgress = 0;
+    setProgress(0);
+
+    // Timer para el progress
+    const intervalTime = 20;
+    const increment = 100 / (interval / intervalTime);
+
+    const progressTimer = setInterval(() => {
+      currentProgress += increment;
+      if (currentProgress >= 100) {
+        currentProgress = 100;
+      }
+      setProgress(currentProgress);
+    }, intervalTime);
+
+    // Timer para cambiar la imagen
+    const slideTimer = setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % validImages.length);
+    }, interval);
+
+    return () => {
+      clearInterval(progressTimer);
+      clearTimeout(slideTimer);
+    };
+  }, [currentIndex, validImages.length, interval]);
   if (validImages.length === 0) {
     return (
       <div
@@ -101,81 +102,34 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Progress indicators (optional) */}
-      {/* {validImages.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {validImages.map((_, index) => (
+      {validImages.length > 1 && (
+        <div
+          className="absolute z-20 flex items-center justify-center"
+          style={{
+            bottom: `calc(14px + env(safe-area-inset-bottom))`,
+            right: "14px",
+          }}
+        >
+          <div className="relative w-8 h-8 flex items-center justify-center">
+            {/* Ring fino */}
             <div
-              key={index}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? "bg-white w-6"
-                  : "bg-white/50"
-              }`}
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `conic-gradient(#ffffff ${progress}%, rgba(255,255,255,0.15) 0%)`,
+                WebkitMask: "radial-gradient(circle, transparent 50%, red 61%)",
+                mask: "radial-gradient(circle, transparent 50%, red 61%)",
+              }}
             />
-          ))}
+
+            {/* Centro */}
+            <div className="relative w-7 h-7 rounded-full bg-black flex items-center justify-center text-theme text-[8px] font-semibold ">
+              <span>{currentIndex + 1}</span>
+              <span className="mx-[1px] opacity-50">/</span>
+              <span className="opacity-50">{validImages.length}</span>
+            </div>
+          </div>
         </div>
-      )} */}
-
-      {/* {validImages.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {validImages.map((_, index) => {
-            const isActive = index === currentIndex;
-
-            return (
-              <div
-                key={index}
-                style={{
-                  width: isActive ? "6px" : "6px",
-                  height: "6px",
-                  transition: "all 0.3s ease-in-out",
-                  rotate: isActive ? "45deg" : "0deg",
-                  opacity: isActive ? 0.5 : 0.2,
-                  bottom: "calc(12px + env(safe-area-inset-bottom))"
-                  
-                }}
-                className={`
-            
-            ${isActive ? "bg-theme-accent shadow-lg scale-105 opacity-50" : "opacity-20 bg-gray-200"}
-          `}
-              />
-            );
-          })}
-        </div>
-      )} */}
-{validImages.length > 1 && (
-  <div
-    className="absolute z-20 flex items-center justify-center"
-    style={{
-      bottom: `calc(14px + env(safe-area-inset-bottom))`,
-      right: "14px",
-    }}
-  >
-    <div className="relative w-8 h-8 flex items-center justify-center">
-
-      {/* Ring fino */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `conic-gradient(#ffffff ${progress}%, rgba(255,255,255,0.15) 0%)`,
-          WebkitMask: "radial-gradient(circle, transparent 50%, red 61%)",
-          mask: "radial-gradient(circle, transparent 50%, red 61%)",
-        }}
-      />
-
-      {/* Centro */}
-      <div className="relative w-7 h-7 rounded-full bg-black flex items-center justify-center text-theme text-[8px] font-semibold ">
-        <span>{currentIndex + 1}</span>
-        <span className="mx-[1px] opacity-50">/</span>
-        <span className="opacity-50">{validImages.length}</span>
-      </div>
-
-    </div>
-  </div>
-)}
-
-
-
+      )}
     </div>
   );
 };

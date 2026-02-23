@@ -7,6 +7,9 @@ import { Star, StarHalf, ArrowRight } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import SplitText from "./SplitText";
+import "aos/dist/aos.css";
+import AOS from "aos";
+
 import "swiper/css";
 import "swiper/css/effect-cube";
 import ParticlesCanvas from "./ParticlesCanvas";
@@ -104,33 +107,91 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
 
 export default function CubeEffectSlider(): React.ReactNode {
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState(false);
   const locale = useLocale() as Locale;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // ✅ TODOS los useEffect ANTES de cualquier return condicional
   useEffect((): void => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const checkDevice = () => setIsMobile(window.innerWidth < 768);
+    checkDevice();
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
+
+  // AOS init — siempre inicializar, hacer refresh cuando cambia isMobile
+  // para que detecte el atributo data-aos tras el render condicional
+  // useEffect(() => {
+  //   if (!mounted) return;
+  //   AOS.init({ once: true, duration: 800, offset: 100 });
+  //   AOS.refresh();
+  // }, [mounted, isMobile]);
+
+  useEffect(() => {
+    AOS.init({
+      once: true,
+      duration: 800,
+      offset: 120,
+      easing: "ease-out-cubic",
+    });
+  }, []);
+
+  // 🔍 Zoom out effect SOLO MOBILE
+  useEffect(() => {
+    if (!isMobile || !mounted) return;
+
+    const section = scrollContainerRef.current;
+    if (!section) return;
+
+    section.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+    section.style.transformOrigin = "center center";
+
+    const handleScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const progress = Math.max(
+        0,
+        Math.min(1, -rect.top / (rect.height * 0.5)),
+      );
+      section.style.transform = `scale(${1 - progress})`;
+      section.style.opacity = String(1 - progress);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (section) {
+        section.style.transform = "";
+        section.style.opacity = "";
+        section.style.transition = "";
+      }
+    };
+  }, [isMobile, mounted]);
+
+  // ✅ Return condicional DESPUÉS de todos los hooks
   if (!mounted) return null;
 
-
-
-
   return (
-    <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12 ">
-      {/* Animated Particles Background */}
+    <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center px-4 sm:px-8 lg:px-16 py-12">
       <ParticlesCanvas />
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div
+        ref={scrollContainerRef}
+        className="relative z-20 w-full max-w-6xl"
+      >
+          <div
+        {...(!isMobile ? { "data-aos": "zoom-in-up" } : {})}
+        className="relative z-10 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+      >
         {/* Text Section */}
-        <div className="flex flex-col justify-center ">
-          {/* <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-            Let's Travel The World Together!
-          </h1> */}
+        <div className="flex flex-col justify-center">
           <SplitTextVanilla
-            text={
-              locale === "es" ? "Aventuras " : "SOARprising"
-            }
+            text={locale === "es" ? "Aventuras " : "SOARprising"}
             className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-theme-tittles mb-3 uppercase"
             delay={25}
             duration={0.5}
@@ -139,10 +200,9 @@ export default function CubeEffectSlider(): React.ReactNode {
             from={{ opacity: 0, y: 20 }}
             to={{ opacity: 1, y: 0 }}
             textAlign="center"
-          />   <SplitTextVanilla
-            text={
-              locale === "es" ? "SOARprendentes" : "Adventures"
-            }
+          />
+          <SplitTextVanilla
+            text={locale === "es" ? "SOARprendentes" : "Adventures"}
             className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-theme-tittles mb-3 uppercase"
             delay={25}
             duration={0.5}
@@ -159,10 +219,6 @@ export default function CubeEffectSlider(): React.ReactNode {
             lifetime. You can uncover the hidden gems, iconic landmarks, and
             unique cultural treasures that make each destination special.
           </p>
-          {/* <button className="w-fit px-6 py-2 sm:px-8 sm:py-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-theme-btn font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2 hover:gap-3">
-            Explore Tours
-            <ArrowRight className="w-4 h-4 " />
-          </button> */}
 
           <ButtonArrow
             title={locale === "es" ? "Explorar Tours" : "Explore Tours"}
@@ -188,12 +244,7 @@ export default function CubeEffectSlider(): React.ReactNode {
               shadowScale: 0.94,
             }}
             className="w-full max-w-sm"
-            style={
-              {
-                width: "320px",
-                height: "420px",
-              } as React.CSSProperties
-            }
+            style={{ width: "320px", height: "420px" } as React.CSSProperties}
           >
             {tours.map((tour: Tour) => (
               <SwiperSlide
@@ -235,6 +286,8 @@ export default function CubeEffectSlider(): React.ReactNode {
           </Swiper>
         </div>
       </div>
+      </div>
+    
     </div>
   );
 }
