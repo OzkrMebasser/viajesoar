@@ -1,15 +1,20 @@
+
+import { notFound } from "next/navigation";
+import { getPackageBySlug } from "@/lib/data/packages/packages";
 import PackageInfoFull from "@/components/Packages/PackageInfoFull";
-import PackagePage from "@/components/Packages/PackagePage";
+import type { Locale } from "@/types/locale";
 
-export default async function Page({ 
-  params 
-}: { 
-  params: Promise<{ pkgSlug: string }> 
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ pkgSlug: string; locale: Locale }>;
 }) {
-  const { pkgSlug } = await params; //  Awaiting params
-  
+  const { pkgSlug, locale } = await params;
 
-    return <PackageInfoFull slug={pkgSlug} locale="en" />;
+  const pkg = await getPackageBySlug(pkgSlug, locale);
 
+  if (!pkg) notFound();
+
+  return <PackageInfoFull pkg={pkg} locale="en"/>;
 }
 
