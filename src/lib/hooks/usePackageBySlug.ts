@@ -1,7 +1,5 @@
 // src/lib/hooks/usePackageBySlug.ts
 
-
-// src/lib/hooks/usePackageBySlug.ts
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 

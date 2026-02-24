@@ -1,174 +1,33 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { FaSuitcase } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+// import { useRouter } from "next/navigation";
+
+// Components
 import SplitText from "@/components/SplitText";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
 import CardsSlideShow from "@/components/CardsSlideShow";
-
 import ButtonArrow from "@/components/ui/ButtonArrow";
-import { supabase } from "@/lib/supabase";
+
+//GSAP
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
-type Locale = "es" | "en";
+// types
+import type { Package } from "@/types/packages";
+import type { Locale } from "@/types/locale";
 
-interface Package {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  home_carousel_images: string[]; // 👈 Renombrado
-  price_from: number;
-  currency: string;
-  visited_countries: string[];
+// Props del componente
+interface Props {
+  locale: Locale;
+  packages: Package[];
 }
 
-// 🔥 DATOS HARDCODEADOS TEMPORALES
-const hardcodedPackages: Record<Locale, Package[]> = {
-  es: [
-    {
-      id: "temp-1",
-      name: "Maravillas de Asia",
-      slug: "maravillas-asia",
-      description:
-        "Descubre los templos ancestrales y la cultura milenaria de Tailandia, Camboya y Vietnam en 14 días inolvidables.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800",
-      ],
-      price_from: 2199,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-2",
-      name: "Safari Africano Premium",
-      slug: "safari-africano-premium",
-      description:
-        "Vive la aventura africana con safaris fotográficos en Kenia y Tanzania. Incluye los Big 5 y playas de Zanzíbar.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800",
-      ],
-      price_from: 3499,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-3",
-      name: "Patagonia Extrema",
-      slug: "patagonia-extrema",
-      description:
-        "Glaciares milenarios, montañas imponentes y lagos turquesa. Recorre Argentina y Chile en esta aventura de 10 días.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1591642425143-1fb5e1f9682b?w=800",
-      ],
-      price_from: 1899,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-4",
-      name: "Ruta de los Incas",
-      slug: "ruta-incas",
-      description:
-        "Machu Picchu, Valle Sagrado, Cusco y el Lago Titicaca. Explora la civilización Inca en 8 días mágicos.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800",
-      ],
-      price_from: 1299,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-5",
-      name: "Islas Griegas de Ensueño",
-      slug: "islas-griegas",
-      description:
-        "Santorini, Mykonos, Creta y Atenas. Playas de arena blanca, arquitectura única y gastronomía mediterránea.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800",
-      ],
-      price_from: 1799,
-      currency: "USD",
-      visited_countries: [],
-    },
-  ],
-  en: [
-    {
-      id: "temp-1",
-      name: "Asian Wonders",
-      slug: "maravillas-asia",
-      description:
-        "Discover ancient temples and millennial culture in Thailand, Cambodia and Vietnam on an unforgettable 14-day journey.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800",
-      ],
-      price_from: 2199,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-2",
-      name: "Premium African Safari",
-      slug: "safari-africano-premium",
-      description:
-        "Live the African adventure with photo safaris in Kenya and Tanzania. Includes the Big 5 and Zanzibar beaches.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800",
-      ],
-      price_from: 3499,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-3",
-      name: "Extreme Patagonia",
-      slug: "patagonia-extrema",
-      description:
-        "Ancient glaciers, imposing mountains and turquoise lakes. Explore Argentina and Chile on this 10-day adventure.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1591642425143-1fb5e1f9682b?w=800",
-      ],
-      price_from: 1899,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-4",
-      name: "Inca Trail",
-      slug: "ruta-incas",
-      description:
-        "Machu Picchu, Sacred Valley, Cusco and Lake Titicaca. Explore the Inca civilization on an 8-day magical journey.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800",
-      ],
-      price_from: 1299,
-      currency: "USD",
-      visited_countries: [],
-    },
-    {
-      id: "temp-5",
-      name: "Dreamy Greek Islands",
-      slug: "islas-griegas",
-      description:
-        "Santorini, Mykonos, Crete and Athens. White sandy beaches, unique architecture and Mediterranean cuisine.",
-      home_carousel_images: [
-        "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800",
-      ],
-      price_from: 1799,
-      currency: "USD",
-      visited_countries: [],
-    },
-  ],
-};
+export default function PackagesSlideGSAP({ locale, packages }: Props) {
+  // const locale = useLocale() as Locale;
 
-export default function PackagesSlideGSAP() {
-  const locale = useLocale() as Locale;
-  const router = useRouter();
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -179,70 +38,8 @@ export default function PackagesSlideGSAP() {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [packages, setPackages] = useState<Package[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  // 🔥 Fetch packages from Supabase + merge with hardcoded
-  useEffect(() => {
-    async function fetchPackages() {
-      try {
-        setLoading(true);
-
-        // const { data, error } = await supabase
-        //   .from("packages")
-        //   .select(
-        //     `
-        //     id,
-        //     name,
-        //     slug,
-        //     description,
-        //     images,
-        //     price_from,
-        //     currency,
-        //     visited_countries
-        //   `,
-        //   )
-        //   .eq("locale", locale)
-        //   .eq("is_active", true)
-        //   .order("created_at", { ascending: false });
-        const { data, error } = await supabase
-          .from("packages")
-          .select(
-            `
-    id, name, slug, description,
-    home_carousel_images,
-    price_from, currency, visited_countries
-  `,
-          )
-          .eq("locale", locale)
-          .eq("is_active", true)
-          .eq("is_home_carousel", true) // 👈 Solo los del home
-          .order("created_at", { ascending: false })
-          .limit(7); // 👈 Máximo 7
-
-        if (error) {
-          console.error("Error fetching packages:", error);
-        }
-
-        // 🔥 Combinar datos reales con hardcoded
-        const realPackages = data || [];
-        const hardcoded = hardcodedPackages[locale] || [];
-
-        // Merge: primero los reales, luego los hardcoded
-        setPackages([...realPackages, ...hardcoded]);
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        // En caso de error, usar solo hardcoded
-        setPackages(hardcodedPackages[locale] || []);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchPackages();
-  }, [locale]);
-
-  // 🔥 Detectar mobile vs desktop
+  // Detectar mobile vs desktop
   useEffect(() => {
     const checkDevice = () => {
       const mobile = window.innerWidth < 768;
@@ -254,62 +51,9 @@ export default function PackagesSlideGSAP() {
     return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
-  // 🎨 GSAP Scroll Horizontal INVERSO (derecha a izquierda) - SOLO DESKTOP
-  // useEffect(() => {
-  //   if (isMobile || loading || packages.length === 0) return;
-
-  //   const section = sectionRef.current;
-  //   const carousel = carouselRef.current;
-  //   const container = scrollContainerRef.current;
-
-  //   if (!section || !carousel || !container) return;
-
-  //   // Esperar a que el DOM esté listo
-  //   const timer = setTimeout(() => {
-  //     const scrollDistance = carousel.scrollWidth - container.offsetWidth;
-
-  //     // 🔥 Posicionar el carousel al FINAL (derecha) inicialmente
-  //     gsap.set(carousel, { x: -scrollDistance });
-
-  //     // 🔥 Timeline con ScrollTrigger - DIRECCIÓN INVERSA
-  //     const tl = gsap.timeline({
-  //       scrollTrigger: {
-  //         trigger: section,
-  //         start: "top top",
-  //         end: () => `+=${scrollDistance + 500}`, // Distancia total + espacio para fade
-  //         scrub: 1,
-  //         pin: container,
-  //         anticipatePin: 1,
-  //         invalidateOnRefresh: true,
-  //       },
-  //     });
-
-  //     // Animación del carousel de DERECHA a IZQUIERDA (de -scrollDistance a 0)
-  //     tl.to(carousel, {
-  //       x: 0, // 👈 Termina en posición 0 (izquierda)
-  //       ease: "none",
-  //     })
-  //     // Fade out al final
-  //     .to(
-  //       container,
-  //       {
-  //         opacity: 0.6,
-  //         scale: 0.97,
-  //         ease: "power1.in",
-  //       },
-  //       "-=0.3"
-  //     );
-
-  //   }, 100);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //     ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-  //   };
-  // }, [isMobile, loading, packages.length]);
-  // 🎨 GSAP Scroll Horizontal INVERSO (derecha a izquierda) - SOLO DESKTOP// 🎨 GSAP Scroll Horizontal INVERSO - SOLO DESKTOP
+  // GSAP Scroll Horizontal INVERSO (derecha a izquierda) - SOLO DESKTOP
   useEffect(() => {
-    if (isMobile || loading || packages.length === 0) return;
+    if (isMobile || packages.length === 0) return;
 
     const section = sectionRef.current;
     const carousel = carouselRef.current;
@@ -336,11 +80,11 @@ export default function PackagesSlideGSAP() {
           end: () => `+=${scrollDistance + 500}`,
           scrub: 1,
           pin: container,
-          pinSpacing: true, // 👈 IMPORTANTE: Agrega espacio después del pin
+          pinSpacing: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           id: "packages-scroll",
-          markers: false, // 👈 Cambia a true para debugging
+          markers: false, // para debugging
         },
       });
 
@@ -365,10 +109,11 @@ export default function PackagesSlideGSAP() {
         }
       });
     };
-  }, [isMobile, loading, packages.length]);
-  // 👆 Scroll mobile
+  }, [isMobile, packages.length]);
+
+  // Scroll Listener para Carousel - SOLO MOBILE
   useEffect(() => {
-    if (!isMobile || loading || packages.length === 0) return;
+    if (!isMobile || packages.length === 0) return;
 
     const timeoutId = setTimeout(() => {
       const scrollElement = mobileScrollRef.current;
@@ -402,10 +147,10 @@ export default function PackagesSlideGSAP() {
     }, 200);
 
     return () => clearTimeout(timeoutId);
-  }, [isMobile, packages.length, loading]);
-  // 🔍 Zoom out/in effect SOLO MOBILE - ligado al scroll de página
+  }, [isMobile, packages.length]);
+  //  Zoom out/in effect SOLO MOBILE - ligado al scroll de página
   useEffect(() => {
-    if (!isMobile || loading) return;
+    if (!isMobile) return;
 
     const section = scrollContainerRef.current;
     if (!section) return;
@@ -441,17 +186,8 @@ export default function PackagesSlideGSAP() {
         section.style.transition = "";
       }
     };
-  }, [isMobile, loading]);
+  }, [isMobile]);
 
-  if (loading) {
-    return (
-      <div className="relative min-h-screen bg-gradient-theme flex items-center justify-center py-8">
-        <div className="text-white text-xl">
-          {locale === "es" ? "Cargando paquetes..." : "Loading packages..."}
-        </div>
-      </div>
-    );
-  }
 
   if (packages.length === 0) {
     return (
@@ -505,9 +241,17 @@ export default function PackagesSlideGSAP() {
               >
                 <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg h-12 w-12">
                   {isAtEnd ? (
-                    <img src="/swipe-right.svg" alt="Swipe right indicator" className="text-2xl hand-icon-right " />
+                    <img
+                      src="/swipe-right.svg"
+                      alt="Swipe right indicator"
+                      className="text-2xl hand-icon-right "
+                    />
                   ) : (
-                    <img src="/swipe-left.svg" alt="Swipe left indicator" className="text-2xl hand-icon-left"/>
+                    <img
+                      src="/swipe-left.svg"
+                      alt="Swipe left indicator"
+                      className="text-2xl hand-icon-left"
+                    />
                   )}
                 </div>
               </div>
@@ -554,16 +298,6 @@ export default function PackagesSlideGSAP() {
                     `}
                   >
                     <div className="bg-white/5 rounded-2xl overflow-hidden relative group h-full">
-                      {/* <div className="relative h-80">
-                        <img
-                          src={pkg.images?.[0] || "/placeholder-package.jpg"}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          draggable={false}
-                          alt={pkg.name}
-                          loading={index < 3 ? "eager" : "lazy"}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      </div> */}
                       <div className="relative h-80">
                         <CardsSlideShow
                           images={pkg.home_carousel_images || []}
@@ -588,11 +322,7 @@ export default function PackagesSlideGSAP() {
                             {pkg.description}
                           </p>
                           <ButtonGlower
-                            onClick={() => {
-                              const basePath =
-                                locale === "es" ? "paquetes" : "packages";
-                              router.push(`/${locale}/${basePath}/${pkg.slug}`);
-                            }}
+                            href={`/${locale}/${locale === "es" ? "paquetes" : "packages"}/${pkg.slug}`}
                           >
                             {locale === "es" ? "Ver paquete" : "View package"}
                           </ButtonGlower>

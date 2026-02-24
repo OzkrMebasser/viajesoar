@@ -1,16 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/types/locale";
-import type { DestinationRegion } from "@/types/destinations";
-
-
+import type { RegionHome } from "@/types/destinations";
 export async function getDestinationRegions(
-  locale: Locale
-) {
+  locale: Locale,
+): Promise<RegionHome[]> {
   const supabase = await createClient();
-    console.log("Fetched data (regions)", supabase);
 
   const { data, error } = await supabase
-    .from("destinations_regions")
+    .from("regions_home")  // 👈 también revisa que sea esta tabla, no "destinations_regions"
     .select("*")
     .eq("locale", locale)
     .eq("is_active", true)
@@ -20,8 +17,11 @@ export async function getDestinationRegions(
     console.error("Error fetching regions:", error);
     return [];
   }
- 
-  console.log("Data from server", data)
-  return data ;
-}
 
+  return data?.map((region) => ({
+    ...region,
+    images: typeof region.images === "string"
+      ? JSON.parse(region.images)
+      : region.images ?? [],
+  })) ?? [];
+}

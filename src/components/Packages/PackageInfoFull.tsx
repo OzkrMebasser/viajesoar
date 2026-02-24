@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { usePackageBySlug } from "@/lib/hooks/usePackageBySlug";
+// import { usePackageBySlug } from "@/lib/hooks/usePackageBySlug";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ButtonArrow from "@/components/ui/ButtonArrow";
@@ -23,29 +22,32 @@ import {
 import { MdTravelExplore } from "react-icons/md";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+import type { TabType, DayItinerary, HotelEntry, PackageDetail } from "@/types/packages";
+
 
 type Locale = "es" | "en";
 
-type TabType = "itinerary" | "optionals" | "hotels" | "prices";
+// type TabType = "itinerary" | "optionals" | "hotels" | "prices";
 
-interface DayItinerary {
-  day: number;
-  title: string;
-  description: string;
-  optional?: string | null;
-}
+// interface DayItinerary {
+//   day: number;
+//   title: string;
+//   description: string;
+//   optional?: string | null;
+// }
 
-interface HotelEntry {
-  country: string;
-  city: string;
-  hotel: string;
-  type?: string;
-}
+// interface HotelEntry {
+//   country: string;
+//   city: string;
+//   hotel: string;
+//   type?: string;
+// }
 
-interface PackagePageProps {
-  slug: string;
-  locale: Locale;
-}
+// interface PackagePageProps {
+//   slug: string;
+//   locale: Locale;
+// }
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -54,41 +56,47 @@ const t = (locale: Locale, es: string, en: string) =>
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function PackagePage({ slug, locale }: PackagePageProps) {
-  const { pkg, loading, error } = usePackageBySlug(slug, locale);
+
+interface Props {
+  locale: Locale;
+  pkg: PackageDetail;  // ← esto
+}
+
+export default function PackagePage({ pkg, locale }: Props) {
+  // const { pkg, loading, error } = usePackageBySlug(slug, locale);
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("itinerary");
   const [openDay, setOpenDay] = useState<number | null>(1);
 
   // ── Loading ──
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[var(--accent)] text-sm tracking-widest uppercase">
-            {t(locale, "Cargando paquete...", "Loading package...")}
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
+  //       <div className="flex flex-col items-center gap-4">
+  //         <div className="w-12 h-12 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+  //         <p className="text-[var(--accent)] text-sm tracking-widest uppercase">
+  //           {t(locale, "Cargando paquete...", "Loading package...")}
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // ── Error ──
-  if (error || !pkg) {
-    return (
-      <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-white/50 text-lg mb-4">
-            {t(locale, "Paquete no encontrado", "Package not found")}
-          </p>
-          <ButtonGlower onClick={() => router.back()}>
-            {t(locale, "Volver", "Go back")}
-          </ButtonGlower>
-        </div>
-      </div>
-    );
-  }
+  // if (error || !pkg) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
+  //       <div className="text-center">
+  //         <p className="text-white/50 text-lg mb-4">
+  //           {t(locale, "Paquete no encontrado", "Package not found")}
+  //         </p>
+  //         <ButtonGlower onClick={() => router.back()}>
+  //           {t(locale, "Volver", "Go back")}
+  //         </ButtonGlower>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // ── Parse JSONB fields ──
   const itinerary: DayItinerary[] = Array.isArray(pkg.itinerary)

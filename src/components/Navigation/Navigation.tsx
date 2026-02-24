@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/app/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useTheme } from "@/lib/context/ThemeContext";
+
 import { CircleFlag } from "react-circle-flags";
 // Components
 import ScrollIndicator from "@/components/ScrollIndicator";
@@ -38,7 +38,7 @@ type Locale = "es" | "en";
 // rutas navegación principal
 const routes: Record<string, { [key in Locale]: string }> = {
   home: { es: "/", en: "/" },
-  services: { es: "/servicios", en: "/services" },
+  packages: { es: "/paquetes", en: "/packages" },
   destinations: { es: "/destinos", en: "/destinations" },
   flights: { es: "/vuelos", en: "/flights" },
   offers: { es: "/ofertas", en: "/offers" },
@@ -55,8 +55,8 @@ const Navigation = () => {
   const [activeItem, setActiveItem] = useState("Home");
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const themeMenuRef = useRef<HTMLDivElement | null>(null);
-  const { theme } = useTheme();
+  // const themeMenuRef = useRef<HTMLDivElement | null>(null);
+  // const { theme } = useTheme();
 
   const t = useTranslations("Navigation");
 
@@ -66,7 +66,7 @@ const Navigation = () => {
 
   const navItems = [
     { label: t("home"), href: routes.home[locale] },
-    { label: t("holidays"), href: routes.services[locale] }, // Usa "holidays" de traducción pero va a services
+    { label: t("packages"), href: routes.packages[locale] }, 
     { label: t("destinations"), href: routes.destinations[locale] },
     { label: t("flights"), href: routes.flights[locale] },
     { label: t("offers"), href: routes.offers[locale] },

@@ -12,6 +12,7 @@ export interface Messages {
   Navigation: {
     home: string;
     holidays: string;
+    packages: string;
     destinations: string;
     flights: string;
     offers: string;

@@ -1,21 +1,20 @@
 "use client";
+// React & Libraries
 import React, { useState, useEffect, useRef, Fragment } from "react";
 import { gsap } from "gsap";
-import { useRouter } from "next/navigation";
 
 // Components
 import WorldMapLoader from "@/components/WorldMapLoader";
 import HeroSlidesSkeleton from "./HeroSlidesSkeleton";
-import GhostButtonArrow from "@/components/ui/GhostButtonArrow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 
 // Hooks
 import { useFadeOutMap } from "@/lib/hooks/useFadeOutMap";
+import { useHeroRefs } from "@/lib/hooks/useHeroRefs";
 
 // Types
 import type { Locale } from "@/types/locale";
 import type { SlideshowDestination } from "@/types/heroDestinations";
-import type { TextRefs } from "./types";
 
 // Helpers & Constants
 import {
@@ -41,72 +40,52 @@ const HeroSlides = ({ locale, data }: Props) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
 
-  const router = useRouter();
-
   // All the refs...
-  const orderRef = useRef<number[]>([]);
-  const detailsEvenRef = useRef<boolean>(true);
-  const loopTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const cardContentRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const detailsEvenElementRef = useRef<HTMLDivElement>(null);
-  const detailsOddElementRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const paginationRef = useRef<HTMLDivElement>(null);
-  const coverRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const slideNumberRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const placeTextEvenRef = useRef<HTMLDivElement>(null);
-  const countryTextEvenRef = useRef<HTMLDivElement>(null);
-  const title1EvenRef = useRef<HTMLDivElement>(null);
-  const title2EvenRef = useRef<HTMLDivElement>(null);
-  const descEvenRef = useRef<HTMLDivElement>(null);
-  const ctaEvenRef = useRef<HTMLDivElement>(null);
-  const placeTextOddRef = useRef<HTMLDivElement>(null);
-  const countryTextOddRef = useRef<HTMLDivElement>(null);
-  const title1OddRef = useRef<HTMLDivElement>(null);
-  const title2OddRef = useRef<HTMLDivElement>(null);
-  const descOddRef = useRef<HTMLDivElement>(null);
-  const ctaOddRef = useRef<HTMLDivElement>(null);
-  const isMountedRef = useRef<boolean>(true);
-  const viewportRef = useRef<{ width: number; height: number }>({
-    width: 0,
-    height: 0,
-  });
 
-  // Helper para crear objeto de refs reutilizable
-  const createTextRefsObject = (): {
-    evenRefs: TextRefs;
-    oddRefs: TextRefs;
-  } => ({
-    evenRefs: {
-      place: placeTextEvenRef,
-      country: countryTextEvenRef,
-      title1: title1EvenRef,
-      title2: title2EvenRef,
-      desc: descEvenRef,
-      cta: ctaEvenRef,
-    },
-    oddRefs: {
-      place: placeTextOddRef,
-      country: countryTextOddRef,
-      title1: title1OddRef,
-      title2: title2OddRef,
-      desc: descOddRef,
-      cta: ctaOddRef,
-    },
-  });
+  const {
+    orderRef,
+    detailsEvenRef,
+    loopTimeoutRef,
+    containerRef,
+    cardRefs,
+    cardContentRefs,
+    detailsEvenElementRef,
+    detailsOddElementRef,
+    indicatorRef,
+    navRef,
+    paginationRef,
+    coverRef,
+    progressRef,
+    slideNumberRefs,
+    placeTextEvenRef,
+    countryTextEvenRef,
+    title1EvenRef,
+    title2EvenRef,
+    descEvenRef,
+    ctaEvenRef,
+    placeTextOddRef,
+    countryTextOddRef,
+    title1OddRef,
+    title2OddRef,
+    descOddRef,
+    ctaOddRef,
+    isMountedRef,
+    viewportRef,
+    textRefs,
+  } = useHeroRefs();
 
   // UseEffects
+  // Marco cuando el componente ya está montado
+  // para evitar ejecutar animaciones o setState
+  // si ya se desmontó (evita warnings y memory leaks)
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
   }, []);
-
+  // Espero a que el componente ya esté hidratado en el cliente
+  // para poder ejecutar lógica que depende del window o animaciones
   useEffect(() => {
     if (typeof window !== "undefined") {
       Promise.resolve().then(() => {
@@ -116,7 +95,8 @@ const HeroSlides = ({ locale, data }: Props) => {
       });
     }
   }, []);
-
+  // Cuando llegan los datos, creo el orden inicial de los slides
+  // Solo lo hago una vez para no resetear el slider innecesariamente
   useEffect(() => {
     if (data.length > 0 && order.length === 0) {
       const initialOrder = Array.from({ length: data.length }, (_, i) => i);
@@ -124,15 +104,28 @@ const HeroSlides = ({ locale, data }: Props) => {
       orderRef.current = initialOrder;
     }
   }, [data.length, order.length]);
-
+  // Mantengo el ref sincronizado con el state
+  // porque las animaciones leen desde el ref
+  // y no quiero depender de re-renders
   useEffect(() => {
     orderRef.current = order;
   }, [order]);
 
+  // Igual que con order, sincronizo el modo even/odd
+  // para que GSAP siempre tenga el valor actual
   useEffect(() => {
     detailsEvenRef.current = detailsEven;
   }, [detailsEven]);
 
+  // Este efecto se encarga de arrancar las animaciones
+  // Solo corre cuando:
+  // - Ya hay datos
+  // - Ya hay orden
+  // - Ya estamos en cliente
+  // - Los refs están listos
+  //
+  // También limpia intervalos, timeouts y animaciones
+  // para evitar comportamientos raros al desmontar
   useEffect(() => {
     if (
       !containerRef.current ||
@@ -191,6 +184,7 @@ const HeroSlides = ({ locale, data }: Props) => {
     };
   }, [data.length, order.length, clientReady]);
 
+  // Hook para mostrar el mapa del mundo con fade out
   const showMap = useFadeOutMap({
     selector: ".worldmap-container",
     trigger: data.length > 0,
@@ -198,7 +192,7 @@ const HeroSlides = ({ locale, data }: Props) => {
     duration: 3,
   });
 
-  // Slides animations
+  // Función encargada de inicializar las animaciones al montar el componente
   const initializeAnimations = (): void => {
     if (!isMountedRef.current) return;
 
@@ -209,7 +203,6 @@ const HeroSlides = ({ locale, data }: Props) => {
     const height = container.offsetHeight;
     viewportRef.current = { width, height };
 
-    // ✅ Usando helper
     const responsive = getResponsiveValues(width, height);
     const ease = ANIMATION_CONSTANTS.EASE;
 
@@ -218,11 +211,9 @@ const HeroSlides = ({ locale, data }: Props) => {
     const activeIndex = active;
     const firstData = data[activeIndex];
 
-    // ✅ Usando helper
-    const { evenRefs, oddRefs } = createTextRefsObject();
+    const { evenRefs, oddRefs } = textRefs;
     const initialRefs = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
 
-    // ✅ Usando helper
     if (firstData) {
       updateTextContent(initialRefs, firstData);
     }
@@ -275,7 +266,6 @@ const HeroSlides = ({ locale, data }: Props) => {
       oddRefs,
     );
 
-    // ✅ Usando helper
     resetInactiveYPositions(
       inactiveRefs,
       responsive.yOffset1,
@@ -377,6 +367,7 @@ const HeroSlides = ({ locale, data }: Props) => {
     });
   };
 
+  // función encargada de animar el paso al siguiente o anterior slide
   const step = (direction: "next" | "prev" = "next"): Promise<void> => {
     return new Promise((resolve) => {
       if (isAnimating || !isMountedRef.current) {
@@ -399,7 +390,6 @@ const HeroSlides = ({ locale, data }: Props) => {
 
       const { width, height } = viewportRef.current;
 
-      // ✅ Usando helper
       const responsive = getResponsiveValues(width, height);
       const ease = ANIMATION_CONSTANTS.EASE;
 
@@ -432,8 +422,7 @@ const HeroSlides = ({ locale, data }: Props) => {
         ? detailsOddElementRef.current
         : detailsEvenElementRef.current;
 
-      // ✅ Usando helper
-      const { evenRefs, oddRefs } = createTextRefsObject();
+      const { evenRefs, oddRefs } = textRefs;
       const activeRefs = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
 
       const activeIndex = newOrder[0];
@@ -448,7 +437,6 @@ const HeroSlides = ({ locale, data }: Props) => {
         return;
       }
 
-      // ✅ Usando helper
       updateTextContent(activeRefs, data[activeIndex]);
 
       gsap.set(detailsActive, { zIndex: 22 });
@@ -458,7 +446,6 @@ const HeroSlides = ({ locale, data }: Props) => {
         ease,
       });
 
-      // ✅ Usando helper
       animateActiveRefs(activeRefs, ease);
 
       gsap.set(detailsInactive, { zIndex: 12 });
@@ -550,7 +537,6 @@ const HeroSlides = ({ locale, data }: Props) => {
             oddRefs,
           );
 
-          // ✅ Usando helper
           resetInactiveYPositions(
             inactiveRefs,
             responsive.yOffset1,
@@ -609,6 +595,7 @@ const HeroSlides = ({ locale, data }: Props) => {
     });
   };
 
+  // Función encargada de hacer el loop automático de los slides
   const loop = async (): Promise<void> => {
     if (isAnimating || !isMountedRef.current) return;
 
@@ -649,7 +636,7 @@ const HeroSlides = ({ locale, data }: Props) => {
   };
 
   // SSR Guard
-  if (!clientReady || !data || data.length === 0) {
+  if (!data || data.length === 0) {
     return <HeroSlidesSkeleton />;
   }
 
@@ -659,14 +646,14 @@ const HeroSlides = ({ locale, data }: Props) => {
 
       <div
         ref={containerRef}
-        className="hero-page  relative inset-0 w-screen h-screen text-white overflow-hidden" 
+        className="hero-page  relative inset-0 w-screen h-screen text-white overflow-hidden"
         style={{
           width: "100vw",
           height: "100vh",
           maxWidth: "100vw",
           maxHeight: "100svh",
           opacity: initialized ? 1 : 0, //  invisible hasta que GSAP esté listo
-          transition: "opacity 0.3s ease", // 👈 fade al pintarse
+          transition: "opacity 0.3s ease", // fade al pintarse
         }}
       >
         {/* Mapa del mundo loader */}
@@ -686,41 +673,6 @@ const HeroSlides = ({ locale, data }: Props) => {
         )}
 
         {/* Images cards */}
-        {/* {data.map((item, index) => (
-        <Fragment key={item.id ?? index}>
-          <div
-            ref={(el) => {
-              cardRefs.current[index] = el;
-            }}
-            className="absolute left-0 top-0 w-full h-screen bg-center bg-cover bg-red-400 shadow-[0px_-1px_12px_8px_rgba(0,_0,_0,_0.3)]"
-            // style={{ backgroundImage: `url(${item.image})` }}
-          >
-            {/* Overlay negro transparente */}
-        {/* <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
-          </div>
-
-          <div
-            ref={(el) => {
-              cardContentRefs.current[index] = el;
-            }}
-            className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4 bg-red-700500"
-          >
-            <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
-            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
-              {item.place}
-            </div>
-            <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
-              {item.country}
-            </div>
-            <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-              {item.title}
-            </div>
-            <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
-              {item.title2}
-            </div>
-          </div>
-        </Fragment>
-      ))} */}
 
         {data.map((item, index) => (
           <Fragment key={item.id ?? index}>
@@ -768,15 +720,13 @@ const HeroSlides = ({ locale, data }: Props) => {
               ref={placeTextEvenRef}
               className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
             >
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.place} */}
+              {data[0]?.place}
             </div>
             <div
               ref={countryTextEvenRef}
               className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
             >
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.country} */}
+              {data[0]?.country}
             </div>
           </div>
           <div className="mb-1 overflow-hidden">
@@ -785,16 +735,14 @@ const HeroSlides = ({ locale, data }: Props) => {
               className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
             >
               {" "}
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.title} */}
+              {data[0]?.title}
             </div>
             <div
               ref={title2EvenRef}
               className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
             >
               {" "}
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.title2} */}
+              {data[0]?.title2}
             </div>
           </div>
           <div
@@ -802,19 +750,9 @@ const HeroSlides = ({ locale, data }: Props) => {
             className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
           >
             {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.description} */}
+            {data[0]?.description}
           </div>
-          {/* <div
-          ref={ctaEvenRef}
-          className="relative pt-4 w-full flex items-center"
-        >
-          <GhostButtonArrow
-            href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
-          >
-            {locale === "es" ? "Ver más" : "See more"}
-          </GhostButtonArrow>
-        </div> */}
+
           <div
             ref={ctaEvenRef}
             className="relative pt-4 w-full flex items-center"
@@ -838,15 +776,13 @@ const HeroSlides = ({ locale, data }: Props) => {
               ref={placeTextOddRef}
               className="pt-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
             >
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.place} */}
+              {data[0]?.place}
             </div>
             <div
               ref={countryTextOddRef}
               className="pb-2 text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]"
             >
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.country} */}
+              {data[0]?.country}
             </div>
           </div>
           <div className="mb-1 overflow-hidden">
@@ -855,16 +791,14 @@ const HeroSlides = ({ locale, data }: Props) => {
               className="text-3xl sm:text-4xl md:text-7xl font-semibold [text-shadow:2px_2px_3px_#000000]"
             >
               {" "}
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.title} */}
+              {data[0]?.title}
             </div>
             <div
               ref={title2OddRef}
               className="text-3xl sm:text-4xl md:text-7xl font-semibold leading-tight [text-shadow:2px_2px_3px_#000000]"
             >
               {" "}
-              {/* content controlled by GSAP */}
-              {/* {data[order[0]]?.title2} */}
+              {data[0]?.title2}
             </div>
           </div>
           <div
@@ -872,16 +806,8 @@ const HeroSlides = ({ locale, data }: Props) => {
             className=" mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]"
           >
             {" "}
-            {/* content controlled by GSAP */}
-            {/* {data[order[0]]?.description} */}
+            {data[0]?.description}
           </div>
-          {/* <div ref={ctaOddRef} className="relative pt-4 w-full flex items-center">
-          <GhostButtonArrow
-            href={`/${locale}${locale === "es" ? "/destinos" : "/destinations"}`}
-          >
-            {locale === "es" ? "Ver más" : "See more"}
-          </GhostButtonArrow>
-        </div> */}
 
           <div
             ref={ctaOddRef}
