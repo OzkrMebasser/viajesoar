@@ -28,7 +28,6 @@ interface Props {
 export default function PackagesSlideGSAP({ locale, packages }: Props) {
   // const locale = useLocale() as Locale;
 
-
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -187,7 +186,6 @@ export default function PackagesSlideGSAP({ locale, packages }: Props) {
       }
     };
   }, [isMobile]);
-
 
   if (packages.length === 0) {
     return (
@@ -358,6 +356,8 @@ export default function PackagesSlideGSAP({ locale, packages }: Props) {
           {/* 🎯 CTA Button */}
           <div className="flex justify-center mt-8">
             <ButtonArrow
+              href={`/${locale}/${locale === "es" ? "paquetes" : "packages"}`}
+              type="button"
               title={
                 locale === "es" ? "Ver mas paquetes" : "View more packages"
               }

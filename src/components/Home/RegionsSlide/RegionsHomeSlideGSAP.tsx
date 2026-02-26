@@ -58,7 +58,6 @@ export default function RegionsHomeSlideGSAP({ locale, regions }: Props) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
 
-
   // Detectar si es mobile o desktop para activar GSAP o scroll táctil
   useEffect(() => {
     const checkDevice = () => {
@@ -206,7 +205,6 @@ export default function RegionsHomeSlideGSAP({ locale, regions }: Props) {
       }
     };
   }, [isMobile]);
-
 
   // Si no hay regiones, mostrar skeleton SEO friendly (para que Google no vea un bloque vacío)
   if (!regions.length) {
@@ -387,6 +385,7 @@ export default function RegionsHomeSlideGSAP({ locale, regions }: Props) {
           {/* 🎯 CTA Button */}
           <div className="flex justify-center mt-8 mb-8 ">
             <ButtonArrow
+              href={`/${locale}/${locale === "es" ? "destinos" : "destinations"}`}
               title={
                 locale === "es" ? "Ver todas las regiones" : "View all regions"
               }

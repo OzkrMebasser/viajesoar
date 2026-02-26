@@ -22,7 +22,7 @@ export default async function AllDestinationsPage(props: {
   const page = Number(searchParams.page) || 1;
 
   const data = await getDestinationsPaginated(params.locale, page);
-  console.log("Toda la data", data.total)
+  // console.log("Toda la data", data.total)
   
 //  console.log(`pagina:`, page)
   return (

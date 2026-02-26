@@ -13,6 +13,7 @@ export interface Package {
   home_carousel_images: string[];
   duration: string | null;
   price_from: number | null;
+  taxes: number | null;
   currency: string;
   visited_cities: LocationRef[];
   visited_countries: LocationRef[];

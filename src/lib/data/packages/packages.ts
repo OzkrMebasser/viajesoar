@@ -24,9 +24,13 @@ export async function getPackages(locale: Locale, page: number = 1) {
       home_carousel_images,
       duration,
       price_from,
+      taxes,
       currency,
       visited_cities,
-      visited_countries
+      visited_countries,
+      internal_pkg_id,
+      days,
+      nights
     `,
       { count: "exact" }
     )
@@ -69,9 +73,13 @@ export async function getHomePackages(locale: Locale) {
       home_carousel_images,
       duration,
       price_from,
+      taxes,
       currency,
       visited_cities,
-      visited_countries
+      visited_countries,
+      internal_pkg_id,
+      days,
+      nights
     `)
     .eq("locale", locale)
     .eq("is_active", true)
@@ -115,23 +123,35 @@ export async function getPackageBySlug(
 /* ======================================================
    🧠 HYDRATE LOCATIONS (Reusable — genérico)
 ====================================================== */
-async function hydrateLocations<T extends Package>(rawPkgs: any[]): Promise<T[]> {
+async function hydrateLocations<T extends Package>(
+  rawPkgs: any[]
+): Promise<T[]> {
   const supabase = await createClient();
 
-  const cityIds = [...new Set(rawPkgs.flatMap((p) => p.visited_cities ?? []))];
-  const countryIds = [...new Set(rawPkgs.flatMap((p) => p.visited_countries ?? []))];
+  const cityIds = [
+    ...new Set(rawPkgs.flatMap((p) => p.visited_cities ?? [])),
+  ];
+  const countryIds = [
+    ...new Set(rawPkgs.flatMap((p) => p.visited_countries ?? [])),
+  ];
 
   const [{ data: cities }, { data: countries }] = await Promise.all([
     cityIds.length
-      ? supabase.from("destinations").select("id, name, slug").in("id", cityIds)
+      ? supabase
+          .from("destinations")
+          .select("id, name, slug")
+          .in("id", cityIds)
       : Promise.resolve({ data: [] }),
     countryIds.length
-      ? supabase.from("destinations_countries").select("id, name, slug").in("id", countryIds)
+      ? supabase
+          .from("destinations_countries")
+          .select("id, name, slug")
+          .in("id", countryIds)
       : Promise.resolve({ data: [] }),
   ]);
 
   return rawPkgs.map((pkg) => ({
-    ...pkg, // 👈 spread completo — preserva todos los campos (Package o PackageDetail)
+    ...pkg,
     visited_cities: (pkg.visited_cities ?? []).map((id: string) =>
       cities?.find((c) => c.id === id) ?? { id, name: "N/A", slug: "" }
     ),

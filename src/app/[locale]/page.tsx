@@ -25,7 +25,7 @@ export async function generateMetadata(props: {
       ? "Discover the best destinations with ViajeSoar. From Baja California to the world." 
       : "Descubre los mejores destinos con ViajeSoar. Desde Baja California hasta el mundo.",
     openGraph: {
-      images: ['/images/og-image.jpg'], // Imagen que se ve al compartir en WhatsApp/Face
+      images: ['/images/og-image.jpg'], 
     },
   };
 }

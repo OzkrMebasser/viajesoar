@@ -680,10 +680,12 @@ const HeroSlides = ({ locale, data }: Props) => {
               ref={(el) => {
                 cardRefs.current[index] = el;
               }}
-              className="absolute inset-0 w-full h-full bg-center bg-cover shadow-[0px_-1px_12px_8px_rgba(0,_0,_0,_0.3)]" // 👈 Agregué w-full h-full
+              className="absolute inset-0 w-full h-full bg-center bg-cover "
               style={{ backgroundImage: `url(${item.image})` }}
             >
-              <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
+              {/* <div className="w-2/3 absolute inset-0 rounded-lg bg-linear-to-t from-black/50 via-black/30 to-transparent" /> */}
+              <div className="absolute left-0 top-0 h-full w-full bg-gradient-to-r from-black/50 to-transparent rounded-l-lg" />
+              <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-black/70 to-transparent rounded-b-lg" />
             </div>
 
             <div

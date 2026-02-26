@@ -8,6 +8,7 @@ import { Paginator } from "@/components/ui/paginator";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ButtonArrow from "@/components/ui/ButtonArrow";
+import SplitText from "@/components/SplitText";
 import {
   FaPlane,
   FaMoon,
@@ -19,6 +20,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
+import ParticlesCanvas from "../ParticlesCanvas";
 
 interface Props {
   locale: Locale;
@@ -45,15 +47,14 @@ export default function PackageList({
       (pkg) =>
         pkg.name.toLowerCase().includes(q) ||
         pkg.visited_countries?.some((c) => c.name.toLowerCase().includes(q)) ||
-        pkg.visited_cities?.some((c) => c.name.toLowerCase().includes(q))
+        pkg.visited_cities?.some((c) => c.name.toLowerCase().includes(q)),
     );
   }, [query, packages]);
 
   return (
     <div className="min-h-screen bg-gradient-theme">
-
       {/* ── HERO BAND ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden">
+      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
         {/* Background image — uses first package image as hero */}
         <div className="absolute inset-0 z-0">
           {packages[0]?.home_carousel_images?.[0] ? (
@@ -70,18 +71,31 @@ export default function PackageList({
         </div>
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-10 pt-20">
-          <span className="text-[var(--accent)] text-xs tracking-[0.25em] uppercase font-semibold border border-[var(--accent)]/40 px-3 py-1 rounded-sm mb-4 inline-block">
-            {t(locale, "Viaja con nosotros", "Travel with us")}
-          </span>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white uppercase leading-none text-theme-tittles">
-            {t(locale, "Nuestros Paquetes", "Our Packages")}
-          </h1>
+        <div className="relative z-10 max-w-7xl mx-auto w-full  px-4 sm:px-6 pb-20 pt-10 ">
+          {/* <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-24 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" /> */}
+
+          <SplitText
+            text={t(locale, "Paquetes Imperdibles", "Unmissable Travel Deals")}
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold  mb-3 uppercase"
+            delay={25}
+            duration={0.5}
+            splitType="chars"
+            from={{ opacity: 0, y: 20 }}
+            to={{ opacity: 1, y: 0 }}
+            textAlign="center"
+          />
+          <div className="text-white mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
+            {t(
+              locale,
+              "Viaja a los destinos más increíbles, todo organizado para ti.",
+              "Travel to the most incredible destinations, fully organized for you.",
+            )}
+          </div>
         </div>
       </section>
 
       {/* ── SEARCH BAR ── */}
-      <div className="bg-white/5 border-y border-white/10 py-5 sticky top-0 z-30 backdrop-blur-md">
+      <div className="bg-gradient-theme  py-5 sticky top-0 z-30 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="relative max-w-xl">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
@@ -92,21 +106,21 @@ export default function PackageList({
               placeholder={t(
                 locale,
                 "Buscar por nombre, país o ciudad...",
-                "Search by name, country or city..."
+                "Search by name, country or city...",
               )}
-              className="w-full bg-white/5 border border-white/10 focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-white placeholder-white/30 text-sm outline-none transition-colors duration-200"
+              className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5   text-sm outline-none transition-colors duration-200"
             />
             {query && (
               <button
                 onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
               >
                 <FaTimes className="text-xs" />
               </button>
             )}
           </div>
           {query && (
-            <p className="text-white/30 text-xs mt-2 tracking-widest uppercase">
+            <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
               {filtered.length}{" "}
               {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
             </p>
@@ -115,9 +129,9 @@ export default function PackageList({
       </div>
 
       {/* ── PACKAGE GRID ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 bg-gradient-theme">
         {filtered.length === 0 ? (
-          <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4">
+          <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4 ">
             <MdTravelExplore className="text-white/20 text-6xl" />
             <p className="text-white/30 text-sm tracking-widest uppercase">
               {t(locale, "No se encontraron paquetes", "No packages found")}
@@ -128,14 +142,15 @@ export default function PackageList({
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
+            <ParticlesCanvas />
             {filtered.map((pkg) => (
               <article
                 key={pkg.id}
-                className="bg-white/5 border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 group h-full flex flex-col"
+                className="glass-card   border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 group h-full flex flex-col"
               >
                 {/* ── Image slideshow ── */}
-                <div className="relative h-56 overflow-hidden flex-shrink-0">
+                <div className="relative h-56 overflow-hidden flex-shrink-0 ">
                   <CardsSlideShow
                     images={pkg.home_carousel_images || []}
                     interval={4000}
@@ -146,16 +161,22 @@ export default function PackageList({
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none" />
 
                   {/* Eyebrow badge */}
-                  {pkg.internal_pkg_id && (
+                  {pkg.internal_pkg_id ? (
+                    <div className="absolute top-3 left-3 pointer-events-none">
+                      <span className="text-white/60 text-[10px] tracking-[0.25em] uppercase font-semibold border border-white/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
+                        {pkg.internal_pkg_id}
+                      </span>
+                    </div>
+                  ) : (
                     <div className="absolute top-3 left-3 pointer-events-none">
                       <span className="text-[var(--accent)] text-[10px] tracking-[0.25em] uppercase font-semibold border border-[var(--accent)]/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
-                        {pkg.internal_pkg_id}
+                        VS-0000
                       </span>
                     </div>
                   )}
 
                   {/* Price card — same as PackagePage hero */}
-                  <div className="absolute bottom-3 right-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-4 py-2 pointer-events-none">
+                  <div className="absolute bottom-3 left-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-4 py-2 pointer-events-none">
                     <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-0.5">
                       {t(locale, "Desde", "From")}
                     </p>
@@ -163,22 +184,38 @@ export default function PackageList({
                       <span className="text-[var(--accent)] font-bold text-xl">
                         ${Number(pkg.price_from).toLocaleString()}
                       </span>
-                      <span className="text-white/50 text-xs">{pkg.currency}</span>
+                      <span className="text-white/50 text-xs">
+                        {pkg.currency}
+                      </span>
+                      <br />
+                      <div className="text-white/40 text-xs mt-1">
+                        + ${Number(pkg.taxes).toLocaleString()}{" "}
+                        {t(locale, "impuestos ", "taxes")}
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* ── Content ── */}
                 <div className="p-5 flex flex-col flex-1">
-
                   {/* Title */}
-                  <h2 className="text-white font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles">
+                  {/* <h2 className="text-white font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles">
                     {pkg.name}
-                  </h2>
+                  </h2> */}
+                  <SplitText
+                    text={pkg.name}
+                    className="text-white font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles "
+                    delay={25}
+                    duration={0.5}
+                    splitType="chars"
+                    from={{ opacity: 0, y: 20 }}
+                    to={{ opacity: 1, y: 0 }}
+                    textAlign="left"
+                  />
 
                   {/* Description */}
                   {pkg.description && (
-                    <p className="text-white/60 text-sm leading-relaxed line-clamp-2 mb-4">
+                    <p className="text-[var(--accent)] text-sm md:text-lg  leading-relaxed line-clamp-2 ">
                       {pkg.description}
                     </p>
                   )}
@@ -206,7 +243,7 @@ export default function PackageList({
                         </span>
                       </div>
                     )}
-                    {pkg.includes_flight && (
+                    {/* {pkg.includes_flight && (
                       <>
                         <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
                         <div className="flex items-center gap-1.5 text-white/70 text-xs">
@@ -214,8 +251,8 @@ export default function PackageList({
                           <span>{t(locale, "Vuelo inc.", "Flight inc.")}</span>
                         </div>
                       </>
-                    )}
-                    {pkg.min_passengers && (
+                    )} */}
+                    {/* {pkg.min_passengers && (
                       <>
                         <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
                         <div className="flex items-center gap-1.5 text-white/70 text-xs">
@@ -226,7 +263,7 @@ export default function PackageList({
                           </span>
                         </div>
                       </>
-                    )}
+                    )} */}
                   </div>
 
                   {/* Separator */}
@@ -235,7 +272,7 @@ export default function PackageList({
                   {/* Locations — same as PackagePage sidebar quick-info */}
                   <div className="space-y-2 mb-5">
                     {pkg.visited_countries?.length > 0 && (
-                      <div className="flex items-center gap-3 text-xs text-white/50">
+                      <div className="flex items-center gap-3 text-xs text-[var(--accent)]">
                         <FaGlobe className="text-[var(--accent)] flex-shrink-0" />
                         <span className="line-clamp-1">
                           {pkg.visited_countries.map((c) => c.name).join(" · ")}
@@ -243,7 +280,7 @@ export default function PackageList({
                       </div>
                     )}
                     {pkg.visited_cities?.length > 0 && (
-                      <div className="flex items-center gap-3 text-xs text-white/50">
+                      <div className="flex items-center gap-3 text-xs text-[var(--accent)]">
                         <FaMapMarkerAlt className="text-[var(--accent)] flex-shrink-0" />
                         <span className="line-clamp-1">
                           {pkg.visited_cities.map((c) => c.name).join(" · ")}
@@ -253,11 +290,11 @@ export default function PackageList({
                   </div>
 
                   {/* CTA */}
-                  <ButtonGlower
+                  <ButtonArrow
+                    type="button"
                     href={`/${locale === "es" ? "es/paquetes" : "en/packages"}/${pkg.slug}`}
-                  >
-                    {t(locale, "Ver paquete", "View package")}
-                  </ButtonGlower>
+                    title={t(locale, "Ver paquete", "View package")}
+                  />
                 </div>
               </article>
             ))}

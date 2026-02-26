@@ -7,6 +7,7 @@ import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
+import SplitText from "@/components/SplitText";
 import {
   FaPlane,
   FaHotel,
@@ -22,8 +23,12 @@ import {
 import { MdTravelExplore } from "react-icons/md";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-import type { TabType, DayItinerary, HotelEntry, PackageDetail } from "@/types/packages";
-
+import type {
+  TabType,
+  DayItinerary,
+  HotelEntry,
+  PackageDetail,
+} from "@/types/packages";
 
 type Locale = "es" | "en";
 
@@ -48,7 +53,6 @@ type Locale = "es" | "en";
 //   locale: Locale;
 // }
 
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const t = (locale: Locale, es: string, en: string) =>
@@ -56,10 +60,9 @@ const t = (locale: Locale, es: string, en: string) =>
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-
 interface Props {
   locale: Locale;
-  pkg: PackageDetail;  // ← esto
+  pkg: PackageDetail; // ← esto
 }
 
 export default function PackagePage({ pkg, locale }: Props) {
@@ -138,19 +141,27 @@ export default function PackagePage({ pkg, locale }: Props) {
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-12 pt-32">
+          {/* Title */}
+          {/* <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white uppercase leading-none mb-6 text-theme-tittles">
+            {pkg.name}
+          </h1> */}
+          <SplitText
+            text={pkg.name}
+            className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold  mb-3 uppercase"
+            delay={25}
+            duration={0.5}
+            splitType="chars"
+            from={{ opacity: 0, y: 20 }}
+            to={{ opacity: 1, y: 0 }}
+            textAlign="center"
+          />{" "}
           {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-[var(--accent)] text-xs tracking-[0.25em] uppercase font-semibold border border-[var(--accent)]/40 px-3 py-1 rounded-sm">
+          <div className="flex items-center gap-2 ">
+            <span className="text-[var(--accent)] bg-white/6 backdrop-blur-md border border-white/10 text-xs tracking-[0.25em] uppercase font-semibold  px-3 py-1 rounded-sm">
               {/* {pkg.provider_ui || "Mega Travel"} ·  */}
               {pkg.internal_pkg_id}
             </span>
           </div>
-
-          {/* Title */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white uppercase leading-none mb-6 text-theme-tittles">
-            {pkg.name}
-          </h1>
-
           {/* Meta badges */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
             {pkg.days && (
@@ -174,7 +185,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                 </span>
               </div>
             )}
-            {pkg.includes_flight && (
+            {/* {pkg.includes_flight && (
               <>
                 <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
                 <div className="flex items-center gap-2 text-white/80 text-sm">
@@ -182,8 +193,8 @@ export default function PackagePage({ pkg, locale }: Props) {
                   <span>{t(locale, "Vuelo incluido", "Flight included")}</span>
                 </div>
               </>
-            )}
-            {pkg.min_passengers && (
+            )} */}
+            {/* {pkg.min_passengers && (
               <>
                 <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
                 <div className="flex items-center gap-2 text-white/80 text-sm">
@@ -194,13 +205,12 @@ export default function PackagePage({ pkg, locale }: Props) {
                   </span>
                 </div>
               </>
-            )}
+            )} */}
           </div>
-
           {/* Price + CTA row */}
           <div className="flex flex-wrap items-end gap-6">
             {/* Price card */}
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-6 py-4">
+            <div className="bg-white/6 backdrop-blur-md border border-white/10 rounded-sm px-6 py-4">
               <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-1">
                 {t(locale, "Desde", "From")}
               </p>
@@ -232,7 +242,7 @@ export default function PackagePage({ pkg, locale }: Props) {
       {/* ── DESCRIPTION BAND ────────────────────────────────────── */}
       <div className="bg-white/5 border-y border-white/10 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-3xl">
+          <p className="text-[var(--accent)] text-sm sm:text-base leading-relaxed max-w-3xl">
             {pkg.description}
           </p>
         </div>
@@ -240,7 +250,7 @@ export default function PackagePage({ pkg, locale }: Props) {
 
       {/* ── MAIN LAYOUT ─────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 items-start ">
           {/* ── LEFT COLUMN ── */}
           <div>
             {/* Tabs */}
@@ -251,8 +261,8 @@ export default function PackagePage({ pkg, locale }: Props) {
                   onClick={() => setActiveTab(tab.key)}
                   className={`px-5 py-3 text-xs font-semibold tracking-[0.12em] uppercase whitespace-nowrap transition-all duration-200 border-b-2 -mb-[2px] ${
                     activeTab === tab.key
-                      ? "text-white border-[var(--accent)]"
-                      : "text-white/40 border-transparent hover:text-white/70"
+                      ? "text-[var(--accent)] border-[var(--accent)]"
+                      : "text-[var(--accent)]/40 border-transparent hover:text-[var(--accent)]/70"
                   }`}
                 >
                   {tab.label}
@@ -266,11 +276,11 @@ export default function PackagePage({ pkg, locale }: Props) {
                 <h2 className="text-2xl sm:text-4xl font-bold text-theme-tittles uppercase mb-2">
                   {t(locale, "Itinerario", "Itinerary")}
                 </h2>
-                <p className="text-white/40 text-sm mb-8">
+                <p className="text-theme-tittles/40 text-sm mb-8">
                   {t(
                     locale,
                     "Programa sujeto a cambios según fecha de salida.",
-                    "Program subject to change based on departure date."
+                    "Program subject to change based on departure date.",
                   )}
                 </p>
 
@@ -336,7 +346,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                                     {t(
                                       locale,
                                       "Excursión opcional",
-                                      "Optional excursion"
+                                      "Optional excursion",
                                     )}
                                   </p>
                                   <p className="text-white/60 text-sm">
@@ -357,7 +367,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                       {t(
                         locale,
                         "Itinerario próximamente",
-                        "Itinerary coming soon"
+                        "Itinerary coming soon",
                       )}
                     </p>
                   </div>
@@ -419,7 +429,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                   {t(
                     locale,
                     "Enriquece tu viaje con estas experiencias únicas.",
-                    "Enrich your trip with these unique experiences."
+                    "Enrich your trip with these unique experiences.",
                   )}
                 </p>
                 <div className="bg-white/5 border border-white/10 rounded-sm p-8 text-center">
@@ -428,7 +438,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                     {t(
                       locale,
                       "Opcionales disponibles próximamente",
-                      "Optional tours coming soon"
+                      "Optional tours coming soon",
                     )}
                   </p>
                 </div>
@@ -445,7 +455,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                   {t(
                     locale,
                     "Sujetos a cambio por establecimientos similares.",
-                    "Subject to change for similar establishments."
+                    "Subject to change for similar establishments.",
                   )}
                 </p>
 
@@ -492,11 +502,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                   <div className="bg-white/5 border border-white/10 rounded-sm p-8 text-center">
                     <FaHotel className="text-white/20 text-3xl mx-auto mb-3" />
                     <p className="text-white/30 text-sm">
-                      {t(
-                        locale,
-                        "Hoteles próximamente",
-                        "Hotels coming soon"
-                      )}
+                      {t(locale, "Hoteles próximamente", "Hotels coming soon")}
                     </p>
                   </div>
                 )}
@@ -513,7 +519,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                   {t(
                     locale,
                     "Precios por persona en USD. Sujetos a cambio sin previo aviso.",
-                    "Prices per person in USD. Subject to change without notice."
+                    "Prices per person in USD. Subject to change without notice.",
                   )}
                 </p>
 
@@ -583,7 +589,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                         {t(
                           locale,
                           "Impuestos aéreos (por adulto)",
-                          "Air taxes (per adult)"
+                          "Air taxes (per adult)",
                         )}
                       </span>
                       <span className="text-[var(--accent)]/80 font-bold text-2xl">
@@ -595,10 +601,14 @@ export default function PackagePage({ pkg, locale }: Props) {
                   {/* Valid until */}
                   {pkg.prices_valid_until && (
                     <div className="sm:col-span-2 text-center text-white/30 text-xs pt-2">
-                      {t(locale, "Precios vigentes hasta el", "Prices valid until")}{" "}
+                      {t(
+                        locale,
+                        "Precios vigentes hasta el",
+                        "Prices valid until",
+                      )}{" "}
                       {new Date(pkg.prices_valid_until).toLocaleDateString(
                         locale === "es" ? "es-MX" : "en-US",
-                        { day: "2-digit", month: "long", year: "numeric" }
+                        { day: "2-digit", month: "long", year: "numeric" },
                       )}
                     </div>
                   )}
@@ -615,7 +625,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                       {t(
                         locale,
                         "por persona, no reembolsable.",
-                        "per person, non-refundable."
+                        "per person, non-refundable.",
                       )}
                     </p>
                   </div>
@@ -689,12 +699,12 @@ export default function PackagePage({ pkg, locale }: Props) {
                     {pkg.duration}
                   </div>
                 )}
-                {pkg.includes_flight && (
+                {/* {pkg.includes_flight && (
                   <div className="flex items-center gap-3 text-sm text-white/50">
                     <FaPlane className="text-[var(--accent)] flex-shrink-0" />
                     {t(locale, "Incluye vuelo desde México", "Includes flight from Mexico")}
                   </div>
-                )}
+                )} */}
                 {(pkg.airlines || []).length > 0 && (
                   <div className="flex items-center gap-3 text-sm text-white/50">
                     <FaStar className="text-[var(--accent)] flex-shrink-0" />
@@ -704,7 +714,8 @@ export default function PackagePage({ pkg, locale }: Props) {
                 {pkg.departure_city && (
                   <div className="flex items-center gap-3 text-sm text-white/50">
                     <FaMapMarkerAlt className="text-[var(--accent)] flex-shrink-0" />
-                    {t(locale, "Salida desde", "Departure from")} {pkg.departure_city}
+                    {t(locale, "Salida desde", "Departure from")}{" "}
+                    {pkg.departure_city}
                   </div>
                 )}
               </div>
@@ -716,7 +727,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                 title={t(locale, "Ver todos los paquetes", "View all packages")}
                 onClick={() =>
                   router.push(
-                    `/${locale}${locale === "es" ? "/paquetes" : "/packages"}`
+                    `/${locale}${locale === "es" ? "/paquetes" : "/packages"}`,
                   )
                 }
               />
