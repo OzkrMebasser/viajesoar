@@ -2,6 +2,13 @@ export interface LocationRef {
   id: string;
   name: string;
   slug: string;
+  country_code: string;
+}
+
+export interface RegionRef {
+  id: string;
+  name: string;
+  icon?: string | null;
 }
 
 // ── Tipo ligero — listados y cards ──
@@ -18,12 +25,16 @@ export interface Package {
   visited_cities: LocationRef[];
   visited_countries: LocationRef[];
 
+  // Región (requerida en listing)
+  region_id?: string | null;
+  region?: RegionRef | null;
   // ── Campos opcionales — disponibles en listing y detail ──
   days?: number | null;
   nights?: number | null;
   includes_flight?: boolean | null;
   min_passengers?: number | null;
   internal_pkg_id?: string | null;
+  
 }
 
 // ── Tipo completo — página de detalle ──

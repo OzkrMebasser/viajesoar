@@ -110,7 +110,7 @@ const CardsSlideShow: React.FC<CardsSlideShowProps> = ({
             right: "14px",
           }}
         >
-          <div className="relative w-8 h-8 flex items-center justify-center">
+          <div className="relative w-8 h-8 flex items-center justify-center opacity-80">
             {/* Ring fino */}
             <div
               className="absolute inset-0 rounded-full"
@@ -122,10 +122,10 @@ const CardsSlideShow: React.FC<CardsSlideShowProps> = ({
             />
 
             {/* Centro */}
-            <div className="relative w-7 h-7 rounded-full bg-black flex items-center justify-center text-theme text-[8px] font-semibold ">
-              <span>{currentIndex + 1}</span>
-              <span className="mx-[1px] opacity-50">/</span>
-              <span className="opacity-50">{validImages.length}</span>
+            <div className="relative w-7 h-7  rounded-full bg-black flex items-center justify-center text-theme text-[8px] font-semibold ">
+              <span className="text-white">{currentIndex + 1}</span>
+              <span className="text-white mx-[1px] opacity-50">/</span>
+              <span className="text-white opacity-50">{validImages.length}</span>
             </div>
           </div>
         </div>

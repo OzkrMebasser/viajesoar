@@ -2,12 +2,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   FaEuroSign,
+  FaGlobeEurope,
   FaGlobeAmericas,
   FaGlobeAsia,
   FaGlobeAfrica,
 } from "react-icons/fa";
 import { GiEarthAmerica, GiPalmTree, GiAztecCalendarSun } from "react-icons/gi";
 import { MdTravelExplore } from "react-icons/md";
+
+
 
 // types
 import type { RegionHome } from "@/types/destinations";
@@ -28,7 +31,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // iconos dinamicos
 const iconMap: Record<string, React.ComponentType<any>> = {
-  FaEuroSign,
+  FaGlobeEurope,
   MdTravelExplore,
   GiEarthAmerica,
   FaGlobeAsia,

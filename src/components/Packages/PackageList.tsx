@@ -5,6 +5,15 @@ import Link from "next/link";
 import type { Locale } from "@/types/locale";
 import type { Package } from "@/types/packages";
 import { Paginator } from "@/components/ui/paginator";
+import {
+  FaEuroSign,
+  FaGlobeEurope,
+  FaGlobeAmericas,
+  FaGlobeAsia,
+  FaGlobeAfrica,
+} from "react-icons/fa";
+import { GiEarthAmerica, GiPalmTree, GiAztecCalendarSun } from "react-icons/gi";
+
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ButtonArrow from "@/components/ui/ButtonArrow";
@@ -21,6 +30,17 @@ import {
 } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
 import ParticlesCanvas from "../ParticlesCanvas";
+
+const iconMap: Record<string, React.ComponentType<any>> = {
+  FaGlobeEurope,
+  MdTravelExplore,
+  GiEarthAmerica,
+  FaGlobeAsia,
+  FaGlobeAmericas,
+  GiPalmTree,
+  FaGlobeAfrica,
+  GiAztecCalendarSun,
+};
 
 interface Props {
   locale: Locale;
@@ -243,7 +263,7 @@ export default function PackageList({
                         </span>
                       </div>
                     )}
-                    {/* {pkg.includes_flight && (
+                    {pkg.includes_flight && (
                       <>
                         <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
                         <div className="flex items-center gap-1.5 text-white/70 text-xs">
@@ -251,7 +271,7 @@ export default function PackageList({
                           <span>{t(locale, "Vuelo inc.", "Flight inc.")}</span>
                         </div>
                       </>
-                    )} */}
+                    )}
                     {/* {pkg.min_passengers && (
                       <>
                         <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
@@ -269,7 +289,45 @@ export default function PackageList({
                   {/* Separator */}
                   <div className="border-t border-white/5 mb-4 mt-auto" />
 
+                  {/* ── Region + Flags ── */}
+                  <div className="mb-3">
+                    {/* Region */}
+                    {/* {pkg.region && (
+                      <div className="text-[10px] uppercase tracking-[0.25em] text-white/40 mb-1">
+                        {pkg.region.name}
+                      </div>
+                    )} */}
+                    {pkg.region &&
+                      (() => {
+                        const IconComponent =
+                          iconMap[pkg.region.icon ?? ""] || MdTravelExplore;
+
+                        return (
+                          <div className="flex items-center gap-2 mb-1">
+                            <IconComponent className="text-[var(--accent)] text-xs" />
+                            <span className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                              {pkg.region.name}
+                            </span>
+                          </div>
+                        );
+                      })()}
+
+                    {/* Flags */}
+                    {pkg.visited_countries?.length > 0 && (
+                      <div className="flex items-center gap-[3px]">
+                        {pkg.visited_countries.map((c) =>
+                          c.country_code ? (
+                            <span
+                              key={c.id}
+                              className={`fi fi-${c.country_code.toLowerCase()} w-5 h-4 `}
+                            />
+                          ) : null,
+                        )}
+                      </div>
+                    )}
+                  </div>
                   {/* Locations — same as PackagePage sidebar quick-info */}
+
                   <div className="space-y-2 mb-5">
                     {pkg.visited_countries?.length > 0 && (
                       <div className="flex items-center gap-3 text-xs text-[var(--accent)]">

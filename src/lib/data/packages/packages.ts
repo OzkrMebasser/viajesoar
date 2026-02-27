@@ -30,7 +30,9 @@ export async function getPackages(locale: Locale, page: number = 1) {
       visited_countries,
       internal_pkg_id,
       days,
-      nights
+      nights,
+      includes_flight,
+      region_id
     `,
       { count: "exact" }
     )
@@ -58,7 +60,7 @@ export async function getPackages(locale: Locale, page: number = 1) {
 }
 
 /* ======================================================
-   🚀 GET HOME PACKAGES (Optimizado)
+   🚀 GET HOME PACKAGES
 ====================================================== */
 export async function getHomePackages(locale: Locale) {
   const supabase = await createClient();
@@ -79,7 +81,9 @@ export async function getHomePackages(locale: Locale) {
       visited_countries,
       internal_pkg_id,
       days,
-      nights
+      nights,
+      includes_flight,
+      region_id
     `)
     .eq("locale", locale)
     .eq("is_active", true)
@@ -124,40 +128,70 @@ export async function getPackageBySlug(
    🧠 HYDRATE LOCATIONS (Reusable — genérico)
 ====================================================== */
 async function hydrateLocations<T extends Package>(
-  rawPkgs: any[]
+   rawPkgs: (T & {
+    visited_cities?: string[];
+    visited_countries?: string[];
+    region_id?: string | null;
+  })[]
 ): Promise<T[]> {
   const supabase = await createClient();
 
   const cityIds = [
     ...new Set(rawPkgs.flatMap((p) => p.visited_cities ?? [])),
   ];
+
   const countryIds = [
     ...new Set(rawPkgs.flatMap((p) => p.visited_countries ?? [])),
   ];
 
-  const [{ data: cities }, { data: countries }] = await Promise.all([
-    cityIds.length
-      ? supabase
-          .from("destinations")
-          .select("id, name, slug")
-          .in("id", cityIds)
-      : Promise.resolve({ data: [] }),
-    countryIds.length
-      ? supabase
-          .from("destinations_countries")
-          .select("id, name, slug")
-          .in("id", countryIds)
-      : Promise.resolve({ data: [] }),
-  ]);
+  const regionIds = [
+    ...new Set(rawPkgs.map((p) => p.region_id).filter(Boolean)),
+  ];
+
+const [
+  { data: cities },
+  { data: countries },
+  { data: regions },
+] = await Promise.all([
+  cityIds.length
+    ? supabase
+        .from("destinations")
+        .select("id, name, slug")
+        .in("id", cityIds)
+    : Promise.resolve({ data: [] }),
+
+  countryIds.length
+    ? supabase
+        .from("destinations_countries")
+        .select("id, name, slug, country_code")
+        .in("id", countryIds)
+    : Promise.resolve({ data: [] }),
+
+  regionIds.length
+    ? supabase
+        .from("destinations_regions") 
+        .select("id, name, icon")
+        .in("id", regionIds)
+    : Promise.resolve({ data: [] }),
+]);
 
   return rawPkgs.map((pkg) => ({
     ...pkg,
+
     visited_cities: (pkg.visited_cities ?? []).map((id: string) =>
       cities?.find((c) => c.id === id) ?? { id, name: "N/A", slug: "" }
     ),
+
     visited_countries: (pkg.visited_countries ?? []).map((id: string) =>
-      countries?.find((c) => c.id === id) ?? { id, name: "N/A", slug: "" }
+      countries?.find((c) => c.id === id) ?? {
+        id,
+        name: "N/A",
+        slug: "",
+        country_code: "",
+      }
     ),
+
+    region: regions?.find((r) => r.id === pkg.region_id) ?? null,
   })) as T[];
 }
 
