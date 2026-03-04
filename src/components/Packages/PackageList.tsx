@@ -30,6 +30,7 @@ import {
 } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
 import ParticlesCanvas from "../ParticlesCanvas";
+import CardParticlesCanvas from "../CardParticlesCanvas";
 
 const iconMap: Record<string, React.ComponentType<any>> = {
   FaGlobeEurope,
@@ -133,6 +134,7 @@ export default function PackageList({
             {query && (
               <button
                 onClick={() => setQuery("")}
+                aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
               >
                 <FaTimes className="text-xs" />
@@ -149,6 +151,7 @@ export default function PackageList({
       </div>
 
       {/* ── PACKAGE GRID ── */}
+      {/* ── No packages found  ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 bg-gradient-theme">
         {filtered.length === 0 ? (
           <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4 ">
@@ -164,11 +167,18 @@ export default function PackageList({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
             <ParticlesCanvas />
+
+            {/* ── CARDS  ── */}
             {filtered.map((pkg) => (
               <article
                 key={pkg.id}
-                className="glass-card   border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 group h-full flex flex-col"
+                className="glass-card border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 group h-full flex flex-col"
               >
+                {/* Partículas internas */}
+                <div className="absolute inset-0 opacity-90 pointer-events-none">
+                  <CardParticlesCanvas />
+                </div>
+
                 {/* ── Image slideshow ── */}
                 <div className="relative h-56 overflow-hidden flex-shrink-0 ">
                   <CardsSlideShow
@@ -183,14 +193,14 @@ export default function PackageList({
                   {/* Eyebrow badge */}
                   {pkg.internal_pkg_id ? (
                     <div className="absolute top-3 left-3 pointer-events-none">
-                      <span className="text-white/60 text-[10px] tracking-[0.25em] uppercase font-semibold border border-white/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
+                      <span className="text-[var(--accent)] text-[10px] tracking-[0.25em] uppercase font-semibold border border-white/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
                         {pkg.internal_pkg_id}
                       </span>
                     </div>
                   ) : (
                     <div className="absolute top-3 left-3 pointer-events-none">
-                      <span className="text-[var(--accent)] text-[10px] tracking-[0.25em] uppercase font-semibold border border-[var(--accent)]/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
-                        VS-0000
+                      <span className="text-[var(--accent)] text-[10px] tracking-[0.25em] uppercase font-semibold border border-white/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
+                        VS-00000
                       </span>
                     </div>
                   )}
@@ -218,13 +228,10 @@ export default function PackageList({
 
                 {/* ── Content ── */}
                 <div className="p-5 flex flex-col flex-1">
-                  {/* Title */}
-                  {/* <h2 className="text-white font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles">
-                    {pkg.name}
-                  </h2> */}
+                  {/* Package Title */}
                   <SplitText
                     text={pkg.name}
-                    className="text-white font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles "
+                    className=" font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles "
                     delay={25}
                     duration={0.5}
                     splitType="chars"
@@ -235,77 +242,68 @@ export default function PackageList({
 
                   {/* Description */}
                   {pkg.description && (
-                    <p className="text-[var(--accent)] text-sm md:text-lg  leading-relaxed line-clamp-2 ">
+                    <p className="text-[var(--accent)] text-sm md:text-lg  leading-relaxed line-clamp-2 mb-2 ">
                       {pkg.description}
                     </p>
                   )}
 
                   {/* Meta badges — same dot-separator pattern as PackagePage hero */}
-                  <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <div className="flex flex-wrap items-center gap-3 mb-4 ">
                     {pkg.days && (
-                      <div className="flex items-center gap-1.5 text-white/70 text-xs">
+                      <div className="flex items-center gap-1.5 text-[var(--text)]/80  text-xs">
                         <FaSun className="text-[var(--accent)]" />
                         <span>
-                          <strong className="text-white">{pkg.days}</strong>{" "}
+                          <strong className="text-[var(--text)]">
+                            {pkg.days}
+                          </strong>{" "}
                           {t(locale, "días", "days")}
                         </span>
                       </div>
                     )}
                     {pkg.days && pkg.nights && (
-                      <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
+                      <span className="text-[var(--accent)]/70">|</span>
                     )}
                     {pkg.nights && (
-                      <div className="flex items-center gap-1.5 text-white/70 text-xs">
+                      <div className="flex items-center gap-1.5 text-[var(--text)]/80  text-xs">
                         <FaMoon className="text-[var(--accent)]" />
                         <span>
-                          <strong className="text-white">{pkg.nights}</strong>{" "}
+                          <strong className="text-[var(--text)]">
+                            {pkg.nights}
+                          </strong>{" "}
                           {t(locale, "noches", "nights")}
                         </span>
                       </div>
                     )}
                     {pkg.includes_flight && (
                       <>
-                        <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
+                        <span className="text-[var(--accent)]/70">|</span>
                         <div className="flex items-center gap-1.5 text-white/70 text-xs">
                           <FaPlane className="text-[var(--accent)]" />
-                          <span>{t(locale, "Vuelo inc.", "Flight inc.")}</span>
-                        </div>
-                      </>
-                    )}
-                    {/* {pkg.min_passengers && (
-                      <>
-                        <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
-                        <div className="flex items-center gap-1.5 text-white/70 text-xs">
-                          <FaUsers className="text-[var(--accent)]" />
-                          <span>
-                            {t(locale, "Mín.", "Min.")} {pkg.min_passengers}{" "}
-                            {t(locale, "pax", "pax")}
+                          <span className="text-[var(--text)]">
+                            <strong>
+                              {t(locale, "Vuelo inc.", "Flight inc.")}
+                            </strong>
                           </span>
                         </div>
                       </>
-                    )} */}
+                    )}
                   </div>
 
                   {/* Separator */}
-                  <div className="border-t border-white/5 mb-4 mt-auto" />
+                  <div className="border-t border-theme opacity-45 mb-4 " />
 
                   {/* ── Region + Flags ── */}
-                  <div className="mb-3">
+                  <div className="mb-2">
                     {/* Region */}
-                    {/* {pkg.region && (
-                      <div className="text-[10px] uppercase tracking-[0.25em] text-white/40 mb-1">
-                        {pkg.region.name}
-                      </div>
-                    )} */}
                     {pkg.region &&
                       (() => {
                         const IconComponent =
                           iconMap[pkg.region.icon ?? ""] || MdTravelExplore;
 
                         return (
-                          <div className="flex items-center gap-2 mb-1">
-                            <IconComponent className="text-[var(--accent)] text-xs" />
-                            <span className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                          <div className="flex items-center gap-2 text-[12px]">
+                            <IconComponent className="text-[var(--accent)] " />
+                            <span className=" uppercase tracking-[0.25em] text-theme font-bold">
                               {pkg.region.name}
                             </span>
                           </div>
@@ -313,36 +311,64 @@ export default function PackageList({
                       })()}
 
                     {/* Flags */}
-                    {pkg.visited_countries?.length > 0 && (
-                      <div className="flex items-center gap-[3px]">
-                        {pkg.visited_countries.map((c) =>
-                          c.country_code ? (
-                            <span
-                              key={c.id}
-                              className={`fi fi-${c.country_code.toLowerCase()} w-5 h-4 `}
-                            />
-                          ) : null,
-                        )}
-                      </div>
-                    )}
                   </div>
                   {/* Locations — same as PackagePage sidebar quick-info */}
 
                   <div className="space-y-2 mb-5">
                     {pkg.visited_countries?.length > 0 && (
-                      <div className="flex items-center gap-3 text-xs text-[var(--accent)]">
-                        <FaGlobe className="text-[var(--accent)] flex-shrink-0" />
-                        <span className="line-clamp-1">
-                          {pkg.visited_countries.map((c) => c.name).join(" · ")}
-                        </span>
+                      <div className="flex flex-col gap-1 text-xs text-[var(--accent)]">
+                        {/* Título */}
+                        <div className="flex items-center gap-2">
+                          <FaGlobe className="flex-shrink-0" />
+                          <p className="text-theme text-[12px] uppercase tracking-wide">
+                            {pkg.visited_countries?.length === 1
+                              ? t(locale, "País visitado", "Visited Country")
+                              : t(
+                                  locale,
+                                  "Países visitados",
+                                  "Visited Countries",
+                                )}
+                          </p>
+                        </div>
+
+                        {/* Lista */}
+                        <div className="flex flex-wrap gap-3 ml-6">
+                          {pkg.visited_countries.map((c) => (
+                            <span
+                              key={c.id}
+                              className="flex items-center gap-1 text-theme text-[12px] whitespace-nowrap"
+                            >
+                              - <span>{c.name}</span>
+                              {c.country_code && (
+                                <span
+                                  className={`fi fi-${c.country_code.toLowerCase()} w-4 h-3 shadow-[0px_4px_6px_0px_rgba(0,_0,_0,_0.1)]`}
+                                />
+                              )}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     )}
                     {pkg.visited_cities?.length > 0 && (
-                      <div className="flex items-center gap-3 text-xs text-[var(--accent)]">
-                        <FaMapMarkerAlt className="text-[var(--accent)] flex-shrink-0" />
-                        <span className="line-clamp-1">
-                          {pkg.visited_cities.map((c) => c.name).join(" · ")}
-                        </span>
+                      <div className="flex flex-col gap-1 text-xs text-[var(--accent)]">
+                        <div className="flex items-center gap-2">
+                          <FaMapMarkerAlt className="flex-shrink-0 text-[var(--accent)]" />
+                          <p className="text-theme text-[12px] uppercase tracking-wide">
+                            {pkg.visited_cities?.length === 1
+                              ? t(locale, "Ciudad visitada", "Visited City")
+                              : t(
+                                  locale,
+                                  "Ciudades visitadas",
+                                  "Visited Cities",
+                                )}
+                          </p>
+                        </div>
+
+                        <div className="ml-6 flex flex-wrap gap-2 text-theme text-[12px]">
+                          {pkg.visited_cities.map((c) => (
+                            <span key={c.id}>- {c.name}</span>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>

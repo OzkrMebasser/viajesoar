@@ -172,7 +172,65 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
             </div>
           </div>
         </div>
+        {/* Newsletter Section */}
+        <div className="border-b border-theme  py-8">
+          <div className="max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold mb-2 text-center text-theme">
+              {t.newsletter}
+            </h3>
+            <p className="text-[var(--accent)] text-base md:text-xl text-center mb-6">
+              {t.subscribeText}
+            </p>
 
+            <div
+              onSubmit={handleSubscribe}
+              className="flex flex-col sm:flex-row gap-3"
+            >
+              <div className="flex-1 relative">
+                <input
+                  type="email"
+                  placeholder={t.emailPlaceholder}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-theme text-theme placeholder-gray-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                  required
+                />
+              </div>
+              {/* <button
+                  onClick={() => {
+                    if (email) {
+                      setSubscribed(true);
+                      setEmail("");
+                      setTimeout(() => setSubscribed(false), 3000);
+                    }
+                  }}
+                  className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-black font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 group whitespace-nowrap"
+                >
+                  {t.subscribe}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button> */}
+              <ButtonArrow
+                title={t.subscribe}
+                onClick={() => {
+                  if (email) {
+                    setSubscribed(true);
+                    setEmail("");
+                    setTimeout(() => setSubscribed(false), 3000);
+                  }
+                }}
+              />
+            </div>
+
+            {subscribed && (
+              <p className="text-center text-[var(--accent)] text-base mt-3 animate-pulse">
+                ✓{" "}
+                {locale === "es"
+                  ? "¡Gracias por suscribirse!"
+                  : "Thank you for subscribing!"}
+              </p>
+            )}
+          </div>
+        </div>
         {/* Main Content */}
         <div className="px-4 py-16 sm:py-20 ">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -284,7 +342,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 </div>
                 <div className="flex items-center gap-3 text-theme">
                   {/* <Mail className="w-4 h-4 text-[var(--accent)] flex-shrink-0" /> */}
-                     <button
+                  <button
                     className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                     aria-label="Email address"
                   >
@@ -296,7 +354,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 </div>
                 <div className="flex items-start gap-3 text-theme">
                   {/* <MapPin className="w-4 h-4 text-[var(--accent)] flex-shrink-0 mt-0.5" /> */}
-                       <button
+                  <button
                     className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                     aria-label="Location"
                   >
@@ -309,80 +367,22 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
               </div>
             </div>
           </div>
-
-          {/* Newsletter Section */}
-          <div className="border-t border-theme pt-12 mt-8">
-            <div className="max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold mb-2 text-center text-theme">
-                {t.newsletter}
-              </h3>
-              <p className="text-[var(--accent)] text-base md:text-xl text-center mb-6">
-                {t.subscribeText}
-              </p>
-
-              <div
-                onSubmit={handleSubscribe}
-                className="flex flex-col sm:flex-row gap-3"
-              >
-                <div className="flex-1 relative">
-                  <input
-                    type="email"
-                    placeholder={t.emailPlaceholder}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-[var(--accent)] text-theme placeholder-gray-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
-                    required
-                  />
-                </div>
-                {/* <button
-                  onClick={() => {
-                    if (email) {
-                      setSubscribed(true);
-                      setEmail("");
-                      setTimeout(() => setSubscribed(false), 3000);
-                    }
-                  }}
-                  className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-black font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 group whitespace-nowrap"
-                >
-                  {t.subscribe}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button> */}
-                <ButtonArrow
-                  title={t.subscribe}
-                  onClick={() => {
-                    if (email) {
-                      setSubscribed(true);
-                      setEmail("");
-                      setTimeout(() => setSubscribed(false), 3000);
-                    }
-                  }}
-                />
-              </div>
-
-              {subscribed && (
-                <p className="text-center text-[var(--accent)] text-base mt-3 animate-pulse">
-                  ✓{" "}
-                  {locale === "es"
-                    ? "¡Gracias por suscribirse!"
-                    : "Thank you for subscribing!"}
-                </p>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-theme px-4 py-8 lg:px-24">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-theme text-sm flex items-center gap-2">
-              © {new Date().getFullYear()} <span className=" tracking-wider">
-                  VIAJE<span className="accent ml-[1px]">SOAR </span>
-                </span>   {t.allRights}.
+              © {new Date().getFullYear()}{" "}
+              <span className=" tracking-wider">
+                VIAJE<span className="accent ml-[1px]">SOAR </span>
+              </span>{" "}
+              {t.allRights}.
             </p>
             <p className="text-theme text-sm flex items-center gap-1">
               {t.madeWith}{" "}
-              <Heart className="w-4 h-4 text-[var(--accent)] fill-current" /> para los
-              viajeros
+              <Heart className="w-4 h-4 text-[var(--accent)] fill-current" />{" "}
+              para los viajeros
             </p>
           </div>
         </div>

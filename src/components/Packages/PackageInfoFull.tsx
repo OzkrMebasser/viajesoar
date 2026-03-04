@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { usePackageBySlug } from "@/lib/hooks/usePackageBySlug";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
+import PackagesImagesModal from "./PackagesImagesModal";
 import SplitText from "@/components/SplitText";
+import TourMap from "./TourMap";
+import SimilarPackages from "@/components/Packages/SimilarPackages";
+import { TbMapPin2 } from "react-icons/tb";
+
 import {
   FaPlane,
   FaHotel,
@@ -28,30 +32,10 @@ import type {
   DayItinerary,
   HotelEntry,
   PackageDetail,
+  Package,
 } from "@/types/packages";
 
 type Locale = "es" | "en";
-
-// type TabType = "itinerary" | "optionals" | "hotels" | "prices";
-
-// interface DayItinerary {
-//   day: number;
-//   title: string;
-//   description: string;
-//   optional?: string | null;
-// }
-
-// interface HotelEntry {
-//   country: string;
-//   city: string;
-//   hotel: string;
-//   type?: string;
-// }
-
-// interface PackagePageProps {
-//   slug: string;
-//   locale: Locale;
-// }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -62,50 +46,31 @@ const t = (locale: Locale, es: string, en: string) =>
 
 interface Props {
   locale: Locale;
-  pkg: PackageDetail; // ← esto
+  pkg: PackageDetail;
+  similarPackages?: Package[];
 }
 
-export default function PackagePage({ pkg, locale }: Props) {
-  // const { pkg, loading, error } = usePackageBySlug(slug, locale);
+export default function PackageInfoFull({
+  pkg,
+  locale,
+  similarPackages = [],
+}: Props) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("itinerary");
   const [openDay, setOpenDay] = useState<number | null>(1);
-
-  // ── Loading ──
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
-  //       <div className="flex flex-col items-center gap-4">
-  //         <div className="w-12 h-12 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-  //         <p className="text-[var(--accent)] text-sm tracking-widest uppercase">
-  //           {t(locale, "Cargando paquete...", "Loading package...")}
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // ── Error ──
-  // if (error || !pkg) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-theme flex items-center justify-center">
-  //       <div className="text-center">
-  //         <p className="text-white/50 text-lg mb-4">
-  //           {t(locale, "Paquete no encontrado", "Package not found")}
-  //         </p>
-  //         <ButtonGlower onClick={() => router.back()}>
-  //           {t(locale, "Volver", "Go back")}
-  //         </ButtonGlower>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  const [openMap, setOpenMap] = useState(false);
 
   // ── Parse JSONB fields ──
   const itinerary: DayItinerary[] = Array.isArray(pkg.itinerary)
     ? pkg.itinerary
     : [];
-  const hotels: HotelEntry[] = Array.isArray(pkg.hotels) ? pkg.hotels : [];
+  const hotels: HotelEntry[] = Object.entries(
+    (pkg.hotels as unknown as Record<string, Record<string, string[]>>) || {},
+  ).flatMap(([country, cities]) =>
+    Object.entries(cities).flatMap(([city, hotelList]) =>
+      hotelList.map((hotel) => ({ country, city, hotel })),
+    ),
+  );
   const included: string[] = Array.isArray(pkg.included) ? pkg.included : [];
   const notIncluded: string[] = Array.isArray(pkg.not_included)
     ? pkg.not_included
@@ -117,6 +82,16 @@ export default function PackagePage({ pkg, locale }: Props) {
     { key: "hotels", label: t(locale, "Hoteles", "Hotels") },
     { key: "prices", label: t(locale, "Tarifas", "Prices") },
   ];
+
+  const tourCities = (pkg.visited_cities ?? [])
+    .filter((c) => c.latitude && c.longitude)
+    .map((c, i, arr) => ({
+      name: c.name,
+      lat: c.latitude!,
+      lng: c.longitude!,
+      isStart: i === 0,
+      isEnd: i === arr.length - 1,
+    }));
 
   return (
     <div className="min-h-screen bg-gradient-theme">
@@ -135,16 +110,13 @@ export default function PackagePage({ pkg, locale }: Props) {
         </div>
 
         {/* Particles */}
-        <div className="absolute inset-0 z-[1]">
+        <div className="absolute inset-0 z-[1] ">
           <ParticlesCanvas />
         </div>
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-12 pt-32">
           {/* Title */}
-          {/* <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white uppercase leading-none mb-6 text-theme-tittles">
-            {pkg.name}
-          </h1> */}
           <SplitText
             text={pkg.name}
             className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold  mb-3 uppercase"
@@ -157,13 +129,12 @@ export default function PackagePage({ pkg, locale }: Props) {
           />{" "}
           {/* Eyebrow */}
           <div className="flex items-center gap-2 ">
-            <span className="text-[var(--accent)] bg-white/6 backdrop-blur-md border border-white/10 text-xs tracking-[0.25em] uppercase font-semibold  px-3 py-1 rounded-sm">
-              {/* {pkg.provider_ui || "Mega Travel"} ·  */}
-              {pkg.internal_pkg_id}
+            <span className="text-[var(--accent)] bg-white/6 backdrop-blur-md border border-[var(--border)]/40 text-xs tracking-[0.25em] uppercase font-semibold  px-3 py-1 rounded-sm">
+              {pkg.internal_pkg_id ? pkg.internal_pkg_id : "VS-0000"}
             </span>
           </div>
           {/* Meta badges */}
-          <div className="flex flex-wrap items-center gap-4 mb-8">
+          <div className="flex flex-wrap items-center gap-4 mb-8 mt-2">
             {pkg.days && (
               <div className="flex items-center gap-2 text-white/80 text-sm">
                 <FaSun className="text-[var(--accent)]" />
@@ -174,7 +145,7 @@ export default function PackagePage({ pkg, locale }: Props) {
               </div>
             )}
             {pkg.days && pkg.nights && (
-              <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
+              <span className="text-[var(--accent)]/70">|</span>
             )}
             {pkg.nights && (
               <div className="flex items-center gap-2 text-white/80 text-sm">
@@ -185,32 +156,20 @@ export default function PackagePage({ pkg, locale }: Props) {
                 </span>
               </div>
             )}
-            {/* {pkg.includes_flight && (
+            {pkg.includes_flight && (
               <>
-                <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
+                <span className="text-[var(--accent)]/70">|</span>
                 <div className="flex items-center gap-2 text-white/80 text-sm">
                   <FaPlane className="text-[var(--accent)]" />
                   <span>{t(locale, "Vuelo incluido", "Flight included")}</span>
                 </div>
               </>
-            )} */}
-            {/* {pkg.min_passengers && (
-              <>
-                <div className="w-1 h-1 rounded-full bg-[var(--accent)]" />
-                <div className="flex items-center gap-2 text-white/80 text-sm">
-                  <FaUsers className="text-[var(--accent)]" />
-                  <span>
-                    {t(locale, "Mín.", "Min.")} {pkg.min_passengers}{" "}
-                    {t(locale, "pax", "pax")}
-                  </span>
-                </div>
-              </>
-            )} */}
+            )}
           </div>
           {/* Price + CTA row */}
           <div className="flex flex-wrap items-end gap-6">
             {/* Price card */}
-            <div className="bg-white/6 backdrop-blur-md border border-white/10 rounded-sm px-6 py-4">
+            <div className="bg-white/6 backdrop-blur-md border border-[var(--border)]/40 rounded-sm px-6 py-4">
               <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-1">
                 {t(locale, "Desde", "From")}
               </p>
@@ -240,21 +199,25 @@ export default function PackagePage({ pkg, locale }: Props) {
       </section>
 
       {/* ── DESCRIPTION BAND ────────────────────────────────────── */}
-      <div className="bg-white/5 border-y border-white/10 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="bg-white/5 border-y border-[var(--border)]/40 py-6 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-12 flex flex-wrap gap-4 items-center justify-between">
           <p className="text-[var(--accent)] text-sm sm:text-base leading-relaxed max-w-3xl">
             {pkg.description}
           </p>
+          <PackagesImagesModal
+            images={pkg.home_carousel_images || []}
+            title={pkg.name}
+          />
         </div>
       </div>
 
       {/* ── MAIN LAYOUT ─────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 items-start ">
-          {/* ── LEFT COLUMN ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-16 py-12  ">
+        <div className="grid grid-cols-1 gap-10">
+          {/* ── MAIN CONTENT ── */}
           <div>
             {/* Tabs */}
-            <div className="flex gap-0 border-b border-white/10 mb-10 overflow-x-auto">
+            <div className="flex gap-0 border-b border-[var(--border)]/40 mb-10 pb-4 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -276,7 +239,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                 <h2 className="text-2xl sm:text-4xl font-bold text-theme-tittles uppercase mb-2">
                   {t(locale, "Itinerario", "Itinerary")}
                 </h2>
-                <p className="text-theme-tittles/40 text-sm mb-8">
+                <p className="text-[var(--text)]/80 text-sm mb-8">
                   {t(
                     locale,
                     "Programa sujeto a cambios según fecha de salida.",
@@ -293,10 +256,10 @@ export default function PackagePage({ pkg, locale }: Props) {
                       <div key={day.day} className="relative pl-14 mb-3">
                         {/* Dot */}
                         <div
-                          className={`absolute left-0 top-4 w-[46px] h-[46px] rounded-sm flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                          className={`absolute left-0 top-0 w-[46px] h-[46px] rounded-sm flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                             openDay === day.day
                               ? "bg-[var(--accent)] text-black"
-                              : "bg-white/5 border border-white/10 text-white/50"
+                              : "bg-white/5 border border-[var(--border)]/40 text-white/50"
                           }`}
                         >
                           {String(day.day).padStart(2, "0")}
@@ -307,7 +270,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                           className={`bg-white/5 border rounded-sm overflow-hidden transition-all duration-300 ${
                             openDay === day.day
                               ? "border-[var(--accent)]/30"
-                              : "border-white/5"
+                              : "border-[var(--border)]/40"
                           }`}
                         >
                           {/* Header */}
@@ -335,12 +298,12 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                           {/* Body */}
                           {openDay === day.day && (
-                            <div className="px-5 pb-5 border-t border-white/5">
+                            <div className="px-5 pb-5 border-t border-[var(--border)]/40">
                               <p className="text-white/60 text-sm leading-relaxed mt-4">
                                 {day.description}
                               </p>
                               {day.optional && (
-                                <div className="mt-4 bg-[var(--accent)]/10 border-l-2 border-[var(--accent)] px-4 py-3 rounded-sm">
+                                <div className="mt-4 bg-[var(--accent)]/10 border-l-2 border-[var(--border)]/40 px-4 py-3 rounded-sm">
                                   <p className="text-[var(--accent)] text-[10px] tracking-[0.2em] uppercase font-semibold mb-1">
                                     ✦{" "}
                                     {t(
@@ -361,9 +324,9 @@ export default function PackagePage({ pkg, locale }: Props) {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white/5 border border-white/10 rounded-sm p-8 text-center">
-                    <MdTravelExplore className="text-white/20 text-4xl mx-auto mb-3" />
-                    <p className="text-white/30 text-sm">
+                  <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-8 text-center">
+                    <MdTravelExplore className="text-[var(--text)]/60 text-4xl mx-auto mb-3" />
+                    <p className="text-[var(--text)]/60 text-sm">
                       {t(
                         locale,
                         "Itinerario próximamente",
@@ -386,7 +349,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                           {included.map((item, i) => (
                             <li
                               key={i}
-                              className="flex gap-3 text-sm text-white/60 border-b border-white/5 pb-3 last:border-0"
+                              className="flex gap-3 text-sm text-white/60 border-b border-[var(--border)]/40 pb-3 last:border-0"
                             >
                               <FaCheck className="text-emerald-400 flex-shrink-0 mt-0.5" />
                               {item}
@@ -405,7 +368,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                           {notIncluded.map((item, i) => (
                             <li
                               key={i}
-                              className="flex gap-3 text-sm text-white/60 border-b border-white/5 pb-3 last:border-0"
+                              className="flex gap-3 text-sm text-white/60 border-b border-[var(--border)]/40 pb-3 last:border-0"
                             >
                               <FaTimes className="text-red-400 flex-shrink-0 mt-0.5" />
                               {item}
@@ -425,16 +388,16 @@ export default function PackagePage({ pkg, locale }: Props) {
                 <h2 className="text-2xl sm:text-4xl font-bold text-theme-tittles uppercase mb-2">
                   {t(locale, "Tours Opcionales", "Optional Tours")}
                 </h2>
-                <p className="text-white/40 text-sm mb-8">
+                <p className="text-[var(--text)]/80 text-sm mb-8">
                   {t(
                     locale,
                     "Enriquece tu viaje con estas experiencias únicas.",
                     "Enrich your trip with these unique experiences.",
                   )}
                 </p>
-                <div className="bg-white/5 border border-white/10 rounded-sm p-8 text-center">
-                  <FaStar className="text-[var(--accent)] text-3xl mx-auto mb-3 opacity-40" />
-                  <p className="text-white/30 text-sm">
+                <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-8 text-center">
+                  <FaStar className="text-[var(--text)]/60 text-3xl mx-auto mb-3 opacity-40" />
+                  <p className="text-[var(--text)]/60 text-sm">
                     {t(
                       locale,
                       "Opcionales disponibles próximamente",
@@ -451,7 +414,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                 <h2 className="text-2xl sm:text-4xl font-bold text-theme-tittles uppercase mb-2">
                   {t(locale, "Hoteles Previstos", "Planned Hotels")}
                 </h2>
-                <p className="text-white/40 text-sm mb-8">
+                <p className="text-[var(--text)]/80 text-sm mb-8">
                   {t(
                     locale,
                     "Sujetos a cambio por establecimientos similares.",
@@ -460,10 +423,10 @@ export default function PackagePage({ pkg, locale }: Props) {
                 </p>
 
                 {hotels.length > 0 ? (
-                  <div className="overflow-hidden rounded-sm border border-white/10">
+                  <div className="overflow-hidden rounded-sm border border-[var(--border)]/40">
                     <table className="w-full">
                       <thead>
-                        <tr className="border-b border-white/10 bg-white/5">
+                        <tr className="border-b border-[var(--border)]/40 bg-white/5">
                           <th className="text-left px-5 py-3 text-[10px] tracking-[0.2em] uppercase text-[var(--accent)] font-semibold">
                             {t(locale, "País", "Country")}
                           </th>
@@ -479,7 +442,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                         {hotels.map((h, i) => (
                           <tr
                             key={i}
-                            className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors"
+                            className="border-b border-[var(--border)]/40 last:border-0 hover:bg-white/5 transition-colors"
                           >
                             <td className="px-5 py-4 text-sm text-white/60">
                               {h.country}
@@ -499,9 +462,9 @@ export default function PackagePage({ pkg, locale }: Props) {
                     </table>
                   </div>
                 ) : (
-                  <div className="bg-white/5 border border-white/10 rounded-sm p-8 text-center">
-                    <FaHotel className="text-white/20 text-3xl mx-auto mb-3" />
-                    <p className="text-white/30 text-sm">
+                  <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-8 text-center">
+                    <FaHotel className="text-[var(--text)]/60 text-3xl mx-auto mb-3" />
+                    <p className="text-[var(--text)]/60 text-sm">
                       {t(locale, "Hoteles próximamente", "Hotels coming soon")}
                     </p>
                   </div>
@@ -515,7 +478,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                 <h2 className="text-2xl sm:text-4xl font-bold text-theme-tittles uppercase mb-2">
                   {t(locale, "Tarifas", "Prices")}
                 </h2>
-                <p className="text-white/40 text-sm mb-8">
+                <p className="text-[var(--text)]/80 text-sm mb-8">
                   {t(
                     locale,
                     "Precios por persona en USD. Sujetos a cambio sin previo aviso.",
@@ -525,8 +488,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Double */}
-                  <div className="bg-white/5 border border-white/10 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
-                    <span className="text-white/70 text-sm font-semibold">
+                  <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
+                    <span className="text-[var(--text)]/60 text-sm font-semibold">
                       {t(locale, "Doble", "Double")}
                     </span>
                     <span className="text-[var(--accent)] font-bold text-2xl">
@@ -536,8 +499,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                   {/* Triple */}
                   {pkg.price_triple && (
-                    <div className="bg-white/5 border border-white/10 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
-                      <span className="text-white/70 text-sm font-semibold">
+                    <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
+                      <span className="text-[var(--text)]/60 text-sm font-semibold">
                         {t(locale, "Triple", "Triple")}
                       </span>
                       <span className="text-[var(--accent)] font-bold text-2xl">
@@ -548,8 +511,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                   {/* Single */}
                   {pkg.price_single && (
-                    <div className="bg-white/5 border border-white/10 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
-                      <span className="text-white/70 text-sm font-semibold">
+                    <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
+                      <span className="text-[var(--text)]/60 text-sm font-semibold">
                         {t(locale, "Sencilla", "Single")}
                       </span>
                       <span className="text-[var(--accent)] font-bold text-2xl">
@@ -560,8 +523,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                   {/* Child */}
                   {pkg.price_child && (
-                    <div className="bg-white/5 border border-white/10 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
-                      <span className="text-white/70 text-sm font-semibold">
+                    <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
+                      <span className="text-[var(--text)]/60 text-sm font-semibold">
                         {t(locale, "Menor", "Child")}
                       </span>
                       <span className="text-[var(--accent)] font-bold text-2xl">
@@ -572,8 +535,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                   {/* Infant */}
                   {pkg.price_infant && (
-                    <div className="bg-white/5 border border-white/10 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
-                      <span className="text-white/70 text-sm font-semibold">
+                    <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 flex justify-between items-center hover:border-[var(--accent)]/30 transition-colors">
+                      <span className="text-[var(--text)]/60 text-sm font-semibold">
                         {t(locale, "Infante", "Infant")}
                       </span>
                       <span className="text-[var(--accent)] font-bold text-2xl">
@@ -584,8 +547,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                   {/* Taxes */}
                   {pkg.taxes && (
-                    <div className="sm:col-span-2 bg-white/10 border border-[var(--accent)]/20 rounded-sm p-5 flex justify-between items-center">
-                      <span className="text-white/50 text-sm">
+                    <div className="sm:col-span-2 bg-white/10 border border-[var(--border)]/40 rounded-sm p-5 flex justify-between items-center">
+                      <span className="text-[var(--text)]/60 text-sm">
                         {t(
                           locale,
                           "Impuestos aéreos (por adulto)",
@@ -600,7 +563,7 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                   {/* Valid until */}
                   {pkg.prices_valid_until && (
-                    <div className="sm:col-span-2 text-center text-white/30 text-xs pt-2">
+                    <div className="sm:col-span-2 text-center text-[var(--text)]/60 text-xs pt-2">
                       {t(
                         locale,
                         "Precios vigentes hasta el",
@@ -616,8 +579,8 @@ export default function PackagePage({ pkg, locale }: Props) {
 
                 {/* Deposit note */}
                 {pkg.deposit_amount && (
-                  <div className="mt-6 bg-[var(--accent)]/10 border-l-2 border-[var(--accent)] px-5 py-4 rounded-sm">
-                    <p className="text-[var(--accent)] text-xs tracking-widest uppercase font-semibold mb-1">
+                  <div className="mt-6 bg-[var(--accent)]/10 border-l-2 border-[var(--border)]/40 px-5 py-4 rounded-sm">
+                    <p className="text-[var(--text)]/60 text-xs tracking-widest uppercase font-semibold mb-1">
                       {t(locale, "Anticipo requerido", "Deposit required")}
                     </p>
                     <p className="text-white/60 text-sm">
@@ -630,27 +593,116 @@ export default function PackagePage({ pkg, locale }: Props) {
                     </p>
                   </div>
                 )}
+
+                {(pkg.supplements || []).length > 0 && (
+                  <div className="sm:col-span-2 mt-2">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-[1px] flex-1 bg-[var(--border)]/40" />
+                      <span className="text-[10px] tracking-[0.25em] uppercase font-semibold text-[var(--accent)]/60">
+                        {t(
+                          locale,
+                          "Suplementos por fecha de salida",
+                          "Departure date supplements",
+                        )}
+                      </span>
+                      <div className="h-[1px] flex-1 bg-[var(--border)]/40" />
+                    </div>
+
+                    {/* Supplement rows */}
+                    <div className="space-y-3">
+                      {(pkg.supplements || []).map((sup, i) => {
+                        // Group dates by month for compact display
+                        const byMonth: Record<string, number[]> = {};
+                        sup.dates.forEach((d) => {
+                          const dt = new Date(d + "T00:00:00");
+                          const key = dt.toLocaleDateString(
+                            locale === "es" ? "es-MX" : "en-US",
+                            { month: "long", year: "numeric" },
+                          );
+                          if (!byMonth[key]) byMonth[key] = [];
+                          byMonth[key].push(dt.getDate());
+                        });
+
+                        return (
+                          <div
+                            key={i}
+                            className="bg-white/5 border border-[var(--border)]/40 rounded-sm px-5 py-4
+                       hover:border-[var(--accent)]/20 transition-colors"
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              {/* Dates */}
+                              <div className="flex-1 space-y-1">
+                                {Object.entries(byMonth).map(
+                                  ([month, days]) => (
+                                    <p
+                                      key={month}
+                                      className="text-xs text-white/50 leading-relaxed capitalize"
+                                    >
+                                      <span className="text-white/70 font-semibold">
+                                        {month}:
+                                      </span>{" "}
+                                      {days.sort((a, b) => a - b).join(", ")}
+                                    </p>
+                                  ),
+                                )}
+                              </div>
+
+                              {/* Amount badge */}
+                              <div className="shrink-0 flex flex-col items-end">
+                                <span className="text-[10px] tracking-[0.15em] uppercase text-[var(--accent)]/50 mb-0.5">
+                                  {t(locale, "suplemento", "supplement")}
+                                </span>
+                                <span className="text-[var(--accent)] font-bold text-xl">
+                                  +${sup.amount}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Note */}
+                    <p className="text-[11px] text-white/30 mt-3 leading-relaxed">
+                      {t(
+                        locale,
+                        "* El suplemento se suma al precio base según la fecha de salida elegida. Consulta disponibilidad con tu ejecutivo.",
+                        "* Supplement is added to the base price based on the selected departure date. Check availability with your agent.",
+                      )}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
-          </div>
 
-          {/* ── SIDEBAR ── */}
-          <aside className="sticky top-6">
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm overflow-hidden">
+            {/* ── MAP ── */}
+            <div className="mt-8 text-center">
+              <h3 className="text-theme uppercase mb-4">
+                {t(locale, "ruta del viaje", "tour route")}
+              </h3>
+              <TourMap
+                cities={tourCities}
+                caption={tourCities.map((c) => c.name).join(", ")}
+              />
+            </div>
+
+            {/* ── SIDEBAR CONTENT MOVED HERE ── */}
+            <div className="mt-12 bg-white/5 backdrop-blur-md border border-[var(--border)]/40 rounded-sm overflow-hidden w-2/5">
               {/* Sidebar header */}
-              <div className="bg-white/5 border-b border-white/10 px-6 py-5">
-                <h3 className="text-white font-bold text-lg uppercase tracking-wider leading-tight">
+              <div className="bg-white/5 border-b border-[var(--border)]/40 px-6 py-5">
+                <h3 className="text-[var(--accent)] font-bold text-lg uppercase tracking-wider leading-tight">
                   {pkg.name}
                 </h3>
-                <p className="text-white/30 text-xs mt-1 tracking-widest uppercase">
-                  {pkg.provider_pkg_id} · {pkg.provider_ui}
+                <p className="text-[var(--accent)]/40 text-xs mt-1 tracking-widest uppercase">
+                  {!pkg.internal_pkg_id ? "VS-00000" : pkg.internal_pkg_id}
                 </p>
               </div>
 
               {/* Price rows */}
               <div className="px-6 py-4 space-y-3">
-                <div className="flex justify-between items-baseline py-2 border-b border-white/5">
-                  <span className="text-white/50 text-sm">
+                <div className="flex justify-between items-baseline py-2 border-b border-[var(--border)]/40">
+                  <span className="text-[var(--text)]/50 text-sm">
                     {t(locale, "Hab. Doble", "Double room")}
                   </span>
                   <span className="text-[var(--accent)] font-bold text-lg">
@@ -658,7 +710,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                   </span>
                 </div>
                 {pkg.price_single && (
-                  <div className="flex justify-between items-baseline py-2 border-b border-white/5">
+                  <div className="flex justify-between items-baseline py-2 border-b border-[var(--border)]/40">
                     <span className="text-white/50 text-sm">
                       {t(locale, "Hab. Sencilla", "Single room")}
                     </span>
@@ -668,7 +720,7 @@ export default function PackagePage({ pkg, locale }: Props) {
                   </div>
                 )}
                 {pkg.taxes && (
-                  <div className="flex justify-between items-baseline py-2 border-b border-white/5">
+                  <div className="flex justify-between items-baseline py-2 border-b border-[var(--border)]/40">
                     <span className="text-white/50 text-sm">
                       {t(locale, "Impuestos aéreos", "Air taxes")}
                     </span>
@@ -692,19 +744,23 @@ export default function PackagePage({ pkg, locale }: Props) {
               </div>
 
               {/* Quick info */}
-              <div className="px-6 py-4 border-t border-white/10 space-y-3">
+              <div className="px-6 py-4 border-t border-[var(--border)]/40 space-y-3">
                 {pkg.duration && (
                   <div className="flex items-center gap-3 text-sm text-white/50">
                     <FaMoon className="text-[var(--accent)] flex-shrink-0" />
                     {pkg.duration}
                   </div>
                 )}
-                {/* {pkg.includes_flight && (
+                {pkg.includes_flight && (
                   <div className="flex items-center gap-3 text-sm text-white/50">
                     <FaPlane className="text-[var(--accent)] flex-shrink-0" />
-                    {t(locale, "Incluye vuelo desde México", "Includes flight from Mexico")}
+                    {t(
+                      locale,
+                      "Incluye vuelo desde México",
+                      "Includes flight from Mexico",
+                    )}
                   </div>
-                )} */}
+                )}
                 {(pkg.airlines || []).length > 0 && (
                   <div className="flex items-center gap-3 text-sm text-white/50">
                     <FaStar className="text-[var(--accent)] flex-shrink-0" />
@@ -732,9 +788,45 @@ export default function PackagePage({ pkg, locale }: Props) {
                 }
               />
             </div>
-          </aside>
+
+            {/* ── SIMILAR PACKAGES ── */}
+            {similarPackages.length > 0 && (
+              <div className="mt-12 border-t border-[var(--border)]/40 pt-12">
+                <SimilarPackages packages={similarPackages} locale={locale} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Map Modal */}
+      {openMap && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setOpenMap(false)}
+        >
+          <div
+            className="relative w-full max-w-5xl max-h-[90vh] rounded-lg overflow-hidden border border-[var(--border)]/40"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setOpenMap(false)}
+              className="absolute top-4 right-4 z-50 bg-black/60 text-white p-2 rounded-full hover:bg-black/80 transition-colors"
+            >
+              <FaTimes className="w-6 h-6" />
+            </button>
+
+            <div className="h-[80vh]">
+              <TourMap
+                cities={tourCities}
+                height={800}
+                caption={tourCities.map((c) => c.name).join(", ")}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

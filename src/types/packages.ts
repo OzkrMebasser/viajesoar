@@ -2,9 +2,10 @@ export interface LocationRef {
   id: string;
   name: string;
   slug: string;
-  country_code: string;
+  country_code?: string;  
+  latitude?: number | null;
+  longitude?: number | null;
 }
-
 export interface RegionRef {
   id: string;
   name: string;
@@ -34,7 +35,13 @@ export interface Package {
   includes_flight?: boolean | null;
   min_passengers?: number | null;
   internal_pkg_id?: string | null;
+  provider_pkg_id?: string | null;
   
+}
+
+export interface Supplement {
+  amount: number;
+  dates: string[]; // "YYYY-MM-DD"
 }
 
 // ── Tipo completo — página de detalle ──
@@ -54,6 +61,7 @@ export interface PackageDetail extends Package {
   taxes: number | null;
   deposit_amount: number | null;
   prices_valid_until: string | null;
+  supplements?: Supplement[] | null;
 
   // Content
   itinerary: DayItinerary[] | null;
