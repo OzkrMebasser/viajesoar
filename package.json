@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@elfalem/leaflet-curve": "^0.9.2",
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-three/drei": "^10.7.6",

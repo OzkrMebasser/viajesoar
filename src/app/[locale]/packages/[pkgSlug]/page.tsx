@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPackageBySlug, getSimilarPackages } from "@/lib/data/packages/packages";
-import PackageInfoFull from "@/components/Packages/PackageInfoFull";
+import PackageInfoFull from "@/components/Packages/Detail/PackageInfoFull";
 import type { Locale } from "@/types/locale";
 
 export default async function Page({

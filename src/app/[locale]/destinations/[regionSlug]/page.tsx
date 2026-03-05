@@ -1,39 +1,28 @@
-"use client";
-import RegionDestination from "@/components/Region/RegionDestination";
-import { useLocale } from "next-intl";
-import { useParams } from "next/navigation";
-import {
-  useDestinationBySlug,
-  useCountriesByRegion,
-} from "@/lib/hooks/useDestinations";
+// app/[locale]/destinos/[regionSlug]/page.tsx
+import RegionDestination from "@/components/Regions/RegionDestination";
+import { getRegionBySlug, getCountriesByRegion } from "@/lib/data/destinations/regions";
+import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import type { Locale } from "@/types/locale";
 
-export default function DestinationPage() {
-  // const locale = useLocale() as "es" | "en";
-  // const { regionSlug } = useParams<{ regionSlug: string }>();
+export default async function DestinationPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale; regionSlug: string }>;
+}) {
+  const { regionSlug } = await params;
+  const locale = (await getLocale()) as Locale;
 
-  // const safeSlug = typeof regionSlug === "string" ? regionSlug : "";
+  const region = await getRegionBySlug(regionSlug, locale);
+  if (!region) notFound();
 
-  // const {
-  //   destination: region,
-  //   loading,
-  //   error,
-  // } = useDestinationBySlug(safeSlug, locale);
-
-  // const { countries } = useCountriesByRegion(region?.id, locale);
-  // // const regionDestinations = destinations.map((dest) => dest.name);
-  // // console.log("countries", countries);
-
-  // // const filteredCountries = countries.filter((country) => country.region_id === region?.id);
-
-  // // console.log('filteredCountries', filteredCountries)
-
-  // if (loading) return <div>Cargando...</div>;
-  // if (error) return <div>Error: {error}</div>;
-  // if (!region) return <div>No se encontró la región</div>;
+  const countries = await getCountriesByRegion(region.id, locale);
 
   return (
-    <div className=" bg-gradient-theme text-theme min-h-screen">
-      <RegionDestination />
-    </div>
+    <RegionDestination
+      locale={locale}
+      region={region}
+      countries={countries}
+    />
   );
 }

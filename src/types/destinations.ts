@@ -6,7 +6,9 @@ export interface DestinationRegion {
   id: string;
   name: string;
   description: string;
+  long_description?: string; 
   image: string;
+  images: string[];
   gradient: string;
   icon: string;
   locale: string;

@@ -1,49 +1,28 @@
-"use client";
-import RegionDestination from "@/components/Region/RegionDestination";
-import { useLocale } from "next-intl";
-import { useParams } from "next/navigation";
-import { useDestinationBySlug , useCountriesByRegion} from "@/lib/hooks/useDestinations";
+// app/[locale]/destinos/[regionSlug]/page.tsx
+import RegionDestination from "@/components/Regions/RegionDestination";
+import { getRegionBySlug, getCountriesByRegion } from "@/lib/data/destinations/regions";
+import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import type { Locale } from "@/types/locale";
 
-export default function DestinationPage() {
-  const locale = useLocale() as "es" | "en";
-  const { regionSlug } = useParams<{ regionSlug: string }>();
+export default async function DestinationPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale; regionSlug: string }>;
+}) {
+  const { regionSlug } = await params;
+  const locale = (await getLocale()) as Locale;
 
-  const safeSlug = typeof regionSlug === "string" ? regionSlug : "";
+  const region = await getRegionBySlug(regionSlug, locale);
+  if (!region) notFound();
 
-  const {
-    destination: region,
-    loading,
-    error,
-  } = useDestinationBySlug(safeSlug, locale);
-
-  // const { countries } = useCountriesByRegion(region?.id, locale);
-
-
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
-  // if (!region) return <div>No se encontró la región</div>;
+  const countries = await getCountriesByRegion(region.id, locale);
 
   return (
-    <div className="p-8  min-h-screen">
-      {/* <h1 className="text-4xl font-bold text-white">{region.name}</h1>
-      <p className="mt-4 text-white/90">{region.description}</p>
-
-      {region.image && (
-        <img
-          src={region.image}
-          alt={region.name}
-          className="mt-6 rounded-xl max-w-xl"
-        />
-      )}
-      <div>
-        <h2 className="text-2xl font-semibold text-white mt-8">Países en esta región:</h2>
-        <ul className="mt-4 list-disc list-inside text-white/90">
-          {countries.map((country) => ( 
-            <li key={country.id}>{country.name}</li>
-          ))}
-        </ul> 
-      </div> */}
-      <RegionDestination />
-    </div>
+    <RegionDestination
+      locale={locale}
+      region={region}
+      countries={countries}
+    />
   );
 }

@@ -61,16 +61,19 @@ export default function PackageList({
 }: Props) {
   const [query, setQuery] = useState("");
 
-  const filtered = useMemo(() => {
-    if (!query.trim()) return packages;
-    const q = query.toLowerCase();
-    return packages.filter(
-      (pkg) =>
-        pkg.name.toLowerCase().includes(q) ||
-        pkg.visited_countries?.some((c) => c.name.toLowerCase().includes(q)) ||
-        pkg.visited_cities?.some((c) => c.name.toLowerCase().includes(q)),
-    );
-  }, [query, packages]);
+const normalize = (str: string) =>
+  str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+const filtered = useMemo(() => {
+  if (!query.trim()) return packages;
+  const q = normalize(query);
+  return packages.filter(
+    (pkg) =>
+      normalize(pkg.name).includes(q) ||
+      pkg.visited_countries?.some((c) => normalize(c.name).includes(q)) ||
+      pkg.visited_cities?.some((c) => normalize(c.name).includes(q)),
+  );
+}, [query, packages]);
 
   return (
     <div className="min-h-screen bg-gradient-theme">
@@ -231,7 +234,7 @@ export default function PackageList({
                   {/* Package Title */}
                   <SplitText
                     text={pkg.name}
-                    className=" font-bold text-lg uppercase leading-tight mb-2 text-theme-tittles "
+                    className=" font-bold text-lg uppercase leading-tight mb-2 text-[var(--accent)] "
                     delay={25}
                     duration={0.5}
                     splitType="chars"
@@ -242,7 +245,7 @@ export default function PackageList({
 
                   {/* Description */}
                   {pkg.description && (
-                    <p className="text-[var(--accent)] text-sm md:text-lg  leading-relaxed line-clamp-2 mb-2 ">
+                    <p className="text-[var(--text)]/80 text-sm leading-relaxed line-clamp-3 mb-4 mb-2 ">
                       {pkg.description}
                     </p>
                   )}

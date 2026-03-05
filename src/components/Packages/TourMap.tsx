@@ -1,36 +1,27 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
+import { FaLocationPin } from "react-icons/fa6";
+import { ImHeart } from "react-icons/im";
+import { renderToStaticMarkup } from "react-dom/server";
 
 export interface TourCity {
   name: string;
   lat: number;
   lng: number;
-  isStart?: boolean; // renders green marker
-  isEnd?: boolean;   // renders red   marker
+  isStart?: boolean;
+  isEnd?: boolean;
 }
 
 export interface TourMapProps {
   cities: TourCity[];
-  /** Caption shown below the map */
   caption?: string;
-  /** Height of the map container (default 320px) */
   height?: number | string;
-  /** Initial zoom level (default auto-fit) */
   zoom?: number;
-  /** Leaflet tile URL — defaults to OpenStreetMap */
   tileUrl?: string;
-  /** Show numeric step labels on each marker */
   showStepNumbers?: boolean;
 }
 
-
-
-/** Inject Leaflet CSS + JS from CDN only once */
 function ensureLeaflet(): Promise<void> {
   return new Promise((resolve) => {
     if ((window as any).L) return resolve();
@@ -50,73 +41,80 @@ function ensureLeaflet(): Promise<void> {
       script.onload = () => resolve();
       document.head.appendChild(script);
     } else {
-      // script already added – wait for it
       const check = setInterval(() => {
-        if ((window as any).L) {
-          clearInterval(check);
-          resolve();
-        }
+        if ((window as any).L) { clearInterval(check); resolve(); }
       }, 50);
     }
   });
 }
 
-// Brand colors
-const BLUE   = "#0049fc";
-const GREEN  = "#22c55e";
-const RED    = "#ef4444";
-const WHITE  = "#ffffff";
-const LINE   = "#000000";
+const LINE = "#000000";
 
-function markerHtml(
-  fill: string,
-  label: string,
-  showStep: boolean,
-  step: number
-): string {
+function markerHtml(label: string): string {
+  const pinIcon = renderToStaticMarkup(
+    <FaLocationPin size={30} style={{ color: "tomato", filter: "drop-shadow(0px 3px 6px rgba(0,0,0,.35))" }} />
+  );
+  const heartIcon = renderToStaticMarkup(
+    <ImHeart size={12} style={{ color: "#fff" }} />
+  );
+
   return `
-    <div style="
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      pointer-events:none;
-    ">
-      <div style="
-        background:${fill};
-        border: 2px solid ${WHITE};
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        box-shadow: 0 1px 4px rgba(0,0,0,.35);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:9px;
-        font-weight:700;
-        color:${WHITE};
-        font-family: 'Outfit', sans-serif;
-      ">${showStep ? step : ""}</div>
-      <div style="
-        margin-top:3px;
-        background:${BLUE};
-        color:${WHITE};
-        font-family:'Outfit',sans-serif;
-        font-size:10px;
-        font-weight:600;
-        padding:2px 6px;
-        border-radius:4px;
-        white-space:nowrap;
-        box-shadow:0 1px 3px rgba(0,0,0,.3);
-        letter-spacing:.01em;
-      ">${label}</div>
+    <style>
+      @keyframes softSpring {
+        0% { transform: translateX(0px); }
+        25% { transform: translateX(-3px); }
+        50% { transform: translateX(3px); }
+        75% { transform: translateX(-2px); }
+        100% { transform: translateX(0px); }
+      }
+      .marker-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translateY(-2px);
+      }
+      .marker-icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease;
+      }
+      .marker-wrapper:hover .marker-icon { animation: softSpring 0.6s ease; }
+      .marker-wrapper:active .marker-icon { animation: softSpring 0.6s ease; }
+    </style>
+    <div class="marker-wrapper">
+      <div class="marker-icon">
+        ${pinIcon}
+        <div style="position:absolute;top:8px;display:flex;align-items:center;justify-content:center;">
+          ${heartIcon}
+        </div>
+      </div>
     </div>
   `;
 }
 
-// ─────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────
+function buildZigzag(points: [number, number][], amp = 0.4, steps = 8): [number, number][] {
+  const result: [number, number][] = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const [lat1, lng1] = points[i];
+    const [lat2, lng2] = points[i + 1];
+    result.push([lat1, lng1]);
+    for (let s = 1; s < steps; s++) {
+      const t = s / steps;
+      const midLat = lat1 + (lat2 - lat1) * t;
+      const midLng = lng1 + (lng2 - lng1) * t;
+      const dLat = lat2 - lat1;
+      const dLng = lng2 - lng1;
+      const len = Math.sqrt(dLat * dLat + dLng * dLng);
+      const sine = Math.sin(s * (Math.PI / steps) * 2) * amp;
+      result.push([midLat + (-dLng / len) * sine, midLng + (dLat / len) * sine]);
+    }
+  }
+  result.push(points[points.length - 1]);
+  return result;
+}
 
 export default function TourMap({
   cities,
@@ -124,10 +122,9 @@ export default function TourMap({
   height = 450,
   zoom,
   tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  showStepNumbers = false,
 }: TourMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef       = useRef<any>(null);
+  const mapRef = useRef<any>(null);
 
   useEffect(() => {
     if (!containerRef.current || cities.length === 0) return;
@@ -139,7 +136,6 @@ export default function TourMap({
 
       const L = (window as any).L;
 
-      // Destroy existing instance if re-rendering
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -150,9 +146,9 @@ export default function TourMap({
         scrollWheelZoom: false,
         attributionControl: true,
       });
+
       mapRef.current = map;
 
-      // Tile layer
       L.tileLayer(tileUrl, {
         attribution: '© <a href="https://osm.org/copyright">OpenStreetMap</a>',
         maxZoom: 18,
@@ -160,8 +156,7 @@ export default function TourMap({
 
       const latlngs = cities.map((c) => [c.lat, c.lng] as [number, number]);
 
-      // Polyline connecting all cities
-      L.polyline(latlngs, {
+      L.polyline(buildZigzag(latlngs), {
         color: LINE,
         weight: 3,
         opacity: 1,
@@ -169,29 +164,26 @@ export default function TourMap({
         lineCap: "round",
       }).addTo(map);
 
-      // Markers
-      cities.forEach((city, i) => {
-        const fill =
-          city.isStart ? GREEN
-          : city.isEnd ? RED
-          : BLUE;
-
+      cities.forEach((city) => {
         const icon = L.divIcon({
-          html: markerHtml(fill, city.name, showStepNumbers, i + 1),
+          html: markerHtml(city.name),
           className: "",
-          iconAnchor: [0, 10],
-          popupAnchor: [0, -15],
+          iconSize: [30, 30],
+          iconAnchor: [15, 30],
         });
 
-        L.marker([city.lat, city.lng], { icon })
-          .addTo(map)
-          .bindPopup(`<b style="font-family:Outfit,sans-serif">${city.name}</b>`);
+        const marker = L.marker([city.lat, city.lng], { icon }).addTo(map);
+
+        marker.bindTooltip(city.name, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -34],
+          className: "city-tooltip",
+        });
       });
 
-      // Fit map to markers
       if (zoom) {
-        const center = latlngs[0];
-        map.setView(center, zoom);
+        map.setView(latlngs[0], zoom);
       } else {
         const bounds = L.latLngBounds(latlngs);
         map.fitBounds(bounds, { padding: [32, 32] });
@@ -205,7 +197,6 @@ export default function TourMap({
         mapRef.current = null;
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cities]);
 
   return (
@@ -219,9 +210,8 @@ export default function TourMap({
           overflow: "hidden",
         }}
       />
-      
       {caption && (
-        <p className="mt-2 fontOutfit italic text-xs text-[#051D2E]/70">
+        <p className="mt-2 fontOutfit italic text-xs text-[var(--text)]/70">
           {caption}
         </p>
       )}

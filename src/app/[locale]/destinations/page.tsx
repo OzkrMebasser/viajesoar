@@ -1,3 +1,28 @@
+import AllRegions from "@/components/Regions/AllRegions";
+import { getAllRegions } from "@/lib/data/destinations/regions";
+import type { Locale } from "@/types/locale";
+import { getLocale } from "next-intl/server";
+
+interface Props {
+  params: Promise<{ locale: Locale }>;
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function AllDestinationsPage(props: Props) {
+  const locale = (await getLocale()) as Locale;
+  const params = await props.params;
+
+  const regions = await getAllRegions(params.locale);
+
+  return (
+    <main>
+      <AllRegions
+        locale={locale}
+        regions={regions}
+      />
+    </main>
+  );
+}
 // import Destinations from "@/components/Destinations";
 // const AllDestinationsPage = () => {
 //   return (
@@ -8,42 +33,42 @@
 // };
 
 // export default AllDestinationsPage;
-import Destinations from "@/components/Destinations";
-import { getDestinationsPaginated } from "@/lib/data/destinations";
-import DestinationsClient from "@/components/Destinations/DestinationsClient";
-import type { Locale } from "@/types/locale";
-import { getLocale } from "next-intl/server";
+// import Destinations from "@/components/Destinations";
+// import { getDestinationsPaginated } from "@/lib/data/destinations";
+// import DestinationsClient from "@/components/Destinations/DestinationsClient";
+// import type { Locale } from "@/types/locale";
+// import { getLocale } from "next-intl/server";
 
-interface Props {
-  searchParams: { page?: string };
-   params: Promise<{ locale: Locale }>;
-}
+// interface Props {
+//   searchParams: { page?: string };
+//    params: Promise<{ locale: Locale }>;
+// }
 
-export default async function AllDestinationsPage(props: {
-  params: Promise<{ locale: Locale }>;
-  searchParams: Promise<{ page?: string }>;
-}) 
- {
-  const locale = (await getLocale()) as Locale;
+// export default async function AllDestinationsPage(props: {
+//   params: Promise<{ locale: Locale }>;
+//   searchParams: Promise<{ page?: string }>;
+// }) 
+//  {
+//   const locale = (await getLocale()) as Locale;
 
-  const params = await props.params;
-  const searchParams = await props.searchParams;
+//   const params = await props.params;
+//   const searchParams = await props.searchParams;
 
-  const page = Number(searchParams.page) || 1;
+//   const page = Number(searchParams.page) || 1;
 
-  const data = await getDestinationsPaginated(params.locale, page);
-  console.log("Toda la data", data.total)
+//   const data = await getDestinationsPaginated(params.locale, page);
+//   console.log("Toda la data", data.total)
   
-//  console.log(`pagina:`, page)
-  return (
-    <main>
-      <Destinations
-        destinations={data.data}
-        page={data.page}
-        totalPages={data.totalPages}
-        locale={locale}
-        total={data.total}
-      />
-    </main>
-  );
-}
+// //  console.log(`pagina:`, page)
+//   return (
+//     <main>
+//       <Destinations
+//         destinations={data.data}
+//         page={data.page}
+//         totalPages={data.totalPages}
+//         locale={locale}
+//         total={data.total}
+//       />
+//     </main>
+//   );
+// }

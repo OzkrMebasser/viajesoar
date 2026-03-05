@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import CardsSlideShow from "@/components/CardsSlideShow";
-import SplitText from "../SplitText";
+import SplitText from "../../SplitText";
 import { FaTimes, FaImages } from "react-icons/fa";
 
 interface Props {
