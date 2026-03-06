@@ -45,7 +45,7 @@ body {
   --bg: #0f172a;
   --bg-lighter: #0c1220;
   --bg-secondary: #1e293b;
-  --bg-tertiary: #242931;
+  --bg-tertiary: #0e0f13;
   --bg-accent: #14b8a6;
   --text: #f8fafc;
   --text-tittles: #f8fafc;
@@ -107,8 +107,45 @@ html[data-theme="light"] {
   --skeleton-shine: #e2e8f0;
 }
 
-/* Tema vibrant */
+
+/* Tema vibrant - Versión Light & Tech (Inspirada en el logo) */
 html[data-theme="vibrant"] {
+  /* Fondos Ultra-Light: Evitan la fatiga visual */
+  --bg: #FFFAF5;            /* Blanco arena (Fondo base casi blanco) */
+  --bg-lighter: #FFFFFF;    /* Blanco puro para elevar cards */
+  --bg-secondary: #ffb184;  /* Azul cielo muy pálido para secciones secundarias */
+  --bg-tertiary: #FFF1E6;   /* Crema melocotón suave para destacar sutilmente */
+  --bg-accent: #FF823C;     /* Azul Cerúleo del logo (Solo para elementos clave) */
+  
+  /* Textos: Contraste suave basado en el azul del logo */
+  --text: #195377;          /* Gris azulado oscuro (Sutil y elegante) */
+  --text-secondary: #0C95EA; /* Azul del logo para destacar links */
+  --text-tertiary: #64748b; /* Gris neutro para info secundaria */
+  --text-tittles: #014E7D;  /* Azul marino profundo (Orient) para títulos */
+  --text-subtittles: #F97316; /* Naranja enérgico pero balanceado */
+  --text-btn: #FFFFFF;      
+  --text-nav: #014E7D;      
+  
+  /* Acentos: El naranja ahora es un acento, no un bloque pesado */
+  --accent: #FF823C;        /* Naranja Atardecer (Acción principal) */
+  --accent-hover: #F97316;
+  --accent-secondary: #4AF0D8; /* Cian del logo para botones secundarios */
+  --accent-secondary-hover: #0C95EA;
+  
+  --border: #014E7D;        /* Bordes gris-azulados muy claros */
+  --map-filter: brightness(1.1) contrast(1) saturate(1.1);
+
+  /* Gradients: Mezcla aireada de azul y naranja */
+  --gradient: linear-gradient(135deg, #FFFAF5 0%, #FFF1E6 100%); /* Fondo degradado suave */
+  --gradient-secondary: linear-gradient(135deg, #0C95EA 0%, #4AF0D8 100%); /* El alma del logo */
+  --gradient-tertiary: linear-gradient(to top, #FFFFFF, #F0F9FF, #FFFFFF);
+  
+  --skeleton-base: #faad80;
+  --skeleton-shine: #FFFFFF;
+  --skeleton-border: #CBD5E1;
+}
+
+/* html[data-theme="vibrant"] {
   --bg: #fff7ed;
   --bg-lighter: #ffedd5;
   --bg-secondary: #014e7d;
@@ -127,7 +164,6 @@ html[data-theme="vibrant"] {
   --accent-secondary-hover: #e4c7a6;
   --border: #fed7aa;
   --map-filter: brightness(0.5) contrast(1.1) saturate(1.2);
-
   --gradient: linear-gradient(to top, #ff9f1a, #ffaf40, #ff9f1a);
   --gradient-secondary: linear-gradient(
     to bottom,
@@ -138,7 +174,7 @@ html[data-theme="vibrant"] {
   --gradient-tertiary: linear-gradient(to top, #f8a736, #ebaf5b, #f8a736);
   --skeleton-base: #f1b663;
   --skeleton-shine: #ffe0b2;
-}
+} */
 
 /* Clases reutilizables */
 .bg-theme {

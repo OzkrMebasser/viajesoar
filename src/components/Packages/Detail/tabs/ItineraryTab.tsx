@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FaCheck, FaTimes, FaChevronDown } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
 import type { DayItinerary } from "@/types/packages";
-
+import RouteIcon from "@/icons/RouteIcon";
+import Image from "next/image";
 type Locale = "es" | "en";
 const t = (locale: Locale, es: string, en: string) =>
   locale === "es" ? es : en;
@@ -37,20 +38,25 @@ export default function ItineraryTab({
 
       {itinerary.length > 0 ? (
         <div className="relative">
-          <div className="absolute left-[22px] top-0 bottom-0 w-[1px] bg-white/10" />
-          <div className="flex grid-cols-2  text-theme  py-2  text-center">
-            <span className=" text-center w-3/20 lg:w-1/20">{t(locale, "Día", "Day")}</span>
-            <span className=" w-17/20">{t(locale, "Recorrido", "Route")}</span>
+          {/*Dias linea vertical*/}
+          <div className="absolute left-[22px] top-14 bottom-2 w-[1px] bg-[var(--accent)]/40 " />
+          <div className="flex grid-cols-2  text-theme  text-center uppercase text-lg font-bold mb-3 tracking-wider ">
+            <span className="  p-2 text-center w-3/20 lg:w-1/20">
+              {t(locale, "Día", "Day")}
+            </span>
+            <span className="p-2 w-17/20 items-center gap-2 text-theme ">
+              {t(locale, "Recorrido", "Route")}
+              <RouteIcon className="h-[18px] mb-1 w-6 inline ml-1" />
+            </span>{" "}
           </div>
           {itinerary.map((day) => (
             <div key={day.day} className="relative pl-14 mb-3">
               {/* Day number dot */}
-
               <div
                 className={`absolute left-0 top-0 w-[46px] h-[46px] rounded-sm flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                   openDay === day.day
                     ? "bg-[var(--accent)] text-theme-btn"
-                    : "bg-white/5 border border-[var(--border)]/40 text-theme"
+                    : "bg-gradient-theme border border-[var(--accent)]/40 text-[var(--accent)]"
                 }`}
               >
                 {String(day.day).padStart(2, "0")}
@@ -68,17 +74,19 @@ export default function ItineraryTab({
                   onClick={() =>
                     setOpenDay(openDay === day.day ? null : day.day)
                   }
-                  className="w-full flex items-center justify-between px-5 py-4 text-left"
+                  className="w-full flex items-center justify-between px-5 py-[12.5px] text-left"
                 >
                   <span
                     className={`font-semibold text-sm transition-colors ${
-                      openDay === day.day ? "text-white" : "text-white/70"
+                      openDay === day.day
+                        ? "text-[var(--accent)]"
+                        : "text-theme-tittles"
                     }`}
                   >
                     {day.title}
                   </span>
                   <FaChevronDown
-                    className={`text-white/30 text-xs transition-transform duration-300 flex-shrink-0 ml-4 ${
+                    className={`text-[var(--text)] text-xs transition-transform duration-300 flex-shrink-0 ml-4 ${
                       openDay === day.day ? "rotate-180" : ""
                     }`}
                   />
@@ -86,7 +94,7 @@ export default function ItineraryTab({
 
                 {openDay === day.day && (
                   <div className="px-5 pb-5 border-t border-[var(--border)]/40">
-                    <p className="text-white/60 text-sm leading-relaxed mt-4">
+                    <p className="text-[var(--text)]/80 text-sm leading-relaxed mt-4">
                       {day.description}
                     </p>
                     {day.optional && (
@@ -99,7 +107,7 @@ export default function ItineraryTab({
                             "Optional excursion",
                           )}
                         </p>
-                        <p className="text-white/60 text-sm">{day.optional}</p>
+                        <p className="text-theme text-sm">{day.optional}</p>
                       </div>
                     )}
                   </div>
@@ -122,7 +130,7 @@ export default function ItineraryTab({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-12">
           {included.length > 0 && (
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-theme uppercase tracking-wider mb-4 flex items-center gap-2">
                 <FaCheck className="text-emerald-400 text-sm" />
                 {t(locale, "Incluye", "Includes")}
               </h3>
@@ -130,7 +138,7 @@ export default function ItineraryTab({
                 {included.map((item, i) => (
                   <li
                     key={i}
-                    className="flex gap-3 text-sm text-white/60 border-b border-[var(--border)]/40 pb-3 last:border-0"
+                    className="flex gap-3 text-sm text-[var(--text)]/80 border-b border-[var(--border)]/40 pb-3 last:border-0"
                   >
                     <FaCheck className="text-emerald-400 flex-shrink-0 mt-0.5" />
                     {item}
@@ -142,7 +150,7 @@ export default function ItineraryTab({
 
           {notIncluded.length > 0 && (
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-theme uppercase tracking-wider mb-4 flex items-center gap-2">
                 <FaTimes className="text-red-400 text-sm" />
                 {t(locale, "No incluye", "Not included")}
               </h3>
@@ -150,7 +158,7 @@ export default function ItineraryTab({
                 {notIncluded.map((item, i) => (
                   <li
                     key={i}
-                    className="flex gap-3 text-sm text-white/60 border-b border-[var(--border)]/40 pb-3 last:border-0"
+                    className="flex gap-3 text-sm text-[var(--text)]/80 border-b border-[var(--border)]/40 pb-3 last:border-0"
                   >
                     <FaTimes className="text-red-400 flex-shrink-0 mt-0.5" />
                     {item}

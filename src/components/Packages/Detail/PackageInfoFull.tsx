@@ -159,13 +159,9 @@ export default function PackageInfoFull({
             >
               <FaTimes className="w-6 h-6" />
             </button> */}
-            <div className="h-[80vh]">
-              <TourMap
-                cities={tourCities}
-                height={800}
-                caption={tourCities.map((c) => c.name).join(", ")}
-              />
-            </div>
+           
+              
+          
           {/* </div>
         </div>
       )} */}
