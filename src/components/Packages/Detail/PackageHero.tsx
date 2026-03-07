@@ -53,13 +53,13 @@ export default function PackageHero({ pkg, locale, onCotizar }: Props) {
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-12 pt-32">
           <SplitText
             text={pkg.name}
-            className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
+            className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase "
             delay={25}
             duration={0.5}
             splitType="chars"
             from={{ opacity: 0, y: 20 }}
             to={{ opacity: 1, y: 0 }}
-            textAlign="center"
+            textAlign="left"
           />
 
           <div className="flex items-center gap-2">

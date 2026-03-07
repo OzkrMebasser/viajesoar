@@ -15,9 +15,16 @@ import ItineraryTab from "./tabs/ItineraryTab";
 import OptionalsTab from "./tabs/OptionalsTab";
 import HotelsTab from "./tabs/HotelsTab";
 import PricesTab from "./tabs/PricesTab";
+import PackageNotes from "./PackageNotes"; // Importamos el componente de notas
 
 // ── Types ──
-import type { TabType, DayItinerary, HotelEntry, PackageDetail, Package } from "@/types/packages";
+import type {
+  TabType,
+  DayItinerary,
+  HotelEntry,
+  PackageDetail,
+  Package,
+} from "@/types/packages";
 
 type Locale = "es" | "en";
 const t = (locale: Locale, es: string, en: string) =>
@@ -32,8 +39,8 @@ interface Props {
 const TABS: { key: TabType; label: [string, string] }[] = [
   { key: "itinerary", label: ["Itinerario", "Itinerary"] },
   { key: "optionals", label: ["Opcionales", "Optionals"] },
-  { key: "hotels",    label: ["Hoteles",    "Hotels"]    },
-  { key: "prices",    label: ["Tarifas",    "Prices"]    },
+  { key: "hotels", label: ["Hoteles", "Hotels"] },
+  { key: "prices", label: ["Tarifas", "Prices"] },
 ];
 
 export default function PackageInfoFull({
@@ -43,19 +50,19 @@ export default function PackageInfoFull({
 }: Props) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("itinerary");
-  const [openMap, setOpenMap] = useState(false);
 
   // ── Parse JSONB fields ──
-  const itinerary: DayItinerary[] = Array.isArray(pkg.itinerary) ? pkg.itinerary : [];
-  const hotels: HotelEntry[] = Object.entries(
-    (pkg.hotels as unknown as Record<string, Record<string, string[]>>) || {},
-  ).flatMap(([country, cities]) =>
-    Object.entries(cities).flatMap(([city, hotelList]) =>
-      hotelList.map((hotel) => ({ country, city, hotel })),
-    ),
-  );
-  const included: string[]    = Array.isArray(pkg.included)     ? pkg.included     : [];
-  const notIncluded: string[] = Array.isArray(pkg.not_included) ? pkg.not_included : [];
+  const itinerary: DayItinerary[] = Array.isArray(pkg.itinerary)
+    ? pkg.itinerary
+    : [];
+
+const hotels: HotelEntry[] = Array.isArray(pkg.hotels) ? pkg.hotels : [];
+
+
+  const included: string[] = Array.isArray(pkg.included) ? pkg.included : [];
+  const notIncluded: string[] = Array.isArray(pkg.not_included)
+    ? pkg.not_included
+    : [];
 
   const tourCities = (pkg.visited_cities ?? [])
     .filter((c) => c.latitude && c.longitude)
@@ -69,7 +76,6 @@ export default function PackageInfoFull({
 
   return (
     <div className="min-h-screen bg-gradient-theme">
-
       {/* ── HERO + DESCRIPTION BAND ── */}
       <PackageHero pkg={pkg} locale={locale} />
 
@@ -77,14 +83,13 @@ export default function PackageInfoFull({
       <div className="max-w-7xl mx-auto px-4 sm:px-16 py-12">
         <div className="grid grid-cols-1 gap-10">
           <div>
-
             {/* ── TAB BAR ── */}
             <div className="flex gap-0 border-b border-[var(--border)]/40 mb-10 pb-4 overflow-x-auto">
               {TABS.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`px-5 py-3 text-xs font-semibold tracking-[0.12em] uppercase whitespace-nowrap transition-all duration-200 border-b-2 -mb-[2px] ${
+                  className={`px-5 py-3 text-lg font-bold mb-3 tracking-wider uppercase whitespace-nowrap transition-all duration-200 border-b-2 -mb-[2px] ${
                     activeTab === tab.key
                       ? "text-[var(--accent)] border-[var(--accent)]"
                       : "text-[var(--accent)]/40 border-transparent hover:text-[var(--accent)]/70"
@@ -105,12 +110,14 @@ export default function PackageInfoFull({
               />
             )}
             {activeTab === "optionals" && <OptionalsTab locale={locale} />}
-            {activeTab === "hotels"    && <HotelsTab hotels={hotels} locale={locale} />}
-            {activeTab === "prices"    && <PricesTab pkg={pkg} locale={locale} />}
+            {activeTab === "hotels" && (
+              <HotelsTab hotels={hotels} locale={locale} />
+            )}
+            {activeTab === "prices" && <PricesTab pkg={pkg} locale={locale} />}
 
             {/* ── MAP ── */}
-            <div className="mt-8 text-center">
-              <h3 className="text-theme uppercase mb-4">
+            <div className="mt-12 text-center">
+              <h3 className="text-theme text-center uppercase text-lg font-bold mb-3 tracking-wider">
                 {t(locale, "ruta del viaje", "tour route")}
               </h3>
               <TourMap
@@ -118,7 +125,8 @@ export default function PackageInfoFull({
                 caption={tourCities.map((c) => c.name).join(", ")}
               />
             </div>
-
+            {/* ── NOTES SECTION ── */}
+            <PackageNotes notes={pkg.notes} locale={locale} className="mt-12" />
             {/* ── SIDEBAR ── */}
             <PackageSidebar pkg={pkg} locale={locale} />
 
@@ -127,7 +135,9 @@ export default function PackageInfoFull({
               <ButtonArrow
                 title={t(locale, "Ver todos los paquetes", "View all packages")}
                 onClick={() =>
-                  router.push(`/${locale}${locale === "es" ? "/paquetes" : "/packages"}`)
+                  router.push(
+                    `/${locale}${locale === "es" ? "/paquetes" : "/packages"}`,
+                  )
                 }
               />
             </div>
@@ -138,34 +148,9 @@ export default function PackageInfoFull({
                 <SimilarPackages packages={similarPackages} locale={locale} />
               </div>
             )}
-
           </div>
         </div>
       </div>
-
-      {/* ── MAP MODAL ── */}
-      {/* {openMap && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-          onClick={() => setOpenMap(false)}
-        >
-          <div
-            className="relative w-full max-w-5xl max-h-[90vh] rounded-lg overflow-hidden border border-[var(--border)]/40"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setOpenMap(false)}
-              className="absolute top-4 right-4 z-50 bg-black/60 text-white p-2 rounded-full hover:bg-black/80 transition-colors"
-            >
-              <FaTimes className="w-6 h-6" />
-            </button> */}
-           
-              
-          
-          {/* </div>
-        </div>
-      )} */}
-
     </div>
   );
 }

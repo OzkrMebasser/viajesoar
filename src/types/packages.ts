@@ -36,7 +36,20 @@ export interface Package {
   min_passengers?: number | null;
   internal_pkg_id?: string | null;
   provider_pkg_id?: string | null;
+
+
+  // Notas - opcional en listados
+  notes?: Note[] | null;
+
   
+}
+
+// Añade esto después de la interfaz Supplement o donde prefieras
+
+export interface Note {
+  type: string;      // "importantes", "tarifas", "hoteles"
+  title: string;     // "NOTAS IMPORTANTES", "NOTAS DE LAS TARIFAS", etc.
+  content: string;   // El contenido de la nota con saltos de línea
 }
 
 export interface Supplement {
@@ -79,6 +92,9 @@ export interface PackageDetail extends Package {
   internal_pkg_id: string | null;
   provider_pkg_id: string | null;
   provider_ui: string | null;
+
+    // Notas - requeridas en detalle (o null si no hay)
+  notes: Note[] | null;
 }
 
 // ── Tabs ──
@@ -95,6 +111,6 @@ export interface DayItinerary {
 export interface HotelEntry {
   country: string;
   city: string;
-  hotel: string;
+    hotels: string[];
   type?: string;
 }

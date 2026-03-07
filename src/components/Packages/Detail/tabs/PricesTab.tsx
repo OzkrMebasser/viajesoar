@@ -16,6 +16,7 @@ type PricesPkg = Pick<
   | "prices_valid_until"
   | "supplements"
   | "currency"
+  | "notes"
 >;
 
 interface Props {
@@ -137,7 +138,8 @@ export default function PricesTab({ pkg, locale }: Props) {
         <div className="mt-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-[1px] flex-1 bg-[var(--border)]/40" />
-            <span className="text-[10px] tracking-[0.25em] uppercase font-semibold text-[var(--accent)]/60">
+            {/* text-theme  text-center uppercase text-lg font-bold mb-3 tracking-wider */}
+            <span className=" tracking-[0.25em] uppercase text-lg font-bold mb-3 tracking-wider text-[var(--accent)]/80">
               {t(locale, "Suplementos por fecha de salida", "Departure date supplements")}
             </span>
             <div className="h-[1px] flex-1 bg-[var(--border)]/40" />
@@ -164,9 +166,9 @@ export default function PricesTab({ pkg, locale }: Props) {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 space-y-1">
                       {Object.entries(byMonth).map(([month, days]) => (
-                        <p key={month} className="text-xs text-white/50 leading-relaxed capitalize">
-                          <span className="text-white/70 font-semibold">{month}:</span>{" "}
-                          {days.sort((a, b) => a - b).join(", ")}
+                        <p key={month} className="text-sm text-[var(--text)]/80 text-sm leading-relaxed  capitalize">
+                          <span className="text-[var(--text)]/80  font-semibold">{month}:</span>{" "}
+                          <span className="ml-2">{days.sort((a, b) => a - b).join(", ")}</span>
                         </p>
                       ))}
                     </div>
@@ -191,6 +193,8 @@ export default function PricesTab({ pkg, locale }: Props) {
               "* Supplement is added to the base price based on the selected departure date. Check availability with your agent.",
             )}
           </p>
+{/* 
+          aqui quiero las notas */}
         </div>
       )}
     </div>
