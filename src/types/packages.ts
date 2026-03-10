@@ -1,3 +1,5 @@
+import { OptionalActivity } from "./activities";
+
 export interface LocationRef {
   id: string;
   name: string;
@@ -36,7 +38,7 @@ export interface Package {
   min_passengers?: number | null;
   internal_pkg_id?: string | null;
   provider_pkg_id?: string | null;
-
+  optional_activities: string[] | null;
 
   // Notas - opcional en listados
   notes?: Note[] | null;
@@ -51,6 +53,7 @@ export interface Note {
   title: string;     // "NOTAS IMPORTANTES", "NOTAS DE LAS TARIFAS", etc.
   content: string;   // El contenido de la nota con saltos de línea
 }
+
 
 export interface Supplement {
   amount: number;
@@ -81,6 +84,7 @@ export interface PackageDetail extends Package {
   hotels: HotelEntry[] | null;
   included: string[] | null;
   not_included: string[] | null;
+  optionals?: OptionalActivity[];
 
   // Logistics (requeridos en detail)
   includes_flight: boolean | null;
@@ -92,6 +96,7 @@ export interface PackageDetail extends Package {
   internal_pkg_id: string | null;
   provider_pkg_id: string | null;
   provider_ui: string | null;
+
 
     // Notas - requeridas en detalle (o null si no hay)
   notes: Note[] | null;

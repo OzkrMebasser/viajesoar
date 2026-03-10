@@ -1,4 +1,6 @@
-import { FaHotel } from "react-icons/fa";
+// import { FaHotel } from "react-icons/fa";
+import { FaHotel } from "react-icons/fa6";
+
 import type { HotelEntry } from "@/types/packages";
 
 type Locale = "es" | "en";
@@ -26,24 +28,24 @@ export default function HotelsTab({ hotels, locale }: Props) {
       </p>
 
       {hotels.length > 0 ? (
-        <div className="overflow-x-auto rounded-sm border border-[var(--border)]/40 ">
+        <div className="overflow-x-auto rounded-sm border border-[var(--border)]/40  ">
           {" "}
-          <table className="w-full">
+          <table className="w-full ">
             <thead>
-              <tr className="border-b border-[var(--border)]/40 bg-white/5">
-                <th className="px-5 py-3 text-left text-theme uppercase text-lg font-bold mb-3 tracking-wider border-r border-[var(--border)]/40">
+              <tr className="border-b border-[var(--border)]/40 bg-(--accent)/20 ">
+                <th className="px-2 lg:px-5 py-3 text-center text-theme uppercase font-semibold text-sm transition-colors border-r border-[var(--border)]/40">
                   {t(locale, "País", "Country")}
                 </th>
 
-                <th className="px-5 py-3 text-left text-theme uppercase text-lg font-bold mb-3 tracking-wider border-r border-[var(--border)]/40">
+                <th className="px-2 lg:px-5 py-3 text-center text-theme uppercase font-semibold text-sm transition-colors border-r border-[var(--border)]/40">
                   {t(locale, "Ciudad", "City")}
                 </th>
 
-                <th className="px-5 py-3 text-left text-theme uppercase text-lg font-bold mb-3 tracking-wider border-r border-[var(--border)]/40">
+                <th className="px-2 lg:px-5 py-3 text-center text-theme uppercase font-semibold text-sm transition-colors border-r border-[var(--border)]/40">
                   {t(locale, "Hotel", "Hotel")}
                 </th>
 
-                <th className="px-5 py-3 text-left text-theme uppercase text-lg font-bold mb-3 tracking-wider border-r border-[var(--border)]/40">
+                <th className="px-2 lg:px-5 py-3 text-center text-theme uppercase font-semibold text-sm transition-colors border-r border-[var(--border)]/40">
                   {t(locale, "Tipo", "Type")}
                 </th>
               </tr>
@@ -60,17 +62,17 @@ export default function HotelsTab({ hotels, locale }: Props) {
                 return (
                   <tr
                     key={i}
-                    className="border-b border-[var(--border)]/40 hover:bg-(--accent)/10 transition-colors"
+                    className="border-b border-[var(--border)]/40 md:hover:bg-[var(--accent)]/10 active:bg-[var(--accent)]/20 transition-colors"
                   >
-                    <td className="px-5 py-4 text-sm text-[var(--text)]/80 border-r border-[var(--border)]/30">
+                    <td className="px-2 lg:px-5   py-4 text-sm text-[var(--text)]/80 border-r border-[var(--border)]/30 text-center">
                       {showCountry ? h.country : ""}
                     </td>
 
-                    <td className="px-5 py-4 text-sm text-[var(--text)]/80 border-r border-[var(--border)]/30">
+                    <td className="px-2 lg:px-5 py-4 text-sm text-[var(--text)]/80 border-r border-[var(--border)]/30 text-center">
                       {showCity ? h.city : ""}
                     </td>
 
-                    <td className="px-5 py-4 text-sm text-[var(--text)]/80 border-r border-[var(--border)]/30">
+                    <td className="px-2 lg:px-5 py-4 text-sm text-[var(--text)]/80 border-r border-[var(--border)]/30 text-left">
                       <div className="flex items-start gap-2">
                         <FaHotel className="text-[var(--accent)] text-xs mt-1 flex-shrink-0" />
                         <span>
@@ -80,7 +82,7 @@ export default function HotelsTab({ hotels, locale }: Props) {
                       </div>
                     </td>
 
-                    <td className="px-5 py-4 text-sm text-[var(--text)]/80">
+                    <td className="px-2 lg:px-5 py-4 text-sm text-[var(--text)]/80 text-center">
                       {h.type}
                     </td>
                   </tr>

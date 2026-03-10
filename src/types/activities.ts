@@ -1,32 +1,108 @@
-import type { Locale } from "./locale";
+import type { Locale } from "@/types/locale";
 
 /* ============================
-   DB ROW
+   OPTIONAL ACTIVITY IN PACKAGES
    ============================ */
-export interface ActivityRow {
+
+export interface OptionalActivity {
   id: string;
-  locale: Locale;
   name: string;
-  slug: string;
+  locale: Locale;
   description: string;
-  category: "tour" | "free-activity";
+  description_sections: { subtitle: string; description: string }[] | null;
+  notes: string;
+
+  // Precio
   price: number | null;
+  price_from: number | null;
+  price_to: number | null;
+  currency: string | null;
+
+  // Media
+  cover_image: string | null;
   photos: string[];
-  destination_id: string;
-  is_active: boolean;
+
+  // Info del tab
+  category: string;
+  duration: string | null;
+  recommended_time: string | null;
+  difficulty_level: string | null;
+  activity_mode: string | null;
+  activity_type: string | null;
+
+  // Incluidos
+  included: string[] | null;
+  not_included: string[] | null;
+
+  // Ubicación
+  address: string | null;
+
+  // Tags
+  tags: string[] | null;          // ← AGREGAR
+
+  // Flags
+  is_featured: boolean | null;
+  is_recommended: boolean | null;
 }
-
 /* ============================
-   DOMAIN MODEL
+   ACTIVITY BY DESTINATION
    ============================ */
-export interface Activity {
+
+export interface DestinationActivity {
   id: string;
+
+  destination_id: string;
   locale: Locale;
   name: string;
-  slug: string;
   description: string;
-  category: "tour" | "free-activity";
+   notes: string;
+  slug: string;
+  category: string;
+
   price: number | null;
+  price_from: number | null;
+  price_to: number | null;
+  currency: string | null;
+
   photos: string[];
-  destinationId: string;
+  cover_image: string | null;
+
+  latitude: number | null;
+  longitude: number | null;
+  address: string | null;
+
+  duration: string | null;
+  recommended_time: string | null;
+  difficulty_level: string | null;
+
+  schedule: string | null;
+  available_days: string[] | null;
+
+  included: string[] | null;
+  not_included: string[] | null;
+
+  official_website: string | null;
+  booking_url: string | null;
+
+  activity_mode: string | null;
+  activity_type: string | null;
+
+  tags: string[] | null;
+
+  is_active: boolean;
+  is_recommended: boolean | null;
+  is_featured: boolean | null;
+
+  sort_order: number | null;
+
+  source: string | null;
+
+  provider_internal: string | null;
+  provider_id: string | null;
+  provider_activity_id: string | null;
+  provider_type: string | null;
+  provider_ui: string | null;
+
+  created_at: string;
+  updated_at: string | null;
 }

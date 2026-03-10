@@ -2,6 +2,7 @@ import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ParticlesCanvas from "@/components/ParticlesCanvas";
 import PackagesImagesModal from "@/components/Packages/Detail/PackagesImagesModal";
+import ImageGalleryModal from "./ImageGalleryModal";
 import SplitText from "@/components/SplitText";
 import { FaPlane, FaMoon, FaSun } from "react-icons/fa";
 import type { PackageDetail } from "@/types/packages";
@@ -132,10 +133,12 @@ export default function PackageHero({ pkg, locale, onCotizar }: Props) {
           <p className="text-[var(--accent)] text-sm sm:text-base leading-relaxed max-w-3xl">
             {pkg.description}
           </p>
-          <PackagesImagesModal
+          {/* <PackagesImagesModal
             images={pkg.home_carousel_images || []}
             title={pkg.name}
-          />
+          /> */}
+          <ImageGalleryModal images={pkg.home_carousel_images || []}
+            title={pkg.name} />
         </div>
       </div>
     </>
