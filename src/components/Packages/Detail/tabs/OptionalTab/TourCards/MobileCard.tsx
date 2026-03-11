@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { OptionalActivity } from "@/types/activities";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import BadgeGlower from "@/components/ui/BadgeGlower";
 import BadgeAccent from "@/components/ui/BadgeAccent";
+import { TbListDetails } from "react-icons/tb";
+
 import {
   FaStar,
   FaImages,
@@ -12,7 +14,7 @@ import {
 } from "react-icons/fa";
 import { MdOutlineTimer, MdOutlineWarningAmber } from "react-icons/md";
 import { BsWatch } from "react-icons/bs";
-import { PiApproximateEqualsBold } from "react-icons/pi";
+import { PiApproximateEqualsBold, PiWarningCircleBold  } from "react-icons/pi";
 import { BorderBeam } from "@/components/ui/BorderBeam";
 
 import {
@@ -40,40 +42,49 @@ function InclusionsModal({
   return (
     <div
       className="absolute inset-0 z-30 flex items-center justify-center p-4"
-      onClick={(e) => { e.stopPropagation(); onClose(); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClose();
+      }}
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-[14px]" />
 
       {/* Modal */}
       <div
-        className="relative w-full max-w-sm bg-[#0d1420] border border-white/10 rounded-2xl p-5 shadow-2xl"
+        className="relative w-full max-w-sm bg-gradient-theme border border-white/10 rounded-2xl p-5 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
         <button
-          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
           aria-label={t(locale, "Cerrar", "Close")}
-          className="absolute top-3 right-3 text-white/40 hover:text-white transition-colors"
+          className="absolute top-3 right-3 text-theme hover:text-(--text)/80 transition-colors"
         >
           <FaTimes />
         </button>
 
-        <h4 className="text-white font-bold text-[0.85rem] uppercase tracking-wider mb-4">
-          {t(locale, "Detalles de inclusión", "Inclusion details")}
+        <h4 className="text-theme font-bold text-[0.85rem] uppercase tracking-wider mb-4">
+          {t(locale, "Detalles", "Details")}
         </h4>
 
         <div className="flex gap-4 mb-4">
           {/* Included */}
           {(opt.included?.length ?? 0) > 0 && (
             <div className="flex-1">
-              <p className="text-white/30 text-[0.6rem] uppercase tracking-wider mb-2">
+              <p className="text-(--text)/80 text-[0.6rem] uppercase tracking-wider mb-2">
                 {t(locale, "Incluye", "Includes")}
               </p>
               <div className="flex flex-col gap-1.5">
                 {opt.included!.map((inc, i) => (
-                  <span key={i} className="flex items-start gap-1.5 text-[0.72rem] text-green-300">
-                    <FaCheck className="flex-shrink-0 mt-0.5 text-[0.6rem]" />
+                  <span
+                    key={i}
+                    className="flex items-start gap-1.5 text-[0.72rem] text-(--text)/90 "
+                  >
+                    <FaCheck className="flex-shrink-0 mt-0.5 text-[0.6rem] text-green-400" />
                     {inc}
                   </span>
                 ))}
@@ -84,13 +95,16 @@ function InclusionsModal({
           {/* Not included */}
           {(opt.not_included?.length ?? 0) > 0 && (
             <div className="flex-1">
-              <p className="text-white/30 text-[0.6rem] uppercase tracking-wider mb-2">
+              <p className="text-(--text)/80 text-[0.6rem] uppercase tracking-wider mb-2">
                 {t(locale, "No incluye", "Not included")}
               </p>
               <div className="flex flex-col gap-1.5">
                 {opt.not_included!.map((exc, i) => (
-                  <span key={i} className="flex items-start gap-1.5 text-[0.72rem] text-red-300/80">
-                    <FaTimes className="flex-shrink-0 mt-0.5 text-[0.6rem]" />
+                  <span
+                    key={i}
+                    className="flex items-start gap-1.5 text-[0.72rem] text-(--text)/90 "
+                  >
+                    <FaTimes className="flex-shrink-0 mt-0.5 text-[0.6rem] text-red-500" />
                     {exc}
                   </span>
                 ))}
@@ -101,9 +115,11 @@ function InclusionsModal({
 
         {/* Notes */}
         {opt.notes && (
-          <div className="flex items-start gap-1.5 bg-amber-500/15 border border-amber-400/25 rounded-lg px-3 py-2">
-            <MdOutlineWarningAmber className="text-amber-300 flex-shrink-0 mt-0.5 text-sm" />
-            <p className="text-amber-200 text-[0.68rem] leading-snug">{opt.notes}</p>
+          <div className="flex items-start gap-1.5 ">
+            <PiWarningCircleBold  className="text-amber-500 flex-shrink-0 mt-0.5 text-sm" />
+            <p className="text-(--text) text-[0.68rem] leading-snug ">
+              {opt.notes}
+            </p>
           </div>
         )}
       </div>
@@ -127,7 +143,15 @@ export default function MobileCard({
 }) {
   const [showInclusions, setShowInclusions] = useState(false);
 
-  const allImages = [opt.cover_image, ...(opt.photos ?? [])].filter(Boolean) as string[];
+    useEffect(() => {
+      if (!isActive) {
+        setShowInclusions(false);
+      }
+    }, [isActive]);
+
+  const allImages = [opt.cover_image, ...(opt.photos ?? [])].filter(
+    Boolean,
+  ) as string[];
   const diff = opt.difficulty_level?.toLowerCase() as Difficulty | undefined;
 
   const hasInclusions =
@@ -145,7 +169,11 @@ export default function MobileCard({
         <div className="relative flex items-center gap-3.5 px-4 py-3.5 min-h-[4rem] overflow-hidden">
           {opt.cover_image && (
             <>
-              <img src={opt.cover_image} alt={opt.name} className="absolute inset-0 w-full h-full object-cover" />
+              <img
+                src={opt.cover_image}
+                alt={opt.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-black/55" />
             </>
           )}
@@ -165,7 +193,12 @@ export default function MobileCard({
         <div className="relative h-[34rem] rounded-[14px]">
           {/* BG slideshow */}
           {allImages.length > 0 ? (
-            <CardsSlideShow images={allImages} interval={4000} className="w-full h-full" maxImages={5} />
+            <CardsSlideShow
+              images={allImages}
+              interval={4000}
+              className="w-full h-full"
+              maxImages={5}
+            />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-(--accent)/15 to-[#05080f]" />
           )}
@@ -176,13 +209,18 @@ export default function MobileCard({
           {/* Price — top left */}
           <span className="absolute left-4 top-4 z-10">
             {opt.price != null && (
-              <BadgeAccent>$ {opt.price} {opt.currency ?? "USD"}</BadgeAccent>
+              <BadgeAccent>
+                $ {opt.price} {opt.currency ?? "USD"}
+              </BadgeAccent>
             )}
           </span>
 
           {/* Close chevron */}
           <button
-            onClick={(e) => { e.stopPropagation(); onClick(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
             aria-label={t(locale, "Cerrar", "Close")}
             className="absolute top-4 right-4 z-20 text-white/60 hover:text-white transition-colors"
           >
@@ -208,7 +246,10 @@ export default function MobileCard({
             <div className="flex flex-wrap gap-2 mb-3">
               {opt.category && (
                 <BadgeGlower className="uppercase">
-                  <CategoryIcon className="text-(--accent)" category={opt.category} />
+                  <CategoryIcon
+                    className="text-(--accent)"
+                    category={opt.category}
+                  />
                   <span className="ml-2">{opt.category}</span>
                 </BadgeGlower>
               )}
@@ -256,17 +297,24 @@ export default function MobileCard({
                   <PiApproximateEqualsBold className="inline" /> {opt.duration}
                 </span>
               )}
-              {opt.activity_mode && (() => {
-                const Icon = ACTIVITY_MODE_ICON[opt.activity_mode as ActivityMode];
-                const label = ACTIVITY_MODE_LABEL[opt.activity_mode as ActivityMode]?.[locale as "es" | "en"];
-                return (
-                  <span className="flex items-center gap-1">
-                    {Icon && <Icon />} {label ?? opt.activity_mode}
-                  </span>
-                );
-              })()}
+              {opt.activity_mode &&
+                (() => {
+                  const Icon =
+                    ACTIVITY_MODE_ICON[opt.activity_mode as ActivityMode];
+                  const label =
+                    ACTIVITY_MODE_LABEL[opt.activity_mode as ActivityMode]?.[
+                      locale as "es" | "en"
+                    ];
+                  return (
+                    <span className="flex items-center gap-1">
+                      {Icon && <Icon />} {label ?? opt.activity_mode}
+                    </span>
+                  );
+                })()}
               {opt.recommended_time && (
-                <span><BsWatch className="inline" /> {opt.recommended_time}</span>
+                <span>
+                  <BsWatch className="inline" /> {opt.recommended_time}
+                </span>
               )}
             </div>
 
@@ -274,7 +322,10 @@ export default function MobileCard({
             <div className="flex flex-wrap items-center gap-2.5 mb-4">
               {allImages.length > 0 && (
                 <BadgeGlower
-                  onClick={(e) => { e.stopPropagation(); onOpenGallery(); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenGallery();
+                  }}
                   className="uppercase flex items-center gap-1.5"
                 >
                   {t(locale, "Ver fotos", "View photos")}{" "}
@@ -283,11 +334,14 @@ export default function MobileCard({
               )}
               {hasInclusions && (
                 <BadgeGlower
-                  onClick={(e) => { e.stopPropagation(); setShowInclusions(true); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowInclusions(true);
+                  }}
                   className="uppercase flex items-center gap-1.5"
                 >
-                  <FaCheck className="text-green-400 text-[0.7rem]" />
-                  {t(locale, "Inclusiones", "Inclusions")}
+                  {t(locale, "Más detalles", "More details")}{" "}
+                  <TbListDetails className="text-white text-[1rem]" />
                 </BadgeGlower>
               )}
             </div>
@@ -296,7 +350,13 @@ export default function MobileCard({
       )}
 
       {isActive && (
-        <BorderBeam duration={6} size={300} colorFrom="var(--accent)" colorTo="#014E7D" borderWidth={3} />
+        <BorderBeam
+          duration={6}
+          size={300}
+          colorFrom="var(--accent)"
+          colorTo="#014E7D"
+          borderWidth={3}
+        />
       )}
     </div>
   );

@@ -187,12 +187,13 @@ export default function OptionalsTab({ locale, optionals }: Props) {
             <div className="flex justify-center gap-1.5 mt-6">
               {optionals.map((_, i) => (
                 <button
+                 title="dot indicator"
                   key={i}
                   onClick={() => setActive(i)}
                   className={`
-                    h-[5px] rounded-full border-none cursor-pointer p-0
+                    h-[6px]  border-none cursor-pointer p-0
                     transition-[width,background] duration-300
-                    ${active === i ? "w-8 bg-[var(--accent)]" : "w-[5px] bg-white/15"}
+                    ${active === i ? "w-8 bg-[var(--accent)]" : "w-[6px] bg-gray-500/15"}
                   `}
                 />
               ))}
