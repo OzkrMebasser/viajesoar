@@ -1,4 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
+import WorldMapLoader from "@/components/WorldMapLoader";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/app/i18n/routing";
@@ -47,6 +48,7 @@ export default async function LocaleLayout({
         {/* <FavoritesProvider> */}
           <Navigation />
           <AirplaneCursor />
+          {/* <WorldMapLoader /> */}
           {children}
           <Footer />
         {/* </FavoritesProvider> */}

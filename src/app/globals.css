@@ -65,7 +65,11 @@ body {
   --gradient-tertiary: linear-gradient(to bottom, #080808, #141414, #080808);
   --skeleton-base: #1e293b;
   --skeleton-shine: #2d3f55;
-  --skeleton-border:var(--accent)
+  --skeleton-border: var(--accent);
+
+  --glow-1: #0000003b;
+  --glow-2: #0808082f;
+  --glow-3: #0000007e;
 
   /* hex logo */
   /* --cerulean: #0c95ea;
@@ -105,44 +109,58 @@ html[data-theme="light"] {
   --gradient-tertiary: linear-gradient(to bottom, #f1f5f9, #ffffff, #f1f5f9);
   --skeleton-base: #cbd5e1;
   --skeleton-shine: #e2e8f0;
+  --glow-1: #ffffff42;
+  --glow-2: #f1f5f93f;
+  --glow-3: #ffffff3b;
 }
-
 
 /* Tema vibrant - Versión Light & Tech (Inspirada en el logo) */
 html[data-theme="vibrant"] {
   /* Fondos Ultra-Light: Evitan la fatiga visual */
-  --bg: #FFFAF5;            /* Blanco arena (Fondo base casi blanco) */
-  --bg-lighter: #FFFFFF;    /* Blanco puro para elevar cards */
-  --bg-secondary: #ffb184;  /* Azul cielo muy pálido para secciones secundarias */
-  --bg-tertiary: #FFF1E6;   /* Crema melocotón suave para destacar sutilmente */
-  --bg-accent: #FF823C;     /* Azul Cerúleo del logo (Solo para elementos clave) */
-  
+  --bg: #fffaf5; /* Blanco arena (Fondo base casi blanco) */
+  --bg-lighter: #ffffff; /* Blanco puro para elevar cards */
+  --bg-secondary: #ffb184; /* Azul cielo muy pálido para secciones secundarias */
+  --bg-tertiary: #fff1e6; /* Crema melocotón suave para destacar sutilmente */
+  --bg-accent: #ff823c; /* Azul Cerúleo del logo (Solo para elementos clave) */
+
   /* Textos: Contraste suave basado en el azul del logo */
-  --text: #195377;          /* Gris azulado oscuro (Sutil y elegante) */
-  --text-secondary: #0C95EA; /* Azul del logo para destacar links */
+  --text: #195377; /* Gris azulado oscuro (Sutil y elegante) */
+  --text-secondary: #0c95ea; /* Azul del logo para destacar links */
   --text-tertiary: #64748b; /* Gris neutro para info secundaria */
-  --text-tittles: #014E7D;  /* Azul marino profundo (Orient) para títulos */
-  --text-subtittles: #F97316; /* Naranja enérgico pero balanceado */
-  --text-btn: #FFFFFF;      
-  --text-nav: #014E7D;      
-  
+  --text-tittles: #014e7d; /* Azul marino profundo (Orient) para títulos */
+  --text-subtittles: #f97316; /* Naranja enérgico pero balanceado */
+  --text-btn: #ffffff;
+  --text-nav: #014e7d;
+
   /* Acentos: El naranja ahora es un acento, no un bloque pesado */
-  --accent: #FF823C;        /* Naranja Atardecer (Acción principal) */
-  --accent-hover: #F97316;
-  --accent-secondary: #4AF0D8; /* Cian del logo para botones secundarios */
-  --accent-secondary-hover: #0C95EA;
-  
-  --border: #014E7D;        /* Bordes gris-azulados muy claros */
+  --accent: #ff823c; /* Naranja Atardecer (Acción principal) */
+  --accent-hover: #f97316;
+  --accent-secondary: #4af0d8; /* Cian del logo para botones secundarios */
+  --accent-secondary-hover: #0c95ea;
+
+  --border: #014e7d; /* Bordes gris-azulados muy claros */
   --map-filter: brightness(1.1) contrast(1) saturate(1.1);
 
   /* Gradients: Mezcla aireada de azul y naranja */
-  --gradient: linear-gradient(135deg, #FFFAF5 0%, #FFF1E6 100%); /* Fondo degradado suave */
-  --gradient-secondary: linear-gradient(135deg, #0C95EA 0%, #4AF0D8 100%); /* El alma del logo */
-  --gradient-tertiary: linear-gradient(to top, #FFFFFF, #F0F9FF, #FFFFFF);
-  
+  --gradient: linear-gradient(
+    135deg,
+    #fffaf5 0%,
+    #fff1e6 100%
+  ); /* Fondo degradado suave */
+  --gradient-secondary: linear-gradient(
+    135deg,
+    #0c95ea 0%,
+    #4af0d8 100%
+  ); /* El alma del logo */
+  --gradient-tertiary: linear-gradient(to top, #ffffff, #f0f9ff, #ffffff);
+
   --skeleton-base: #faad80;
-  --skeleton-shine: #FFFFFF;
-  --skeleton-border: #CBD5E1;
+  --skeleton-shine: #ffffff;
+  --skeleton-border: #cbd5e1;
+
+   --glow-1: #fffaf538;
+  --glow-2: #FFF1E6;
+  --glow-3: #FFF1E6;
 }
 
 /* html[data-theme="vibrant"] {
@@ -177,6 +195,8 @@ html[data-theme="vibrant"] {
 } */
 
 /* Clases reutilizables */
+
+
 .bg-theme {
   background-color: var(--bg);
 }
@@ -249,8 +269,18 @@ html[data-theme="vibrant"] {
 .bg-gradient-theme-tertiary {
   background-image: var(--gradient-tertiary);
 }
+
+.bg-gradient-theme-20 {
+  background-image: var(--gradient);
+}
+
+
+  
+/* body:has(.worldmap-container) .logo-shadow {
+  text-shadow: none !important;
+} */
 /* ----------------- Pattern de fondo ----------------- */
-.pattern {
+/* .pattern {
   position: absolute;
   top: 0;
   left: 0;
@@ -276,12 +306,12 @@ html[data-theme="vibrant"] {
     );
   background-blend-mode: overlay;
   background-size: cover;
-}
+} */
 
 /* ----------------- Aviones animados ----------------- */
-.pattern::before,
+/* .pattern::before,
 .pattern::after {
-  content: "\2708"; /* ✈ */
+  content: "\2708";
   position: absolute;
   font-size: 2rem;
   color: rgba(255, 255, 255, 0.6);
@@ -316,13 +346,13 @@ html[data-theme="vibrant"] {
   100% {
     transform: translateX(120vw) rotate(-360deg);
   }
-}
+} */
 
 /* ----------------- Globos animados ----------------- */
-.globo {
+/* .globo {
   position: absolute;
   font-size: 2.5rem;
-  color: rgba(255, 140, 0, 0.7); /* naranja/amarillo */
+  color: rgba(255, 140, 0, 0.7); 
   animation: float 8s ease-in-out infinite alternate;
 }
 
@@ -344,7 +374,7 @@ html[data-theme="vibrant"] {
   100% {
     transform: translateY(-30px) translateX(10px);
   }
-}
+} */
 
 .slide-in-blurred-top {
   -webkit-animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1)
@@ -506,7 +536,6 @@ html[data-theme="vibrant"] {
   }
 }
 
-
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -535,40 +564,54 @@ html[data-theme="vibrant"] {
   animation: shimmer 1.8s infinite;
 }
 
-
-
 /* ICONO MANO IZQUIERDA*/
 .hand-icon-left {
-  
   transform-origin: 50% 100%;
   animation: handSwipeLeft 1.5s infinite ease;
 }
 
 /* ANIMACIÓN MANO */
 @keyframes handSwipeLeft {
-  5% { transform: translateX(0px) rotate(0deg); }
-  25% { transform: translateX(0px) rotate(0deg); }
-  30% { transform: translateX(-4px) rotate(-25deg); }
-  50% { transform: translateX(0px) rotate(0deg); }
-  100% { transform: translateX(0px) rotate(0deg); }
+  5% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  30% {
+    transform: translateX(-4px) rotate(-25deg);
+  }
+  50% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(0px) rotate(0deg);
+  }
 }
-
 
 /* ICONO MANO DERECHA*/
 .hand-icon-right {
- 
   transform-origin: 50% 100%;
   animation: handSwipeRight 1.5s infinite ease;
 }
 
 @keyframes handSwipeRight {
-  5% { transform: translateX(0px) rotate(0deg); }
-  25% { transform: translateX(0px) rotate(0deg); }
-  30% { transform: translateX(4px) rotate(25deg); }
-  50% { transform: translateX(0px) rotate(0deg); }
-  100% { transform: translateX(0px) rotate(0deg); }
+  5% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  30% {
+    transform: translateX(4px) rotate(25deg);
+  }
+  50% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(0px) rotate(0deg);
+  }
 }
-
 
 /* ----------------- Glass Morph Card ----------------- */
 .glass-card {

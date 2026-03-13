@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/app/i18n/navigation";
 import { useTranslations } from "next-intl";
-
+import Image from "next/image";
 import { CircleFlag } from "react-circle-flags";
 // Components
 import ScrollIndicator from "@/components/ScrollIndicator";
 import ThemeSelector from "@/components/ThemeSelector";
+import TrueFocusLogo from "@/components/Navigation/TrueFocusLogo";
 import Logo from "@/components/Navigation/Logo";
 
 import {
@@ -48,6 +49,7 @@ const routes: Record<string, { [key in Locale]: string }> = {
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [logoChange, setLogoChange] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +68,7 @@ const Navigation = () => {
 
   const navItems = [
     { label: t("home"), href: routes.home[locale] },
-    { label: t("packages"), href: routes.packages[locale] }, 
+    { label: t("packages"), href: routes.packages[locale] },
     { label: t("destinations"), href: routes.destinations[locale] },
     { label: t("flights"), href: routes.flights[locale] },
     { label: t("offers"), href: routes.offers[locale] },
@@ -198,6 +200,14 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+    useEffect(() => {
+    const handleScroll = () => {
+      setLogoChange(window.scrollY > 1000);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   useEffect(() => {
     if (searchQuery.length >= 2) {
       const results = fuse.search(searchQuery);
@@ -272,15 +282,31 @@ const Navigation = () => {
 
   return (
     <>
-      <nav
-        className={`nav   backdrop-blur-[2px] fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out  ${
+      {/* <nav
+        className={`nav  backdrop-blur-[2px]  fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out  ${
           isScrolled
             ? " bg-gradient-theme text-theme shadow-md  "
-            : "text-theme-nav  "
+            : "text-theme-nav bg-gradient-theme-20  "
         }`}
         role="navigation"
-        aria-label="Navegación principal"
+        aria-label="Navegación
+         principal"
+      > */}
+      <nav
+        className={`nav fixed left-0 top-0 right-0 z-40 transition-all duration-500 ease-in-out backdrop-blur-[2px]  ${
+          isScrolled ? "text-theme bg-gradient-theme" : " text-theme-nav"
+        }`}
+        role="navigation"
+        aria-label="Navegación
+         principal"
       >
+        {/* <div
+          className={`absolute inset-0 transition-all duration-500 ${
+            isScrolled
+              ? "bg-gradient-theme opacity-100 "
+              : " bg-gradient-theme opacity-25   "
+          }`}
+        /> */}
         <div className="w-full mx-auto px-4  ">
           <div className="flex items-center justify-between h-16  ">
             <button
@@ -304,7 +330,22 @@ const Navigation = () => {
               onClick={() => setActiveItem("Home")}
               className="flex items-center gap-2 group cursor-pointer absolute left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
             >
-              <Logo isScrolled={isScrolled} />
+              {/* <Logo isScrolled={isScrolled} /> */}
+              
+          
+           {logoChange ? (<Logo isScrolled={logoChange} />  ) :
+
+              (<TrueFocusLogo
+                sentence="VIAJE SOAR"
+                focusClassName="bg-gradient-theme"
+                bgPadding={4}
+                manualMode={false}
+                blurAmount={2}
+                borderColor="#12f8dd" // fallback si wordColors no cubre alguna palabra
+                animationDuration={0.5}
+                pauseBetweenAnimations={1}
+                wordColors={["var(--text)", "var(--accent)"]} // "True" rojo, "Focus" cyan
+              />)  }
             </Link>
 
             {/* Área de íconos a la derecha */}
@@ -369,7 +410,7 @@ const Navigation = () => {
           <ScrollIndicator />
         </div>
       </nav>
-  {/*Search area */}
+      {/*Search area */}
       <div
         className={`fixed inset-0 z-50 transition-all duration-300 text-theme  ${
           isSearchOpen
@@ -455,7 +496,7 @@ const Navigation = () => {
           </div>
         </div>
       </div>
-  {/*Mobile nav */}
+      {/*Mobile nav */}
       <div
         className={`nav fixed inset-0 z-40 transition-all duration-500  ${
           isMobileMenuOpen
