@@ -25,12 +25,12 @@ const WorldMapLoader = () => {
 
   return (
     <div className="bg-gradient-theme min-h-screen flex flex-col items-center justify-center relative z-50">
-      <h1 className="slide-in-blurred-top z-50 absolute pb-[22rem] lg:pb-[25rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide  uppercase text-theme ">
+      {/* <h1 className="slide-in-blurred-top z-50 absolute pb-[22rem] lg:pb-[25rem] text-xl sm:text-2xl md:text-3xl font-semibold text-center tracking-wide  uppercase text-theme ">
         VIAJE
         <span className="animate-pulse accent ml-1">Soar</span>
-      </h1>
+      </h1> */}
 
-      <h2 className="slide-in-blurred-bottom z-50 absolute top-40 text-2xl sm:text-5xl md:text-3xl font-semibold text-center tracking-wide px-6 uppercase text-theme ">
+      <h2 className="slide-in-blurred-bottom z-50 absolute top-25 text-2xl sm:text-5xl md:text-3xl font-semibold text-center tracking-wide px-6 uppercase text-theme ">
         {t("soar1")}
         <span className=" accent animate-pulse  mr-1">Soar</span>
 

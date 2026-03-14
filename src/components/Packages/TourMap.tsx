@@ -52,10 +52,10 @@ const LINE = "#000000";
 
 function markerHtml(label: string): string {
   const pinIcon = renderToStaticMarkup(
-    <FaLocationPin size={30} style={{ color: "tomato", filter: "drop-shadow(0px 3px 6px rgba(0,0,0,.35))" }} />
+    <FaLocationPin size={30} style={{ color: "var(--bg)", filter: "drop-shadow(0px 3px 6px rgba(0,0,0,.35))" }} />
   );
   const heartIcon = renderToStaticMarkup(
-    <ImHeart size={12} style={{ color: "#fff" }} />
+    <ImHeart size={12} style={{ color: "tomato" }} />
   );
 
   return `

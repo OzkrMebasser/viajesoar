@@ -33,7 +33,7 @@ const Logo = ({ isScrolled, className = "" }: LogoProps) => {
 
   return (
     <div className={`flex items-center ${className} `}>
-      <div className="flex items-center  ">
+      <div className="flex items-center gap-[2px] ">
         {/* <Image
             src="/VIAJES-soar-logo-blues.png"
             alt="Logo"
@@ -57,7 +57,7 @@ const Logo = ({ isScrolled, className = "" }: LogoProps) => {
           >
             <span>VIAJE</span>
             <span
-              className={`soar ml-px  ${isScrolled ? "accent" : mounted ? getSoarText() : "text-[#01ac9d]"}`}
+              className={`soar ml-[2px]  ${isScrolled ? "accent" : mounted ? getSoarText() : "text-[#01ac9d]"}`}
             >
               SOAR
             </span>

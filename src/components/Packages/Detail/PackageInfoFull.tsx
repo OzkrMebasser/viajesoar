@@ -10,7 +10,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 
 // ── Subcomponents ──
 import PackageHero from "./PackageHero";
-import PackageSidebar from "./PackageSidebar";
+import PackageSidebar from "./Quote/PackageQuote";
 import ItineraryTab from "./tabs/ItineraryTab";
 import OptionalsTab from "./tabs/OptionalTab/OptionalsTab";
 import HotelsTab from "./tabs/HotelsTab";
