@@ -21,6 +21,7 @@ export interface Package {
   name: string;
   description: string | null;
   home_carousel_images: string[];
+  
   duration: string | null;
   price_from: number | null;
   taxes: number | null;
@@ -64,7 +65,7 @@ export interface Supplement {
 export interface PackageDetail extends Package {
   // Media
   images: string[];
-
+home_carousel_images: string[];
   // Duration (requeridos en detail)
   days: number | null;
   nights: number | null;
@@ -116,6 +117,6 @@ export interface DayItinerary {
 export interface HotelEntry {
   country: string;
   city: string;
-    hotels: string[];
+  hotels: string[];
   type?: string;
 }

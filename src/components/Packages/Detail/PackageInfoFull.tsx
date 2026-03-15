@@ -10,7 +10,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 
 // ── Subcomponents ──
 import PackageHero from "./PackageHero";
-import PackageSidebar from "./Quote/PackageQuote";
+import PricePanel from "@/components/Packages/Detail/Quote/PricePanel"
 import ItineraryTab from "./tabs/ItineraryTab";
 import OptionalsTab from "./tabs/OptionalTab/OptionalsTab";
 import HotelsTab from "./tabs/HotelsTab";
@@ -210,7 +210,7 @@ export default function PackageInfoFull({
             <PackageNotes notes={pkg.notes} locale={locale} className="mt-12" />
 
             {/* ── SIDEBAR ── */}
-            <PackageSidebar pkg={pkg} locale={locale} />
+          <PricePanel pkg={pkg} locale={locale} />
 
             {/* ── BACK ── */}
             <div className="mt-4">

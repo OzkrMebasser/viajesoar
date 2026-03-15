@@ -120,7 +120,13 @@ export default function PackageHero({ pkg, locale, onCotizar }: Props) {
                 </p>
               )}
             </div>
-            <ButtonGlower onClick={onCotizar}>
+            <ButtonGlower
+              onClick={() => {
+                document
+                  .getElementById("quote-form")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
               {t(locale, "Cotizar ahora", "Get a quote")}
             </ButtonGlower>
           </div>
@@ -137,8 +143,10 @@ export default function PackageHero({ pkg, locale, onCotizar }: Props) {
             images={pkg.home_carousel_images || []}
             title={pkg.name}
           /> */}
-          <ImageGalleryModal images={pkg.home_carousel_images || []}
-            title={pkg.name} />
+          <ImageGalleryModal
+            images={pkg.home_carousel_images || []}
+            title={pkg.name}
+          />
         </div>
       </div>
     </>

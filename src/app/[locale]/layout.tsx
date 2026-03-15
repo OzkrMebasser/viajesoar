@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { FavoritesProvider } from "@/lib/context/FavoritesProvider";
 import { ThemeProvider } from "@/lib/context/ThemeContext";
 import WhatsAppChat from "@/components/WhatsAppChat";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default async function LocaleLayout({
   children,
@@ -50,6 +51,8 @@ export default async function LocaleLayout({
           <AirplaneCursor />
           {/* <WorldMapLoader /> */}
           {children}
+          {/* <GoogleAnalytics gaId="G-pendiente agregar" /> */}
+
           <Footer />
         {/* </FavoritesProvider> */}
         <WhatsAppChat />

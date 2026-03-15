@@ -670,3 +670,37 @@ html[data-theme="vibrant"] {
 .glass-card:hover::after {
   left: 140%;
 }
+
+
+.phone-input-wrapper .PhoneInput {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-input-wrapper .PhoneInputCountry {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  border-radius: 2px;
+  padding: 0 8px;
+  color: var(--text);
+}
+
+.phone-input-wrapper .PhoneInputInput {
+  width: 100%;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  color: var(--text);
+  font-size: 0.875rem;
+  border-radius: 2px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 150ms;
+}
+
+.phone-input-wrapper .PhoneInputInput:focus {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.phone-input-wrapper .PhoneInputInput::placeholder {
+  color: color-mix(in srgb, var(--text) 25%, transparent);
+}
