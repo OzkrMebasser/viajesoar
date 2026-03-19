@@ -373,7 +373,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
         <div className="border-t border-theme px-4 py-8 lg:px-24">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-theme text-sm flex items-center gap-2">
-              © {new Date().getFullYear()}{" "}
+              © 2025 - {new Date().getFullYear()}{" "}
               <span className=" tracking-wider">
                 VIAJE<span className="accent ml-[1px]">SOAR </span>
               </span>{" "}

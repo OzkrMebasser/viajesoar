@@ -1,109 +1,97 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { SalesNotificationEmail } from "@/components/Emails/SalesNotificationEmail";
+import { ClientConfirmationEmail } from "@/components/Emails/ClientConfirmationEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function submitQuote(data: Record<string, unknown>) {
-  const supabase = await createClient();
+  // const supabase = await createClient();
+  // Cliente con service_role solo para este server action
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+  const { locale, ...insertData } = data;
 
-  const { error } = await supabase.from("quotes").insert(data);
+  const { error } = await supabase.from("quotes").insert(insertData);
+
   if (error) throw new Error(error.message);
+
+  // Delay para que el trigger genere el quote_number
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Buscar el registro más reciente de este email en los últimos 10 segundos
+  const tenSecondsAgo = new Date(Date.now() - 10000).toISOString();
+
+  const { data: quoteData } = await supabase
+    .from("quotes")
+    .select("quote_number")
+    .eq("email", insertData.email as string)
+    .gte("created_at", tenSecondsAgo)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  const quoteNumber = quoteData?.quote_number ?? null;
+
+  // console.log("insertData.email:", insertData.email);
+  // console.log("tenSecondsAgo:", tenSecondsAgo);
+  // console.log("quoteData:", quoteData);
+  // console.log("quoteNumber:", quoteNumber);
 
   // Correo interno a ventas
   await resend.emails.send({
-    // from: "onboarding@resend.dev",
-    from: "ViajeSOAR Cotizaciones <no-reply@viajesoar.com>",
+    from: "VIAJESOAR Cotizaciones <no-reply@viajesoar.com>",
     to: process.env.RESEND_TO!,
-    subject: `Nueva cotización — ${data.internal_pkg_id} ${data.package_name}`,
-    html: `
-      <h2>Nueva solicitud de cotización</h2>
-      <h3>Paquete</h3>
-      <p><strong>${data.package_name}</strong> (${data.internal_pkg_id})</p>
-      <h3>Cliente</h3>
-      <p><strong>Nombre:</strong> ${data.full_name}</p>
-      <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Teléfono:</strong> ${data.phone ?? "—"}</p>
-      <p><strong>Agencia:</strong> ${data.agency ?? "—"}</p>
-      <h3>Origen</h3>
-      <p><strong>País:</strong> ${data.country ?? "—"}</p>
-      <p><strong>Estado:</strong> ${data.state ?? "—"}</p>
-      <p><strong>Ciudad:</strong> ${data.municipality ?? "—"}</p>
-      <h3>Viaje</h3>
-      <p><strong>Fecha de salida:</strong> ${data.travel_date ?? "—"}</p>
-      <p><strong>Adultos:</strong> ${data.adults}</p>
-      <p><strong>Menores:</strong> ${data.children}</p>
-      <h3>Comentarios</h3>
-      <p>${data.message ?? "Sin comentarios"}</p>
-      <hr/>
-      <p style="color:#999;font-size:12px">
-        Newsletter: ${data.newsletter ? "Sí" : "No"} · 
-        Recibido: ${new Date().toLocaleString("es-MX")}
-      </p>
-    `,
+    subject: `Nueva cotización — ${quoteNumber ?? ""} ${data.package_name}, ${data.internal_pkg_id}`,
+    html: SalesNotificationEmail({
+      package_name: data.package_name as string,
+      internal_pkg_id: data.internal_pkg_id as string | null,
+      full_name: data.full_name as string,
+      email: data.email as string,
+      phone: data.phone as string | null,
+      agency: data.agency as string | null,
+      country: data.country as string | null,
+      state: data.state as string | null,
+      municipality: data.municipality as string | null,
+      travel_date: data.travel_date as string | null,
+      departure_date: data.departure_date as string | null,
+      adults: data.adults as number,
+      children: data.children as number,
+      message: data.message as string | null,
+      newsletter: data.newsletter as boolean,
+      trip_purpose: data.trip_purpose as string | null,
+      quote_number: quoteNumber,
+      locale: locale as string,
+    }),
   });
 
   // Confirmación al cliente
   if (data.email) {
     await resend.emails.send({
-      from: "ViajeSOAR <no-reply@viajesoar.com>",
-      // from: "onboarding@resend.dev",
+      from: "VIAJESOAR <no-reply@viajesoar.com>",
       to: data.email as string,
-      subject: `Recibimos tu solicitud — ${data.package_name}`,
-      html: `
-        <h2>¡Hola ${data.first_name}!</h2>
-        <p>Recibimos tu solicitud para <strong>${data.package_name}</strong>.</p>
-        <p>Uno de nuestros ejecutivos se pondrá en contacto contigo a la brevedad.</p>
-        <br/>
-        <p>Saludos,<br/>El equipo de ViajeSOAR</p>
-      `,
+      subject:
+        locale === "es"
+          ? `Recibimos tu solicitud — ${quoteNumber ?? ""} ${data.package_name}`
+          : `We received your request — ${quoteNumber ?? ""} ${data.package_name}`,
+      html: ClientConfirmationEmail({
+        first_name: data.first_name as string,
+        package_name: data.package_name as string,
+        internal_pkg_id: data.internal_pkg_id as string | null,
+        travel_date: data.travel_date as string | null,
+        departure_date: data.departure_date as string | null,
+        adults: data.adults as number,
+        children: data.children as number,
+        trip_purpose: data.trip_purpose as string | null,
+        locale: (locale as "es" | "en") ?? "es",
+        quote_number: quoteNumber,
+      }),
     });
   }
 
   return { success: true };
 }
-
-// "use server";
-
-// import { createClient } from "@/lib/supabase/server";
-// import { Resend } from "resend";
-
-// const resend = new Resend(process.env.RESEND_API_KEY);
-
-// export async function submitQuote(data: Record<string, unknown>) {
-//   const supabase = await createClient();
-
-//   const { error } = await supabase.from("quotes").insert(data);
-//   if (error) throw new Error(error.message);
-
-//   // Log para ver si la key está llegando
-//   console.log("RESEND_API_KEY:", process.env.RESEND_API_KEY ? "✓ existe" : "✗ undefined");
-//   console.log("RESEND_TO:", process.env.RESEND_TO ?? "✗ undefined");
-
-//   const { data: emailData, error: emailError } = await resend.emails.send({
-//     from: "onboarding@resend.dev",
-//     to: "ventas.viajesoar@gmail.com", // ← pon tu gmail directo aquí
-//     subject: `Test — ${data.package_name}`,
-//     html: `<p>Prueba de cotización para ${data.full_name}</p>`,
-//   });
-
-//   console.log("Resend response:", emailData);
-//   console.log("Resend error:", emailError);
-
-//   return { success: true };
-// }
-
-
-// "use server";
-
-// import { createClient } from "@/lib/supabase/server";
-
-// export async function submitQuote(data: Record<string, unknown>) {
-//   const supabase = await createClient();
-
-//   const { error } = await supabase.from("quotes").insert(data);
-
-//   if (error) throw new Error(error.message);
-//   return { success: true };
-// }

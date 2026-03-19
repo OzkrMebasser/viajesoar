@@ -39,8 +39,8 @@ export interface QuoteFormState {
   terms: boolean;
   newsletter: boolean;
   message: string;
-    travel_date: string;
-
+  travel_date: string;
+trip_purpose: string,
 }
 
 export const EMPTY_FORM: QuoteFormState = {
@@ -58,6 +58,7 @@ export const EMPTY_FORM: QuoteFormState = {
   terms: false,
   newsletter: false,
   message: "",
+  trip_purpose: "",
 };
 
 export const PRIORITY_CODES = ["MX", "US", "CA"];

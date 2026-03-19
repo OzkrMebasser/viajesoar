@@ -142,7 +142,6 @@ export function OriginStep({
             name="travel_date"
             title="travel_date"
             onChange={onChange}
-            required
             min={new Date().toISOString().split("T")[0]}
             className={inputClass}
           />
