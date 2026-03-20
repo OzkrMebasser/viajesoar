@@ -25,26 +25,43 @@ const quoteSchema = (locale: string, hasDepartures: boolean) =>
       .string()
       .min(
         1,
-        locale === "es" ? "El nombre es obligatorio" : "First name is required",
+        locale === "es"
+          ? "Por favor, indícanos tu nombre para poder contactarte"
+          : "Please tell us your name so we can contact you",
       ),
-    last_name: z
+
+    email: z
       .string()
       .min(
         1,
         locale === "es"
-          ? "El apellido es obligatorio"
-          : "Last name is required",
+          ? "Necesitamos tu correo para enviarte los detalles de tu cotización"
+          : "We need your email to send you your quote details",
+      )
+      .email(
+        locale === "es"
+          ? "Revisa tu correo, parece que no es válido"
+          : "Please check your email, it doesn’t look valid",
       ),
-    email: z
-      .string()
-      .min(1, locale === "es" ? "El email es obligatorio" : "Email is required")
-      .email(locale === "es" ? "El email no es válido" : "Email is not valid"),
+
     phone: z
       .string()
       .min(
         1,
-        locale === "es" ? "El teléfono es obligatorio" : "Phone is required",
+        locale === "es"
+          ? "Compártenos un número para poder darte seguimiento a tu solicitud"
+          : "Share a phone number so we can follow up on your request",
       ),
+
+    adults: z
+      .number()
+      .min(
+        1,
+        locale === "es"
+          ? "Indica cuántas personas viajan para calcular tu experiencia"
+          : "Tell us how many people are traveling to calculate your experience",
+      ),
+
     travel_date: hasDepartures
       ? z.string().optional()
       : z
@@ -52,34 +69,79 @@ const quoteSchema = (locale: string, hasDepartures: boolean) =>
           .min(
             1,
             locale === "es"
-              ? "La fecha de salida es obligatoria"
-              : "Departure date is required",
+              ? "Selecciona una fecha aproximada para proponerte las mejores opciones"
+              : "Select an approximate date so we can suggest the best options",
           ),
-    trip_purpose: z
-      .string()
-      .min(
-        1,
-        locale === "es"
-          ? "El motivo del viaje es obligatorio"
-          : "Trip purpose is required",
-      ),
+
     terms: z.literal(true, {
       errorMap: () => ({
         message:
           locale === "es"
-            ? "Debes aceptar los términos"
-            : "You must accept the terms",
+            ? "Para continuar, es necesario aceptar los términos y condiciones"
+            : "To continue, you need to accept the terms and conditions",
       }),
     }),
   });
+// const quoteSchema = (locale: string, hasDepartures: boolean) =>
+//   z.object({
+//     first_name: z
+//       .string()
+//       .min(
+//         1,
+//         locale === "es" ? "El nombre es obligatorio" : "First name is required",
+//       ),
+//     // last_name: z
+//     //   .string()
+//     //   .min(
+//     //     1,
+//     //     locale === "es"
+//     //       ? "El apellido es obligatorio"
+//     //       : "Last name is required",
+//     //   ),
+//     email: z
+//       .string()
+//       .min(1, locale === "es" ? "El email es obligatorio" : "Email is required")
+//       .email(locale === "es" ? "El email no es válido" : "Email is not valid"),
+//     phone: z
+//       .string()
+//       .min(
+//         1,
+//         locale === "es" ? "El teléfono es obligatorio" : "Phone is required",
+//       ),
+//     travel_date: hasDepartures
+//       ? z.string().optional()
+//       : z
+//           .string()
+//           .min(
+//             1,
+//             locale === "es"
+//               ? "Indica una fecha aproximada de viaje"
+//               : "Please provide an approximate travel date",
+//           ),
+//     // trip_purpose: z
+//     //   .string()
+//     //   .min(
+//     //     1,
+//     //     locale === "es"
+//     //       ? "El motivo del viaje es obligatorio"
+//     //       : "Trip purpose is required",
+//     //   ),
+//     terms: z.literal(true, {
+//       errorMap: () => ({
+//         message:
+//           locale === "es"
+//             ? "Debes aceptar los términos"
+//             : "You must accept the terms",
+//       }),
+//     }),
+//   });
 
 export default function QuoteForm({
   locale,
   packageName,
   internalPkgId,
   packageSlug,
-  priceFrom,
-  priceSingle,
+
   departures = [],
 }: QuoteFormProps) {
   const [selectedDeparture, setSelectedDeparture] = useState<Departure | null>(
@@ -125,11 +187,10 @@ export default function QuoteForm({
 
     const result = schema.safeParse({
       first_name: form.first_name,
-      last_name: form.last_name,
       email: form.email,
       phone: form.phone,
+      adults: form.adults,
       travel_date: dep?.date_start ?? form.travel_date,
-      trip_purpose: form.trip_purpose,
       terms: form.terms,
     });
 
@@ -159,6 +220,7 @@ export default function QuoteForm({
         last_name: form.last_name,
         email: form.email,
         phone: form.phone || null,
+        whatsapp: form.whatsapp || null,
         trip_purpose: form.trip_purpose || null,
         country: countryName || null,
         state: stateName || null,
@@ -196,8 +258,9 @@ export default function QuoteForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="px-6 py-6 space-y-6"
+      className="px-4 py-6 space-y-6"
       id="quote-form"
+      autoComplete="off"
     >
       <div className="border-b border-[var(--border)]/40 pb-4">
         <h3 className="text-[var(--accent)] font-bold text-base uppercase tracking-wider">
@@ -216,13 +279,15 @@ export default function QuoteForm({
           onSelect={setSelectedDeparture}
         />
       )}
-
       <ContactStep
         locale={locale}
         number={1 + stepOffset}
         form={form}
         onChange={handleChange}
         onPhoneChange={(val) => setForm((prev) => ({ ...prev, phone: val }))}
+        onWhatsappChange={(val) =>
+          setForm((prev) => ({ ...prev, whatsapp: val }))
+        }
       />
 
       <OriginStep

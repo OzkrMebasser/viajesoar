@@ -8,15 +8,22 @@ export function SubmitStep({
   status,
   errorMsg,
   termsAccepted,
+  allDone,
 }: {
   locale: Locale;
   number: number;
   status: QuoteStatus;
   errorMsg: string;
   termsAccepted: boolean;
+  allDone?: boolean;
 }) {
   return (
-    <Step number={number} label={t(locale, "Enviar solicitud", "Send request")}>
+    <Step number={number} label={t(locale, "Enviar solicitud", "Send request")} showStatus={false} >
+       {allDone && (
+        <p className="text-[var(--accent)]/70 text-xs text-center">
+          {t(locale, "✓ ¡Todo listo, ya puedes enviar!", "✓ All done, ready to submit!")}
+        </p>
+      )}
       {status === "error" && (
         <div className="flex items-center gap-2 text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded px-3 py-2">
           <FaExclamationCircle className="flex-shrink-0" />

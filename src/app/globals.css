@@ -42,7 +42,7 @@ body {
 
 :root {
   /* Valores por defecto (dark) */
-  --bg: #0f172a;
+  --bg: #141414;
   --bg-lighter: #0c1220;
   --bg-secondary: #1e293b;
   --bg-tertiary: #0e0f13;
@@ -66,7 +66,7 @@ body {
   --skeleton-base: #1e293b;
   --skeleton-shine: #2d3f55;
   --skeleton-border: var(--accent);
-
+  --select-bg: #080808;
   --glow-1: #0000003b;
   --glow-2: #0808082f;
   --glow-3: #0000007e;
@@ -103,7 +103,7 @@ html[data-theme="light"] {
   --accent-secondary-hover: #0f766e;
   --border: #8d8e91;
   --map-filter: brightness(0.9) contrast(1.05);
-
+  --select-bg: #f1f5f9;
   --gradient: linear-gradient(to bottom, #ffffff, #f1f5f9, #ffffff);
   --gradient-secondary: linear-gradient(to top, #ffffff, #dee6ee, #ffffff);
   --gradient-tertiary: linear-gradient(to bottom, #f1f5f9, #ffffff, #f1f5f9);
@@ -140,7 +140,7 @@ html[data-theme="vibrant"] {
 
   --border: #014e7d; /* Bordes gris-azulados muy claros */
   --map-filter: brightness(1.1) contrast(1) saturate(1.1);
-
+  --select-bg: #fff1e6;
   /* Gradients: Mezcla aireada de azul y naranja */
   --gradient: linear-gradient(
     135deg,
@@ -274,11 +274,60 @@ html[data-theme="vibrant"] {
   background-image: var(--gradient);
 }
 
+/* Apariencia nativa quitada */
+select {
+  background-color: transparent !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
 
-  
-/* body:has(.worldmap-container) .logo-shadow {
-  text-shadow: none !important;
-} */
+/* Select con valor */
+select[data-has-value="true"] {
+  background-color: color-mix(in srgb, var(--gradient) 5%, transparent) !important;
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent) !important;
+}
+
+/* Input/textarea con valor */
+input:not(:placeholder-shown),
+textarea:not(:placeholder-shown) {
+  background-color: color-mix(in srgb, var(--gradient) 5%, transparent) !important;
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent) !important;
+}
+
+/* Autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text) !important;
+  -webkit-box-shadow: 0 0 0px 9999px var(--gradient)  inset !important;
+  box-shadow: 0 0 0px 9999px var(--gradient)  inset !important;
+  caret-color: var(--text);
+}
+
+/* Options dropdown */
+select option {
+  background-color: var(--select-bg) !important;
+  color: var(--text) !important;
+}
+
+/* Hover y focus estandarizado */
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent) !important;
+}
+ 
+
+
+
 /* ----------------- Pattern de fondo ----------------- */
 /* .pattern {
   position: absolute;

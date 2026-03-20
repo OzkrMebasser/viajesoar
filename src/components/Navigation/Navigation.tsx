@@ -200,7 +200,7 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       setLogoChange(window.scrollY > 1000);
     };
@@ -331,21 +331,22 @@ const Navigation = () => {
               className="flex items-center gap-2 group cursor-pointer absolute left-1/2 transform -translate-x-1/2 z-[10000] pointer-events-auto"
             >
               {/* <Logo isScrolled={isScrolled} /> */}
-              
-          
-           {logoChange ? (<Logo isScrolled={logoChange} />  ) :
 
-              (<TrueFocusLogo
-                sentence="VIAJE SOAR"
-                focusClassName="bg-gradient-theme"
-                bgPadding={4}
-                manualMode={false}
-                blurAmount={2}
-                borderColor="#12f8dd" // fallback si wordColors no cubre alguna palabra
-                animationDuration={0.5}
-                pauseBetweenAnimations={1}
-                wordColors={["var(--text)", "var(--accent)"]} // "True" rojo, "Focus" cyan
-              />)  }
+              {logoChange ? (
+                <Logo isScrolled={logoChange} />
+              ) : (
+                <TrueFocusLogo
+                  sentence="VIAJE SOAR"
+                  focusClassName="bg-gradient-theme"
+                  bgPadding={4}
+                  manualMode={false}
+                  blurAmount={2}
+                  borderColor="#12f8dd" // fallback si wordColors no cubre alguna palabra
+                  animationDuration={0.5}
+                  pauseBetweenAnimations={1}
+                  wordColors={["var(--text)", "var(--accent)"]} // "True" rojo, "Focus" cyan
+                />
+              )}
             </Link>
 
             {/* Área de íconos a la derecha */}

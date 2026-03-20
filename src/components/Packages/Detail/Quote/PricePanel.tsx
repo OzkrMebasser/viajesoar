@@ -11,6 +11,7 @@ import {
 
 import type { PackageDetail, Supplement } from "@/types/packages";
 import QuoteForm from "./QuoteForm";
+import { SuccessScreen } from "./Details/SuccessScreen";
 
 type Locale = "es" | "en";
 const t = (locale: Locale, es: string, en: string) =>
@@ -65,6 +66,7 @@ export default function PricePanel({ pkg, locale }: Props) {
           packageSlug={pkg.slug}
           priceFrom={pkg.price_from}
           priceSingle={pkg.price_single}
+          
         />
       </div>
 
@@ -259,6 +261,7 @@ export default function PricePanel({ pkg, locale }: Props) {
           </div>
         )}
       </div>
+       
     </div>
   );
 }

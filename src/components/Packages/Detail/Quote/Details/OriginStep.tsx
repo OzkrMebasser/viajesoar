@@ -48,14 +48,21 @@ export function OriginStep({
       : [];
 
   return (
-    <Step number={number} label={t(locale, "Origen y fecha", "Origin & date")}>
+    <Step
+      number={number}
+      label={t(locale, "Origen y fecha", "Origin & date")}
+      completed={!!form.country && (hasDepartures ? true : !!form.travel_date)}
+      locale={locale}
+    >
       <Field icon={<FaGlobe />} label={t(locale, "País", "Country")}>
         <select
           name="country"
           value={form.country}
-          title="contry"
+          title="country"
+          data-has-value={!!form.country}
           onChange={(e) => onCountryChange(e.target.value)}
           className={inputClass}
+          
         >
           <option value="">
             {t(locale, "Seleccionar País", "Select Country")}
@@ -134,7 +141,7 @@ export function OriginStep({
       {!hasDepartures && (
         <Field
           icon={<FaCalendarAlt />}
-          label={t(locale, "Fecha de salida", "Departure date")}
+          label={t(locale, "Fecha estimada de viaje", "Estimated travel date")}
         >
           <input
             placeholder=""
@@ -145,6 +152,13 @@ export function OriginStep({
             min={new Date().toISOString().split("T")[0]}
             className={inputClass}
           />
+          <p className="text-xs text-[var(--text)]/40 mt-1">
+            {t(
+              locale,
+              "Aproximada, no tiene que ser exacta",
+              "Approximate, it doesn't have to be exact",
+            )}
+          </p>
         </Field>
       )}
     </Step>

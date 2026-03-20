@@ -192,7 +192,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   placeholder={t.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-theme text-theme placeholder-gray-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-theme text-theme  transition-colors"
                   required
                 />
               </div>

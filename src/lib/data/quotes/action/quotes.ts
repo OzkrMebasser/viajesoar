@@ -66,6 +66,7 @@ export async function submitQuote(data: Record<string, unknown>) {
       trip_purpose: data.trip_purpose as string | null,
       quote_number: quoteNumber,
       locale: locale as string,
+      whatsapp: data.whatsapp as string | null,
     }),
   });
 

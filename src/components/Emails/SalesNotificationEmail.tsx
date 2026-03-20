@@ -2,41 +2,45 @@
 // Correo interno a ventas — ViajeSOAR
 
 const purposeLabels: Record<string, { es: string; en: string }> = {
-  vacaciones:   { es: "Vacaciones",        en: "Vacation"       },
-  luna_de_miel: { es: "Luna de miel",      en: "Honeymoon"      },
-  aniversario:  { es: "Aniversario",       en: "Anniversary"    },
-  cumpleanos:   { es: "Cumpleaños",        en: "Birthday"       },
-  negocios:     { es: "Viaje de negocios", en: "Business trip"  },
-  familia:      { es: "Viaje en familia",  en: "Family trip"    },
-  graduacion:   { es: "Graduación",        en: "Graduation trip"},
-  otro:         { es: "Otro",              en: "Other"          },
+  vacaciones: { es: "Vacaciones", en: "Vacation" },
+  luna_de_miel: { es: "Luna de miel", en: "Honeymoon" },
+  aniversario: { es: "Aniversario", en: "Anniversary" },
+  cumpleanos: { es: "Cumpleaños", en: "Birthday" },
+  negocios: { es: "Viaje de negocios", en: "Business trip" },
+  familia: { es: "Viaje en familia", en: "Family trip" },
+  graduacion: { es: "Graduación", en: "Graduation trip" },
+  otro: { es: "Otro", en: "Other" },
 };
 
 interface SalesNotificationEmailProps {
-  package_name:     string;
+  package_name: string;
   internal_pkg_id?: string | null;
-  full_name:        string;
-  email:            string;
-  phone?:           string | null;
-  agency?:          string | null;
-  country?:         string | null;
-  state?:           string | null;
-  municipality?:    string | null;
-  travel_date?:     string | null;
-  adults:           number;
-  children:         number;
-  message?:         string | null;
-  newsletter:       boolean;
-  trip_purpose?:    string | null;
-  departure_date?:  string | null;
-  quote_number?:    string | null;
-  locale?:          string | null;
+  full_name: string;
+  email: string;
+  phone?: string | null;
+  whatsapp?: string | null;
+  agency?: string | null;
+  country?: string | null;
+  state?: string | null;
+  municipality?: string | null;
+  travel_date?: string | null;
+  adults: number;
+  children: number;
+  message?: string | null;
+  newsletter: boolean;
+  trip_purpose?: string | null;
+  departure_date?: string | null;
+  quote_number?: string | null;
+  locale?: string | null;
 }
 
 const ICONS = {
-  phone:    "https://res.cloudinary.com/dtsenvmdq/image/upload/v1773879673/phone-icon_tamjtx.png",
-  whatsapp: "https://res.cloudinary.com/dtsenvmdq/image/upload/v1773879949/whatsapp-logo_dk63wn.png",
-  email:    "https://res.cloudinary.com/dtsenvmdq/image/upload/v1773880895/email-icon_bqr8a6.png",
+  phone:
+    "https://res.cloudinary.com/dtsenvmdq/image/upload/v1773879673/phone-icon_tamjtx.png",
+  whatsapp:
+    "https://res.cloudinary.com/dtsenvmdq/image/upload/v1773879949/whatsapp-logo_dk63wn.png",
+  email:
+    "https://res.cloudinary.com/dtsenvmdq/image/upload/v1773880895/email-icon_bqr8a6.png",
 };
 
 const BRAND_IMAGE =
@@ -48,6 +52,7 @@ export function SalesNotificationEmail({
   full_name,
   email,
   phone,
+  whatsapp,
   country,
   state,
   municipality,
@@ -71,9 +76,9 @@ export function SalesNotificationEmail({
       ? new Date(
           (departure_date ?? travel_date)! + "T00:00:00",
         ).toLocaleDateString("es-MX", {
-          day:   "numeric",
+          day: "numeric",
           month: "long",
-          year:  "numeric",
+          year: "numeric",
         })
       : null;
 
@@ -145,12 +150,16 @@ export function SalesNotificationEmail({
                 <!-- Badges: pkg id + quote -->
                 <table cellpadding="0" cellspacing="0" style="margin:14px auto 0;">
                   <tr>
-                    ${internal_pkg_id
-                      ? `<td style="padding-right:8px;">${badge(internal_pkg_id, "#0891b2", "#ffffff")}</td>`
-                      : ""}
-                    ${quote_number
-                      ? `<td>${badge(quote_number, "#0c4a6e", "#ffffff")}</td>`
-                      : ""}
+                    ${
+                      internal_pkg_id
+                        ? `<td style="padding-right:8px;">${badge(internal_pkg_id, "#0891b2", "#ffffff")}</td>`
+                        : ""
+                    }
+                    ${
+                      quote_number
+                        ? `<td>${badge(quote_number, "#0c4a6e", "#ffffff")}</td>`
+                        : ""
+                    }
                   </tr>
                 </table>
 
@@ -167,12 +176,14 @@ export function SalesNotificationEmail({
                     <div style="color:#ffffff;font-size:11px;font-family:'Oswald',Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;">Paquete solicitado</div>
                     <div style="color:#ffffff;font-size:18px;font-weight:700;font-family:'Oswald',Arial,sans-serif;text-transform:uppercase;">✈ ${package_name}</div>
                   </td>
-                  ${travelDateFormatted
-                    ? `<td align="right" style="vertical-align:middle;">
+                  ${
+                    travelDateFormatted
+                      ? `<td align="right" style="vertical-align:middle;">
                         <div style="color:#e0f7fa;font-size:11px;font-family:'Oswald',Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;">Salida</div>
                         <div style="color:#ffffff;font-size:14px;font-family:'Oswald',Arial,sans-serif;">${travelDateFormatted}</div>
                       </td>`
-                    : ""}
+                      : ""
+                  }
                 </tr>
               </table>
             </td>
@@ -185,34 +196,37 @@ export function SalesNotificationEmail({
               <!-- 01 Cliente -->
               ${sectionTitle("01", "Cliente")}
               <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:6px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:4px;">
-                ${row("Nombre",   full_name)}
-                ${row("Email",    email)}
+                ${row("Nombre", full_name)}
+                ${row("Email", email)}
                 ${row("Teléfono", phone)}
-                ${row("Motivo",   purposeLabel)}
-                ${row("Idioma",   locale === "en" ? "Inglés" : "Español")}
+                ${row("WhatsApp", whatsapp)}
+                ${row("Motivo", purposeLabel)}
+                ${row("Idioma", locale === "en" ? "Inglés" : "Español")}
               </table>
 
               <!-- 02 Origen -->
               ${sectionTitle("02", "Origen")}
               <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:6px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:4px;">
-                ${row("País",    country)}
-                ${row("Estado",  state)}
-                ${row("Ciudad",  municipality)}
+                ${row("País", country)}
+                ${row("Estado", state)}
+                ${row("Ciudad", municipality)}
               </table>
 
               <!-- 03 Viaje -->
               ${sectionTitle("03", "Viaje")}
               <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:6px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:4px;">
                 ${row("Fecha de salida", travelDateFormatted)}
-                ${row("Adultos",         String(adults))}
-                ${row("Menores",         String(children))}
+                ${row("Adultos", String(adults))}
+                ${row("Menores", String(children))}
               </table>
 
               <!-- 04 Comentarios (condicional) -->
-              ${message
-                ? `${sectionTitle("04", "Comentarios del cliente")}
+              ${
+                message
+                  ? `${sectionTitle("04", "Comentarios del cliente")}
                    <div style="background:#f0f9ff;border-left:4px solid #0891b2;border-radius:0 8px 8px 0;padding:14px 18px;color:#1e293b;font-size:14px;font-family:'Oswald',Arial,sans-serif;line-height:1.7;margin-bottom:4px;">${message}</div>`
-                : ""}
+                  : ""
+              }
 
             </td>
           </tr>
@@ -231,20 +245,30 @@ export function SalesNotificationEmail({
                       <span style="vertical-align:middle;">Email</span>
                     </a>
                   </td>
-                  ${phone
-                    ? `<td style="padding:0 8px;">
-                        <a href="https://wa.me/${phone.replace(/\D/g, "")}" style="display:inline-block;background:#16a34a;color:#ffffff;font-size:12px;font-family:'Oswald',Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:9px 20px;border-radius:6px;">
-                          <img src="${ICONS.whatsapp}" alt="WhatsApp" width="14" height="14" style="display:inline-block;vertical-align:middle;margin-right:6px;filter:brightness(0) invert(1);" />
-                          <span style="vertical-align:middle;">WhatsApp</span>
-                        </a>
-                      </td>
-                      <td style="padding:0 8px;">
-                        <a href="tel:${phone.replace(/\s/g, "")}" style="display:inline-block;background:#0c4a6e;color:#ffffff;font-size:12px;font-family:'Oswald',Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:9px 20px;border-radius:6px;">
-                          <img src="${ICONS.phone}" alt="Llamar" width="14" height="14" style="display:inline-block;vertical-align:middle;margin-right:6px;filter:brightness(0) invert(1);" />
-                          <span style="vertical-align:middle;">Llamar</span>
-                        </a>
-                      </td>`
-                    : ""}
+                 ${
+                   whatsapp || phone
+                     ? `${
+                         whatsapp
+                           ? `<td style="padding:0 8px;">
+          <a href="https://wa.me/${whatsapp.replace(/\D/g, "")}" style="display:inline-block;background:#16a34a;color:#ffffff;font-size:12px;font-family:'Oswald',Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:9px 20px;border-radius:6px;">
+            <img src="${ICONS.whatsapp}" alt="WhatsApp" width="14" height="14" style="display:inline-block;vertical-align:middle;margin-right:6px;filter:brightness(0) invert(1);" />
+            <span style="vertical-align:middle;">WhatsApp</span>
+          </a>
+        </td>`
+                           : ""
+                       }
+    ${
+      phone
+        ? `<td style="padding:0 8px;">
+          <a href="tel:${phone.replace(/\s/g, "")}" style="display:inline-block;background:#0c4a6e;color:#ffffff;font-size:12px;font-family:'Oswald',Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:9px 20px;border-radius:6px;">
+            <img src="${ICONS.phone}" alt="Llamar" width="14" height="14" style="display:inline-block;vertical-align:middle;margin-right:6px;filter:brightness(0) invert(1);" />
+            <span style="vertical-align:middle;">Llamar</span>
+          </a>
+        </td>`
+        : ""
+    }`
+                     : ""
+                 }
                 </tr>
               </table>
             </td>

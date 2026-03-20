@@ -1,19 +1,21 @@
-// next.config.js
+import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/app/i18n/request.ts');
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-    allowedDevOrigins: [
-    "http://localhost:3000",
-    "http://192.168.100.6:3000",
-    "firebasestorage.googleapis.com"
+const nextConfig: NextConfig = {
+  allowedDevOrigins: [
+    "localhost",
+    "192.168.100.6",
   ],
-  images:{
-    
-  }
-  
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);

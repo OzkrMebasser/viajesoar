@@ -30,6 +30,7 @@ export interface QuoteFormState {
   last_name: string;
   email: string;
   phone: string;
+  whatsapp: string;
   agency: string;
   country: string;
   state: string;
@@ -40,7 +41,7 @@ export interface QuoteFormState {
   newsletter: boolean;
   message: string;
   travel_date: string;
-trip_purpose: string,
+ trip_purpose: string,
 }
 
 export const EMPTY_FORM: QuoteFormState = {
@@ -48,12 +49,13 @@ export const EMPTY_FORM: QuoteFormState = {
   last_name: "",
   email: "",
   phone: "",
+  whatsapp: "",
   agency: "",
   country: "",
   state: "",
   municipality: "",
    travel_date: "",
-  adults: 1,
+  adults: 0,
   children: 0,
   terms: false,
   newsletter: false,
@@ -64,8 +66,8 @@ export const EMPTY_FORM: QuoteFormState = {
 export const PRIORITY_CODES = ["MX", "US", "CA"];
 
 export const inputClass = `
-  w-full bg-(--bg-tertiary)/60 border border-[var(--border)]/30
-  text-[var(--text)] text-sm
+  w-full bg-transparent border border-[var(--border)]
+  text-[var(--text)] text-sm appearance-none
   rounded-sm px-3 py-2
   placeholder:text-[var(--text)]/25
   focus:outline-none focus:border-[var(--accent)]/60
@@ -78,3 +80,7 @@ export function formatDate(dateStr: string, locale: Locale) {
     { day: "numeric", month: "long", year: "numeric" },
   );
 }
+
+// en types/quote.ts
+// export const selectClass = (value: string) =>
+//   `${inputClass} ${value && value !== "" ? "has-value" : ""}`;

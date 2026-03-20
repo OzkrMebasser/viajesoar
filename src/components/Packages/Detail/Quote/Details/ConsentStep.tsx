@@ -15,7 +15,7 @@ export function ConsentStep({
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }) {
   return (
-    <Step number={number} label={t(locale, "Comentarios y consentimiento", "Comments & consent")}>
+    <Step number={number} label={t(locale, "Comentarios y consentimiento", "Comments & consent")} completed={form.terms}  locale={locale} >
       <Field icon={<FaCommentDots />} label={t(locale, "Comentarios", "Comments")}>
         <textarea
           name="message" value={form.message}

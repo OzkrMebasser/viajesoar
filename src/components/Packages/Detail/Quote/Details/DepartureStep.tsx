@@ -20,7 +20,7 @@ export function DepartureStep({
     : null;
 
   return (
-    <Step number={number} label={t(locale, "Selecciona tu salida", "Select your departure")}>
+    <Step number={number} label={t(locale, "Selecciona tu salida", "Select your departure")}  >
       <div className="space-y-2">
         {departures.map((d) => {
           const isSelected = selectedDeparture?.id === d.id;
