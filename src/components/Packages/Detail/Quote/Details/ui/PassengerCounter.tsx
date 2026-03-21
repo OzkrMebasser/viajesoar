@@ -2,32 +2,21 @@ import { useState } from "react";
 
 export function PassengerCounter({
   label,
-  name,
   value,
   min = 0,
   onChange,
   optional = false,
 }: {
   label: string;
-  name: string;
   value: number;
   min?: number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: number) => void;  // ← directo, sin evento
   optional?: boolean;
 }) {
   const [enabled, setEnabled] = useState(false);
 
-  const dispatch = (next: number) => {
-    const event = {
-      target: { name, value: String(next), type: "number" },
-    } as React.ChangeEvent<HTMLInputElement>;
-    onChange(event);
-  };
-
   const handleToggle = () => {
-    if (enabled) {
-      dispatch(0); // reset a 0 al desactivar
-    }
+    if (enabled) onChange(0);
     setEnabled((prev) => !prev);
   };
 
@@ -52,7 +41,7 @@ export function PassengerCounter({
         <div className="flex items-center justify-between gap-2">
           <button
             type="button"
-            onClick={() => dispatch(Math.max(min, value - 1))}
+            onClick={() => onChange(Math.max(min, value - 1))}
             className="w-7 h-7 rounded-sm bg-[var(--accent)]/10 text-[var(--accent)] font-bold text-base hover:bg-[var(--accent)]/20 transition-colors flex items-center justify-center"
           >
             −
@@ -62,7 +51,7 @@ export function PassengerCounter({
           </span>
           <button
             type="button"
-            onClick={() => dispatch(Math.min(20, value + 1))}
+            onClick={() => onChange(Math.min(20, value + 1))}
             className="w-7 h-7 rounded-sm bg-[var(--accent)]/10 text-[var(--accent)] font-bold text-base hover:bg-[var(--accent)]/20 transition-colors flex items-center justify-center"
           >
             +

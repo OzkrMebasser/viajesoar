@@ -13,31 +13,30 @@ export function PassengersStep({
   locale: Locale;
   number: number;
   form: QuoteFormState;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (field: "adults" | "children", value: number) => void;
 }) {
   return (
     <Step
       number={number}
       label={t(locale, "Pasajeros", "Passengers")}
-      completed={form.adults >= 1}  locale={locale} 
+      completed={form.adults >= 1}
+      locale={locale}
     >
       <div className="grid grid-cols-2 gap-3">
         <Field icon={<FaUser />} label={t(locale, "Adultos", "Adults")} required>
           <PassengerCounter
             label={t(locale, "Adultos", "Adults")}
-            name="adults"
             value={form.adults}
             min={1}
-            onChange={onChange}
+            onChange={(val) => onChange("adults", val)}
           />
         </Field>
         <Field icon={<FaUser />} label={t(locale, "Menores", "Children")}>
           <PassengerCounter
             label={t(locale, "Menores", "Children")}
-            name="children"
             value={form.children}
             min={0}
-            onChange={onChange}
+            onChange={(val) => onChange("children", val)}
             optional
           />
         </Field>
