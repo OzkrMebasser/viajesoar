@@ -17,6 +17,8 @@ import ButtonArrow from "./ui/ButtonArrow";
 
 type Locale = "es" | "en";
 
+
+
 const translations = {
   es: {
     quickLinks: "Enlaces Rápidos",
@@ -192,7 +194,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   placeholder={t.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-theme text-theme  transition-colors"
+                  className="input-base p-5"
                   required
                 />
               </div>

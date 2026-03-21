@@ -158,9 +158,9 @@ html[data-theme="vibrant"] {
   --skeleton-shine: #ffffff;
   --skeleton-border: #cbd5e1;
 
-   --glow-1: #fffaf538;
-  --glow-2: #FFF1E6;
-  --glow-3: #FFF1E6;
+  --glow-1: #fffaf538;
+  --glow-2: #fff1e6;
+  --glow-3: #fff1e6;
 }
 
 /* html[data-theme="vibrant"] {
@@ -195,7 +195,6 @@ html[data-theme="vibrant"] {
 } */
 
 /* Clases reutilizables */
-
 
 .bg-theme {
   background-color: var(--bg);
@@ -273,60 +272,12 @@ html[data-theme="vibrant"] {
 .bg-gradient-theme-20 {
   background-image: var(--gradient);
 }
-
 /* Apariencia nativa quitada */
 select {
   background-color: transparent !important;
   -webkit-appearance: none !important;
   appearance: none !important;
 }
-
-/* Select con valor */
-select[data-has-value="true"] {
-  background-color: color-mix(in srgb, var(--gradient) 5%, transparent) !important;
-  border-color: color-mix(in srgb, var(--accent) 20%, transparent) !important;
-}
-
-/* Input/textarea con valor */
-input:not(:placeholder-shown),
-textarea:not(:placeholder-shown) {
-  background-color: color-mix(in srgb, var(--gradient) 5%, transparent) !important;
-  border-color: color-mix(in srgb, var(--accent) 20%, transparent) !important;
-}
-
-/* Autofill */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-text-fill-color: var(--text) !important;
-  -webkit-box-shadow: 0 0 0px 9999px var(--gradient)  inset !important;
-  box-shadow: 0 0 0px 9999px var(--gradient)  inset !important;
-  caret-color: var(--text);
-}
-
-/* Options dropdown */
-select option {
-  background-color: var(--select-bg) !important;
-  color: var(--text) !important;
-}
-
-/* Hover y focus estandarizado */
-input:hover,
-textarea:hover,
-select:hover {
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none !important;
-  border-color: color-mix(in srgb, var(--accent) 60%, transparent) !important;
-}
- 
-
-
 
 /* ----------------- Pattern de fondo ----------------- */
 /* .pattern {
@@ -720,36 +671,195 @@ select:focus {
   left: 140%;
 }
 
-
-.phone-input-wrapper .PhoneInput {
-  display: flex;
-  gap: 8px;
-}
-
-.phone-input-wrapper .PhoneInputCountry {
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
-  border-radius: 2px;
-  padding: 0 8px;
-  color: var(--text);
-}
-
-.phone-input-wrapper .PhoneInputInput {
+.input-base {
   width: 100%;
   background: transparent;
-  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  border: 1px solid var(--border);
   color: var(--text);
   font-size: 0.875rem;
-  border-radius: 2px;
-  padding: 8px 12px;
-  outline: none;
+  padding: 12px 16px;
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
   transition: border-color 150ms;
+  outline: none;
 }
 
-.phone-input-wrapper .PhoneInputInput:focus {
-  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
-}
-
-.phone-input-wrapper .PhoneInputInput::placeholder {
+.input-base::placeholder {
   color: color-mix(in srgb, var(--text) 25%, transparent);
+}
+
+.input-base:not(:placeholder-shown) {
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.input-base:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.input-base:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.input-base:-webkit-autofill,
+.input-base:-webkit-autofill:hover,
+.input-base:-webkit-autofill:focus,
+.input-base:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text) !important;
+  -webkit-box-shadow: 0 0 0px 9999px var(--bg) inset !important;
+  box-shadow: 0 0 0px 9999px var(--bg) inset !important;
+  caret-color: var(--text);
+}
+
+select.input-base[data-has-value="true"] {
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Container principal */
+.react-international-phone-input-container {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  color: var(--text) !important;
+  font-size: 0.875rem !important;
+  outline: none !important;
+  transition: border-color 150ms !important;
+  --react-international-phone-height: 44.5px !important;
+}
+
+.react-international-phone-input-container:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+}
+
+.react-international-phone-input-container:focus-within {
+  border-color: var(--accent) !important;
+}
+
+/* Botón selector de país */
+.phone-input-base .react-international-phone-country-selector-button {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 8px !important;
+  cursor: pointer !important;
+  transition: background-color 150ms !important;
+}
+
+.phone-input-base .react-international-phone-country-selector-button:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+}
+
+/* Input */
+.phone-input-field {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: var(--text) !important;
+  font-size: 0.875rem !important;
+  width: 100% !important;
+  padding: 12px 16px !important;
+}
+
+/* Dropdown */
+.react-international-phone-country-selector-dropdown {
+  background: var(--bg) !important;
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent) !important;
+  border-radius: 4px !important;
+  z-index: 50 !important;
+}
+
+/* Search */
+.react-international-phone-country-selector-dropdown__search {
+  width: 100% !important;
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  color: var(--text) !important;
+  font-size: 0.875rem !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+}
+
+.react-international-phone-country-selector-dropdown__search:focus {
+  border-color: var(--accent) !important;
+}
+
+/* Opciones */
+.react-international-phone-country-selector-dropdown__list-item {
+  background: transparent !important;
+  color: var(--text) !important;
+  font-size: 0.875rem !important;
+  padding: 10px 12px 10px 22px !important;
+  border-radius: 2px !important;
+  cursor: pointer !important;
+  transition: background-color 150ms !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  color: var(--text) !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item--selected {
+  background: var(--accent) !important;
+  color: var(--text) !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item--focused {
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  color: var(--text) !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item-dial-code {
+  color: var(--text) !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item--selected
+  .react-international-phone-country-selector-dropdown__list-item-dial-code {
+  color: var(--text) !important;
+}
+
+/*Day picker */
+.rdp-root {
+  padding: 8px;
+  --rdp-accent-color: var(--accent) !important;
+  --rdp-accent-background-color: color-mix(
+    in srgb,
+    var(--accent) 15%,
+    transparent
+  ) !important;
+  color: var(--text) !important;
+}
+
+.rdp-day_button {
+  color: var(--text) !important;
+}
+
+.rdp-day_button:hover {
+  background: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+}
+
+.rdp-selected .rdp-day_button {
+  background: var(--accent) !important;
+  color: var(--bg) !important;
+}
+
+.rdp-disabled .rdp-day_button {
+  opacity: 0.3 !important;
+}
+
+.rdp-nav button {
+  color: var(--text) !important;
+}
+
+.rdp-nav button:hover {
+  background: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+}
+
+.rdp-month_caption {
+  color: var(--text) !important;
+}
+
+.rdp-weekday {
+  color: color-mix(in srgb, var(--text) 50%, transparent) !important;
 }

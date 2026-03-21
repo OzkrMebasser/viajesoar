@@ -1,3 +1,5 @@
+import { FaAsterisk } from "react-icons/fa";
+
 export function Field({
   icon,
   label,
@@ -13,10 +15,10 @@ export function Field({
 }) {
   return (
     <div className={`space-y-1  ${className ?? ""}`}>
-      <label className="flex items-center gap-2 text-[var(--text)]/50 text-xs uppercase tracking-wider mb-2">
-        <span className="text-[var(--accent)]">{icon}</span>
+      <label className="flex items-center gap-2 text-[var(--text)]/75 text-xs uppercase tracking-wider mb-2">
+        <span className="text-[var(--accent)] text-[14px]">{icon}</span>
         {label}
-        {required && <span className="text-[var(--accent)]">*</span>}
+        {required && <span className="text-[var(--accent)] text-[6px]"><FaAsterisk /></span>}
       </label>
       {children}
     </div>

@@ -65,14 +65,14 @@ export const EMPTY_FORM: QuoteFormState = {
 
 export const PRIORITY_CODES = ["MX", "US", "CA"];
 
-export const inputClass = `
-  w-full bg-transparent border border-[var(--border)]
-  text-[var(--text)] text-sm appearance-none
-  rounded-sm px-3 py-2
-  placeholder:text-[var(--text)]/25
-  focus:outline-none focus:border-[var(--accent)]/60
-  transition-colors duration-150
-`;
+// export const inputClass = `
+//   w-full pt-3 pb-3   bg-transparent border border-[var(--border)]
+//   text-[var(--text)] text-sm appearance-none
+//   rounded-sm px-3 py-2
+//   placeholder:text-[var(--text)]/25
+//   focus:outline-none focus:border-[var(--accent)] focus:border-1
+//   transition-colors duration-150
+// `;
 
 export function formatDate(dateStr: string, locale: Locale) {
   return new Date(dateStr + "T00:00:00").toLocaleDateString(

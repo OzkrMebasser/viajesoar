@@ -5,7 +5,7 @@ import {
   FaPlane,
   FaMapMarkerAlt,
   FaUsers,
-  FaClock,
+  
   FaSun,
 } from "react-icons/fa";
 
@@ -56,7 +56,7 @@ export default function PricePanel({ pkg, locale }: Props) {
   const supplements = pkg.supplements ?? [];
 
   return (
-    <div className="flex flex-col-reverse lg:flex-row gap-0 border border-[var(--border)]/40 rounded-sm overflow-hidden">
+    <div className="flex flex-col-reverse lg:flex-row lg:gap-2 border border-[var(--border)]/40 rounded-sm overflow-hidden mt-8">
       {/* ── FORM — 2/3 en lg ── */}
       <div className="w-full lg:w-2/3 border-t lg:border-t-0 lg:border-r border-[var(--border)]/40">
         <QuoteForm
@@ -71,7 +71,7 @@ export default function PricePanel({ pkg, locale }: Props) {
       </div>
 
       {/* ── PRICE PANEL — 1/3 en lg ── */}
-      <div className="w-full lg:w-1/3 backdrop-blur-md">
+      <div className="w-full lg:w-1/3 backdrop-blur-md space-y-12 ">
         {/* Header */}
         <div className="bg-white/5 border-b border-[var(--border)]/40 px-6 py-5">
           <h3 className="text-[var(--accent)] font-bold text-lg uppercase tracking-wider leading-tight">
@@ -116,11 +116,11 @@ export default function PricePanel({ pkg, locale }: Props) {
         </div>
 
         {/* ── Vigencia y depósito ── */}
-        {(pkg.prices_valid_until || pkg.deposit_amount) && (
+        {/* {(pkg.prices_valid_until || pkg.deposit_amount) && (
           <div className="px-6 py-4 border-b border-[var(--border)]/40 space-y-3">
             {pkg.prices_valid_until && (
               <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full px-3 py-1 text-xs">
-                <FaClock className="text-[10px]" />
+                <FaClock className="text-[50px]" />
                 {t(locale, "Vigente hasta", "Valid until")}{" "}
                 {new Date(pkg.prices_valid_until).toLocaleDateString(
                   locale === "es" ? "es-MX" : "en-US",
@@ -139,7 +139,7 @@ export default function PricePanel({ pkg, locale }: Props) {
               </div>
             )}
           </div>
-        )}
+        )} */}
 
         {/* ── Suplementos ── */}
         {supplements.length > 0 && (
@@ -166,7 +166,7 @@ export default function PricePanel({ pkg, locale }: Props) {
                 return (
                   <div
                     key={i}
-                    className="bg-white/5 border border-[var(--border)]/40 rounded-sm px-5 py-4 hover:border-[var(--accent)]/20 transition-colors"
+                    className="bg-[var(--accent)]/4 border border-[var(--border)]/40 rounded-sm px-5 py-4 hover:border-[var(--accent)]/20 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 space-y-1">
