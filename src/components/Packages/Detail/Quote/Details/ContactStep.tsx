@@ -49,7 +49,11 @@ export function ContactStep({
       <Step
         number={number}
         label={t(locale, "Datos de contacto", "Contact details")}
-        completed={!!form.first_name && !!form.email && !!form.phone}
+        completed={
+          !!form.first_name &&
+          form.email.includes("@") &&
+          form.phone.length >= 8
+        }
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
           {/*Nombres*/}
@@ -140,40 +144,6 @@ export function ContactStep({
                 { value: "otro", label: t(locale, "Otro", "Other") },
               ]}
             />
-            {/* <select
-            name="trip_purpose"
-            value={form.trip_purpose}
-            title="trip_purpose"
-            onChange={onChange}
-            className={inputClass}
-            autoComplete="off"
-          >
-            <option value="">
-              {t(locale, "Seleccionar motivo", "Select purpose")}
-            </option>
-            <option value="vacaciones">
-              {t(locale, "Vacaciones", "Vacation")}
-            </option>
-            <option value="luna_de_miel">
-              {t(locale, "Luna de miel", "Honeymoon")}
-            </option>
-            <option value="aniversario">
-              {t(locale, "Aniversario", "Anniversary")}
-            </option>
-            <option value="cumpleanos">
-              {t(locale, "Cumpleaños", "Birthday")}
-            </option>
-            <option value="negocios">
-              {t(locale, "Viaje de negocios", "Business trip")}
-            </option>
-            <option value="familia">
-              {t(locale, "Viaje en familia", "Family trip")}
-            </option>
-            <option value="graduacion">
-              {t(locale, "Graduación", "Graduation trip")}
-            </option>
-            <option value="otro">{t(locale, "Otro", "Other")}</option>
-          </select> */}
           </Field>
         </div>
 

@@ -10,7 +10,7 @@ export function PassengerCounter({
   label: string;
   value: number;
   min?: number;
-  onChange: (value: number) => void;  // ← directo, sin evento
+  onChange: (value: number) => void;  
   optional?: boolean;
 }) {
   const [enabled, setEnabled] = useState(false);

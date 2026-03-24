@@ -1,27 +1,31 @@
 import { useState, useEffect } from "react";
-import type { OptionalActivity } from "@/types/activities";
+import type { ActivityCardData } from "@/types/activities";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import BadgeGlower from "@/components/ui/BadgeGlower";
 import BadgeAccent from "@/components/ui/BadgeAccent";
 import { FaStar, FaImages, FaTimes, FaCheck } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
 
-import { MdOutlineTimer, MdOutlineWarningAmber } from "react-icons/md";
+import { MdOutlineTimer } from "react-icons/md";
 import { BorderBeam } from "@/components/ui/BorderBeam";
 import { PiApproximateEqualsBold, PiWarningCircleBold } from "react-icons/pi";
 import { BsWatch } from "react-icons/bs";
 
-import {
-  t,
-  DIFFICULTY_COLOR,
-  DIFFICULTY_LABEL,
-  CategoryIcon,
-  ACTIVITY_MODE_ICON,
-  ACTIVITY_MODE_LABEL,
-  type Locale,
-  type Difficulty,
-  type ActivityMode,
-} from "../OptionalsTab.utils";
+// import {
+//   t,
+//   DIFFICULTY_COLOR,
+//   DIFFICULTY_LABEL,
+//   CategoryIcon,
+//   ACTIVITY_MODE_ICON,
+//   ACTIVITY_MODE_LABEL,
+//   type Locale,
+//   type Difficulty,
+//   type ActivityMode,
+// } from "../OptionalsTab.utils";
+
+import { t, DIFFICULTY_COLOR, DIFFICULTY_LABEL, CategoryIcon,
+         ACTIVITY_MODE_ICON, ACTIVITY_MODE_LABEL } from "@/types/activities.utils";
+import type { Locale, Difficulty, ActivityMode } from "@/types/activities.utils";
 
 /* ─── INCLUSIONS MINI MODAL ───────────────────────────────────────────────── */
 function InclusionsModal({
@@ -29,7 +33,7 @@ function InclusionsModal({
   locale,
   onClose,
 }: {
-  opt: OptionalActivity;
+  opt: ActivityCardData;
   locale: Locale;
   onClose: () => void;
 }) {
@@ -106,7 +110,7 @@ function InclusionsModal({
 
         {opt.notes && (
           <div className="flex items-start gap-1.5 ">
-            <PiWarningCircleBold  className="text-amber-500 flex-shrink-0 mt-0.5 text-sm" />
+            <PiWarningCircleBold className="text-amber-500 flex-shrink-0 mt-0.5 text-sm" />
             <p className="text-(--text) text-[0.68rem] leading-snug ">
               {opt.notes}
             </p>
@@ -117,15 +121,15 @@ function InclusionsModal({
   );
 }
 
-/* ─── DESKTOP CARD ────────────────────────────────────────────────────────── */
-export default function DesktopCard({
+/* ─── DESKTOP CARD ACTIVITY ───────────────────────────────────────────────── */
+export default function DesktopCardActivity({
   opt,
   isActive,
   onClick,
   onOpenGallery,
   locale,
 }: {
-  opt: OptionalActivity;
+  opt: ActivityCardData;
   isActive: boolean;
   onClick: () => void;
   onOpenGallery: () => void;

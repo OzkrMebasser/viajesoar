@@ -38,25 +38,28 @@ export interface DestinationCountry {
   name: string;
   slug: string;
   description: string;
+   long_description?: string;
   image: string;
+  images: string[];
   region_id: string;
   order_index: number;
   is_active: boolean;
   // created_at: string;
 
 }
-
 export interface Destination {
   id: string;
   locale: string;
   name: string;
   country: string;
   image: string;
+  images: string[];       
   price: number;
   rating: number;
   reviews: number;
   duration: string;
   description: string;
+  long_description?: string;
   category: string;
   slug: string;
   highlights: string[];
@@ -64,7 +67,6 @@ export interface Destination {
   is_featured: boolean;
   is_active: boolean;
 }
-
 
 export interface DestinationSummary {
   id: string;

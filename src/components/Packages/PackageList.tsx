@@ -29,8 +29,8 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
-import ParticlesCanvas from "../ParticlesCanvas";
-import CardParticlesCanvas from "../CardParticlesCanvas";
+import ParticlesCanvas from "../ui/Particles/ParticlesCanvas";
+import CardParticlesCanvas from "../ui/Particles/CardParticlesCanvas";
 
 const iconMap: Record<string, React.ComponentType<any>> = {
   FaGlobeEurope,

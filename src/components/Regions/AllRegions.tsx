@@ -8,8 +8,8 @@ import type { DestinationRegion } from "@/types/destinations";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import SplitText from "@/components/SplitText";
 import ButtonArrow from "@/components/ui/ButtonArrow";
-import ParticlesCanvas from "../ParticlesCanvas";
-import CardParticlesCanvas from "../CardParticlesCanvas";
+import ParticlesCanvas from "../ui/Particles/ParticlesCanvas";
+import CardParticlesCanvas from "../ui/Particles/CardParticlesCanvas";
 
 import {
   FaGlobeEurope,
@@ -54,18 +54,21 @@ const regionHref = (locale: Locale, slug: string) =>
 export default function AllRegions({ locale, regions }: Props) {
   const [query, setQuery] = useState("");
 
-const normalize = (str: string) =>
-  str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const normalize = (str: string) =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
-const filtered = useMemo(() => {
-  if (!query.trim()) return regions;
-  const q = normalize(query);
-  return regions.filter(
-    (r) =>
-      normalize(r.name).includes(q) ||
-      normalize(r.description ?? "").includes(q),
-  );
-}, [query, regions]);
+  const filtered = useMemo(() => {
+    if (!query.trim()) return regions;
+    const q = normalize(query);
+    return regions.filter(
+      (r) =>
+        normalize(r.name).includes(q) ||
+        normalize(r.description ?? "").includes(q),
+    );
+  }, [query, regions]);
   // Hero: primera imagen de la primera región
   const heroImage =
     Array.isArray(regions[0]?.images) && regions[0].images.length > 0
@@ -151,7 +154,26 @@ const filtered = useMemo(() => {
       </div>
 
       {/* ── REGIONS GRID ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 bg-gradient-theme">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme">
+        {/* Section header */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-2">
+            <div
+              className={`w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]`}
+            />
+            <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
+              {t(locale, "Regiones", "Regions")}
+            </h2>
+          </div>
+          <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
+            {t(
+              locale,
+              "Explora destinos por región",
+              "Explore destinations by region",
+            )}
+          </p>
+        </div>
+
         {filtered.length === 0 ? (
           <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4">
             <MdTravelExplore className="text-white/20 text-6xl" />

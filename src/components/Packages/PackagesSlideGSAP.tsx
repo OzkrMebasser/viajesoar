@@ -6,7 +6,7 @@ import { FaSuitcase } from "react-icons/fa";
 // Components
 import SplitText from "@/components/SplitText";
 import ButtonGlower from "@/components/ui/ButtonGlower";
-import ParticlesCanvas from "@/components/ParticlesCanvas";
+import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 

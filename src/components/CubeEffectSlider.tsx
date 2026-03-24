@@ -12,7 +12,7 @@ import AOS from "aos";
 
 import "swiper/css";
 import "swiper/css/effect-cube";
-import ParticlesCanvas from "./ParticlesCanvas";
+import ParticlesCanvas from "./ui/Particles/ParticlesCanvas";
 import ButtonArrow from "./ui/ButtonArrow";
 import SplitTextVanilla from "./SplitTextVanilla";
 

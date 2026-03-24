@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/types/locale";
 import type { Destination } from "@/types/destinations";
+import type { DestinationActivity } from "@/types/activities";
 import type { PaginatedResult } from "@/types/pagination";
 
 const PAGE_SIZE = 9;
@@ -10,7 +11,7 @@ const PAGE_SIZE = 9;
    ===================================================== */
 export async function getCityBySlug(
   slug: string,
-  locale: Locale
+  locale: Locale,
 ): Promise<Destination | null> {
   const supabase = await createClient();
 
@@ -22,7 +23,6 @@ export async function getCityBySlug(
     .eq("is_active", true)
     .single();
 
-    console.log("Data from SSR", data)
   if (error || !data) {
     console.error("Error fetching city:", error);
     return null;
@@ -30,20 +30,58 @@ export async function getCityBySlug(
 
   return {
     ...data,
-    highlights: [
-      data.highlight_1,
-      data.highlight_2,
-      data.highlight_3,
-    ].filter(Boolean),
+    highlights: [data.highlight_1, data.highlight_2, data.highlight_3].filter(
+      Boolean,
+    ),
   };
 }
 
+// mapping highlights
+function mapHighlights(d: {
+  highlight_1?: string;
+  highlight_2?: string;
+  highlight_3?: string;
+}): string[] {
+  return [d.highlight_1, d.highlight_2, d.highlight_3]
+    .filter((h): h is string => Boolean(h))
+    .map((h) => h.trim());
+}
+
+export async function getDestinationsByCountry(
+  countryId: string,
+  locale: Locale,
+): Promise<Destination[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("destinations")
+    .select("*")
+    .eq("country_id", countryId)
+    .eq("locale", locale)
+    .eq("is_active", true)
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching cities:", error);
+    return [];
+  }
+
+  return (
+    data?.map((d) => ({
+      ...d,
+      images:
+        typeof d.images === "string" ? JSON.parse(d.images) : (d.images ?? []),
+      // highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(Boolean),
+      highlights: mapHighlights(d),
+    })) ?? []
+  );
+}
 /* =====================================================
    LISTADO PAGINADO DE DESTINOS / CIUDADES
    ===================================================== */
 export async function getDestinationsPaginated(
   locale: Locale,
-  page = 1
+  page = 1,
 ): Promise<PaginatedResult<Destination>> {
   const supabase = await createClient();
 
@@ -70,13 +108,9 @@ export async function getDestinationsPaginated(
   }
 
   const formatted =
-    data?.map(d => ({
+    data?.map((d) => ({
       ...d,
-      highlights: [
-        d.highlight_1,
-        d.highlight_2,
-        d.highlight_3,
-      ].filter(Boolean),
+      highlights: [d.highlight_1, d.highlight_2, d.highlight_3].filter(Boolean),
     })) ?? [];
 
   return {
@@ -86,4 +120,26 @@ export async function getDestinationsPaginated(
     total: count ?? 0,
     totalPages: Math.ceil((count ?? 0) / PAGE_SIZE),
   };
+}
+
+export async function getActivitiesByDestination(
+  destinationId: string,
+  locale: Locale,
+): Promise<DestinationActivity[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("destinations_activities")
+    .select("*")
+    .eq("destination_id", destinationId)
+    .eq("locale", locale)
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching activities:", error);
+    return [];
+  }
+
+  return data ?? [];
 }

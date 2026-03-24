@@ -1,6 +1,6 @@
 "use client";
 
-import ParticlesCanvas from "@/components/ParticlesCanvas";
+import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 
 export default function RegionsHomeSlideGSAPSkeleton() {
   return (

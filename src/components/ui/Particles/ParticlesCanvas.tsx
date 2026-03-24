@@ -37,7 +37,7 @@ const ParticlesCanvas: React.FC = () => {
     } else if (theme === "light") {
       colors = ["#0891b2", "#01ac9d", "#0d9488", "#0e7490", "#a8c7e6"];
     } else {
-      colors = ["#014e7d", "#4af0d8", "#7bd2ff", "#32ff7e", "#4af0d8"];
+      colors = ["#0c95ea", "#4af0d8", "#ff823c", "#f97316", "#7bd2ff"];
     }
 
     for (let i = 0; i < particleCount; i++) {

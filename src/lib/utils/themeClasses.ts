@@ -1,4 +1,4 @@
-// lib/utils/themeClasses.ts
+
 import type { ThemeName, ThemeClasses } from '@/types/tailwind';
 
 export const themeClasses: Record<ThemeName, ThemeClasses> = {

@@ -55,7 +55,9 @@ export interface DestinationActivity {
   locale: Locale;
   name: string;
   description: string;
-   notes: string;
+  description_sections: { subtitle: string; description: string }[] | null; // ← AGREGAR
+
+  notes: string;
   slug: string;
   category: string;
 
@@ -106,3 +108,35 @@ export interface DestinationActivity {
   created_at: string;
   updated_at: string | null;
 }
+
+// ─── BASE TYPE PARA LOS CARDS (campos usados por Desktop/MobileCardActivity) ─
+export interface ActivityCardData {
+  id: string;
+  name: string;
+  description: string;
+  description_sections: { subtitle: string; description: string }[] | null;
+  notes: string | null;
+
+  price: number | null;
+  currency: string | null;
+
+  cover_image: string | null;
+  photos: string[] | null;
+
+  category: string | null;
+  duration: string | null;
+  recommended_time: string | null;
+  difficulty_level: string | null;
+  activity_mode: string | null;
+
+  included: string[] | null;
+  not_included: string[] | null;
+
+  is_featured: boolean | null;
+}
+
+
+
+
+export type Difficulty = "easy" | "moderate" | "hard";
+export type ActivityMode = "group" | "private" | "semiPrivate" | "selfGuided";

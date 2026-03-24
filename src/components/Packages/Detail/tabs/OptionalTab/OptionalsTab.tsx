@@ -2,11 +2,16 @@
 
 import { useState, useRef, useEffect } from "react";
 import type { OptionalActivity } from "@/types/activities";
-import ImageGalleryModal from "@/components/Packages/Detail/ImageGalleryModal";
+import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import DesktopCard from "./TourCards/DesktopCard";
-import MobileCard from "./TourCards/MobileCard";
-import { t, type Locale } from "./OptionalsTab.utils";
+// import DesktopCard from "./TourCards/DesktopCard";
+// import MobileCard from "./TourCards/MobileCard";
+// import { t, type Locale } from "./OptionalsTab.utils";
+import DesktopCardActivity from "@/components/Activity/DesktopCardActivity";
+import MobileCardActivity from "@/components/Activity/MobileCardActivity";
+import { t, type Locale } from "@/types/activities.utils";
+
+
 
 /* ─── MAIN ────────────────────────────────────────────────────────────────── */
 interface Props {
@@ -133,13 +138,11 @@ export default function OptionalsTab({ locale, optionals }: Props) {
               const disabled =
                 dir === -1 ? active === 0 : active === optionals.length - 1;
               return (
-             
-
-<button
-  key={dir}
-  onClick={() => go(dir)}
-  disabled={disabled}
-  className={`
+                <button
+                  key={dir}
+                  onClick={() => go(dir)}
+                  disabled={disabled}
+                  className={`
     w-10 h-10 rounded-full flex items-center justify-center
     border border-[var(--border)] bg-white/[0.06] text-[var(--text)]
     text-xl cursor-pointer
@@ -147,9 +150,13 @@ export default function OptionalsTab({ locale, optionals }: Props) {
     transition-[background,color,border] duration-200
     ${disabled ? "opacity-20 cursor-not-allowed" : "opacity-100"}
   `}
->
-  {dir === -1 ? <FaChevronLeft size={14} /> : <FaChevronRight size={14} />}
-</button>
+                >
+                  {dir === -1 ? (
+                    <FaChevronLeft size={14} />
+                  ) : (
+                    <FaChevronRight size={14} />
+                  )}
+                </button>
               );
             })}
           </div>
@@ -171,7 +178,7 @@ export default function OptionalsTab({ locale, optionals }: Props) {
             }}
           >
             {optionals.map((opt, i) => (
-              <DesktopCard
+              <DesktopCardActivity
                 key={opt.id}
                 opt={opt}
                 isActive={active === i}
@@ -187,7 +194,7 @@ export default function OptionalsTab({ locale, optionals }: Props) {
             <div className="flex justify-center gap-1.5 mt-6">
               {optionals.map((_, i) => (
                 <button
-                 title="dot indicator"
+                  title="dot indicator"
                   key={i}
                   onClick={() => setActive(i)}
                   className={`
@@ -206,7 +213,7 @@ export default function OptionalsTab({ locale, optionals }: Props) {
       {isMobile && (
         <div className="flex flex-col gap-2.5">
           {optionals.map((opt, i) => (
-            <MobileCard
+            <MobileCardActivity
               key={opt.id}
               opt={opt}
               isActive={active === i}

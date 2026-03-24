@@ -1,8 +1,8 @@
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
-import ParticlesCanvas from "@/components/ParticlesCanvas";
+import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import PackagesImagesModal from "@/components/Packages/Detail/PackagesImagesModal";
-import ImageGalleryModal from "./ImageGalleryModal";
+import ImageGalleryModal from "../../ui/Modals/ImageGalleryModal";
 import SplitText from "@/components/SplitText";
 import { FaPlane, FaMoon, FaSun } from "react-icons/fa";
 import type { PackageDetail } from "@/types/packages";

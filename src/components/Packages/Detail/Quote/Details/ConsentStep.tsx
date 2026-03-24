@@ -2,6 +2,7 @@ import { FaCommentDots } from "react-icons/fa";
 import { type Locale, type QuoteFormState, t } from "@/types/quote";
 import { Step } from "./ui/Step";
 import { Field } from "./ui/Field";
+import { FaAsterisk } from "react-icons/fa";
 
 export function ConsentStep({
   locale,
@@ -58,7 +59,9 @@ export function ConsentStep({
               "Acepto términos y condiciones",
               "I accept terms and conditions",
             )}
-            <span className="text-[var(--accent)]"> *</span>
+            <span className="text-[var(--accent)]">
+              <FaAsterisk className="inline text-[6px] ml-2" />
+            </span>
           </span>
         </label>
         <label className="flex items-start gap-2 cursor-pointer group">

@@ -18,7 +18,7 @@ import type { Locale } from "@/types/locale";
 
 //components
 import SplitText from "@/components/SplitText";
-import ParticlesCanvas from "@/components/ParticlesCanvas";
+import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";

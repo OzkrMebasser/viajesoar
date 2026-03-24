@@ -9,20 +9,17 @@ interface Props {
 }
 
 export default async function AllDestinationsPage(props: Props) {
-  const locale = (await getLocale()) as Locale;
-  const params = await props.params;
 
-  const regions = await getAllRegions(params.locale);
+  const locale = (await getLocale()) as Locale;
+  const regions = await getAllRegions(locale);
 
   return (
     <main>
-      <AllRegions
-        locale={locale}
-        regions={regions}
-      />
+      <AllRegions locale={locale} regions={regions} />
     </main>
   );
 }
+
 
 // import Destinations from "@/components/Destinations";
 // import { getDestinationsPaginated } from "@/lib/data/destinations";
