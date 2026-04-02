@@ -8,6 +8,7 @@ import type { DestinationRegion } from "@/types/destinations";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import SplitText from "@/components/SplitText";
 import ButtonArrow from "@/components/ui/ButtonArrow";
+import ButtonGlower from "../ui/ButtonGlower";
 import ParticlesCanvas from "../ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "../ui/Particles/CardParticlesCanvas";
 
@@ -278,6 +279,13 @@ export default function AllRegions({ locale, regions }: Props) {
             })}
           </div>
         )}
+
+        {/*Go back to home*/}
+        <ButtonArrow
+          href={`/${locale}`}
+          className="mx-auto mt-12 mb-20 animate-pulse"
+          title={t(locale, "Regresar al Inicio", "Return to Home")}
+        ></ButtonArrow>
       </div>
     </div>
   );

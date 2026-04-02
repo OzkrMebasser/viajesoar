@@ -43,9 +43,10 @@ export default async function LocaleLayout({
       />
     </head>
   <body>
+    <NextIntlClientProvider messages={messages}>
     <FavoritesProvider>
     <ThemeProvider>
-      <NextIntlClientProvider messages={messages}>
+      
         {/* <FavoritesProvider> */}
           <Navigation />
           <AirplaneCursor />
@@ -56,9 +57,10 @@ export default async function LocaleLayout({
           <Footer />
         {/* </FavoritesProvider> */}
         <WhatsAppChat />
-      </NextIntlClientProvider>
+    
     </ThemeProvider>
     </FavoritesProvider>
+      </NextIntlClientProvider>
   </body>
 </html>
 

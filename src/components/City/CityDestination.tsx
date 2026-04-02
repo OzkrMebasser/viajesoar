@@ -19,6 +19,7 @@ import { MdTravelExplore } from "react-icons/md";
 
 interface Props {
   locale: Locale;
+  countryName: string;
   regionSlug: string;
   country: DestinationCountry;
   city: Destination;
@@ -27,6 +28,7 @@ interface Props {
 
 export default function CityDestination({
   locale,
+  countryName,
   regionSlug,
   country,
   city,
@@ -40,10 +42,14 @@ export default function CityDestination({
   const [galleryActivity, setGalleryActivity] =
     useState<DestinationActivity | null>(null);
 
+  const basePath = locale === "es" ? "destinos" : "destinations";
   const filtered = useMemo(() => {
     if (!query.trim()) return activities;
     const normalize = (str: string) =>
-      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
     const q = normalize(query);
     return activities.filter(
       (a) =>
@@ -55,7 +61,6 @@ export default function CityDestination({
 
   return (
     <div className="min-h-screen bg-gradient-theme">
-
       {/* Gallery modal */}
       <ImageGalleryModal
         headless
@@ -76,9 +81,17 @@ export default function CityDestination({
       <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
         <div className="absolute inset-0 z-0">
           {Array.isArray(city.images) && city.images.length > 0 ? (
-            <CardsSlideShow images={city.images} interval={5000} className="w-full h-full" />
+            <CardsSlideShow
+              images={city.images}
+              interval={5000}
+              className="w-full h-full"
+            />
           ) : city.image ? (
-            <img src={city.image} alt={city.name} className="w-full h-full object-cover" />
+            <img
+              src={city.image}
+              alt={city.name}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full bg-white/5" />
           )}
@@ -122,7 +135,9 @@ export default function CityDestination({
               {city.highlights.map((highlight, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="animate-pulse mt-[6px] w-1.5 h-1.5 bg-[var(--accent)]/60 shadow-[0_0_6px_var(--accent)] flex-shrink-0" />
-                  <span className="text-white/70 text-xs leading-relaxed">{highlight}</span>
+                  <span className="text-white/70 text-xs leading-relaxed">
+                    {highlight}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -144,7 +159,11 @@ export default function CityDestination({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={t(locale, "Buscar actividad...", "Search activity...")}
+              placeholder={t(
+                locale,
+                "Buscar actividad...",
+                "Search activity...",
+              )}
               className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
             />
             {query && (
@@ -177,7 +196,11 @@ export default function CityDestination({
             </h2>
           </div>
           <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
-            {t(locale, `Explora lo mejor de ${city.name}`, `Explore the best of ${city.name}`)}
+            {t(
+              locale,
+              `Explora lo mejor de ${city.name}`,
+              `Explore the best of ${city.name}`,
+            )}
           </p>
         </div>
 
@@ -187,14 +210,29 @@ export default function CityDestination({
             <MdTravelExplore className="text-white/20 text-6xl" />
             <p className="text-white/30 text-sm tracking-widest uppercase">
               {query
-                ? t(locale, "No se encontraron actividades", "No activities found")
-                : t(locale, "Aún no hay actividades disponibles en esta ciudad", "No activities available in this city yet")}
+                ? t(
+                    locale,
+                    "No se encontraron actividades",
+                    "No activities found",
+                  )
+                : t(
+                    locale,
+                    "Aún no hay actividades disponibles en esta ciudad",
+                    "No activities available in this city yet",
+                  )}
             </p>
             {query ? (
-              <ButtonArrow title={t(locale, "Limpiar búsqueda", "Clear search")} onClick={() => setQuery("")} />
+              <ButtonArrow
+                title={t(locale, "Limpiar búsqueda", "Clear search")}
+                onClick={() => setQuery("")}
+              />
             ) : (
               <p className="text-white/20 text-xs">
-                {t(locale, "Pronto agregaremos nuevas actividades ✈️", "We're adding new activities soon ✈️")}
+                {t(
+                  locale,
+                  "Pronto agregaremos nuevas actividades ✈️",
+                  "We're adding new activities soon ✈️",
+                )}
               </p>
             )}
           </div>
@@ -203,10 +241,12 @@ export default function CityDestination({
             {/* ── DESKTOP: accordion horizontal ── */}
             <div
               className="hidden md:flex gap-3 w-full"
-              style={{
-                "--card-open": "480px",
-                "--card-closed": "72px",
-              } as React.CSSProperties}
+              style={
+                {
+                  "--card-open": "480px",
+                  "--card-closed": "72px",
+                } as React.CSSProperties
+              }
             >
               {filtered.map((activity) => (
                 <DesktopCardActivity
@@ -239,6 +279,16 @@ export default function CityDestination({
             </div>
           </>
         )}
+        {/*Go back to all countries*/}
+        <ButtonArrow
+          href={`/${locale}/${basePath}/${regionSlug}/${country.slug}`}
+          className="mx-auto mt-12 mb-20 animate-pulse"
+          title={t(
+            locale,
+            `Regresar a más ciudades de ${countryName}`,
+            `Return to more cities in ${countryName}`,
+          )}
+        />
       </div>
     </div>
   );

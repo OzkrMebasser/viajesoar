@@ -28,6 +28,7 @@ export default async function CityDestinationPage({
   return (
     <CityDestination
       locale={locale}
+      countryName={country.name}
       regionSlug={regionSlug}
       country={country}
       city={city}

@@ -17,6 +17,7 @@ import { MdTravelExplore } from "react-icons/md";
 interface Props {
   locale: Locale;
   regionSlug: string;
+  regionName: string;
   country: DestinationCountry;
   cities: Destination[];
 }
@@ -27,11 +28,13 @@ const t = (locale: Locale, es: string, en: string) =>
 export default function CountryDestination({
   locale,
   regionSlug,
+  regionName,
   country,
   cities,
 }: Props) {
   const [query, setQuery] = useState("");
 
+  console.log(regionName)
   const filtered = useMemo(() => {
     if (!query.trim()) return cities;
     const normalize = (str: string) =>
@@ -160,12 +163,11 @@ export default function CountryDestination({
             )}
           </p>
         </div>
-
         {/* Empty state */}
         {filtered.length === 0 ? (
-          <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4">
-            <MdTravelExplore className="text-white/20 text-6xl" />
-            <p className="text-white/30 text-sm tracking-widest uppercase">
+          <div className="bg-white/5 border border-[var(--border)]/40 rounded-sm p-8 text-center">
+            <MdTravelExplore className="text-[var(--text)]/60 text-4xl mx-auto mb-3" />
+            <p className="text-[var(--text)]/60 text-sm">
               {query
                 ? t(locale, "No se encontraron ciudades", "No cities found")
                 : t(
@@ -299,7 +301,17 @@ export default function CountryDestination({
               </article>
             ))}
           </div>
-        )}
+        )}{" "}
+        {/*Go back to all countries*/}
+        <ButtonArrow
+          href={`/${locale}/${basePath}/${regionSlug}`}
+          className="mx-auto mt-12 mb-20 animate-pulse"
+          title={t(
+            locale,
+            `Regresar a mas países de ${regionName}`,
+            `Return to more countries in ${regionName}`,
+          )}
+        ></ButtonArrow>
       </div>
     </div>
   );

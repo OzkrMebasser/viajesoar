@@ -1,6 +1,7 @@
 // app/[locale]/destinos/[regionSlug]/page.tsx
 import RegionDestination from "@/components/Regions/RegionDestination";
-import { getRegionBySlug, getCountriesByRegion } from "@/lib/data/destinations/regions";
+import { getRegionBySlug, getCountriesByRegion, getAllRegions } from "@/lib/data/destinations/regions";
+
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import type { Locale } from "@/types/locale";
