@@ -11,15 +11,21 @@ import DesktopCardActivity from "@/components/Activity/DesktopCardActivity";
 import MobileCardActivity from "@/components/Activity/MobileCardActivity";
 import { t, type Locale } from "@/types/activities.utils";
 
-
-
 /* ─── MAIN ────────────────────────────────────────────────────────────────── */
 interface Props {
   locale: Locale;
   optionals: OptionalActivity[];
+  packageSlug: string;
 }
 
-export default function OptionalsTab({ locale, optionals }: Props) {
+export default function OptionalsTab({
+  locale,
+  optionals,
+  packageSlug,
+}: Props) {
+
+const basePath = locale === "es" ? "paquetes" : "packages";
+const activitiesPath = locale === "es" ? "actividades" : "activities"; 
   const [active, setActive] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [galleryActivity, setGalleryActivity] =
@@ -180,7 +186,10 @@ export default function OptionalsTab({ locale, optionals }: Props) {
             {optionals.map((opt, i) => (
               <DesktopCardActivity
                 key={opt.id}
-                opt={opt}
+                opt={{
+                  ...opt,
+               href: `/${locale}/${basePath}/${packageSlug}/${activitiesPath}/${opt.slug}`,
+                }}
                 isActive={active === i}
                 onClick={() => setActive(i)}
                 onOpenGallery={() => setGalleryActivity(opt)}
@@ -215,7 +224,10 @@ export default function OptionalsTab({ locale, optionals }: Props) {
           {optionals.map((opt, i) => (
             <MobileCardActivity
               key={opt.id}
-              opt={opt}
+              opt={{
+                ...opt,
+              href: `/${locale}/${basePath}/${packageSlug}/${activitiesPath}/${opt.slug}`,
+              }}
               isActive={active === i}
               onClick={() => setActive(active === i ? -1 : i)}
               onOpenGallery={() => setGalleryActivity(opt)}

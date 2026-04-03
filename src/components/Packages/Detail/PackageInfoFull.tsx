@@ -188,7 +188,7 @@ export default function PackageInfoFull({
               />
             )}
             {activeTab === "optionals" && (
-              <OptionalsTab locale={locale} optionals={optionals} />
+              <OptionalsTab locale={locale} optionals={optionals} packageSlug={pkg.slug} />
             )}
             {activeTab === "hotels" && (
               <HotelsTab hotels={hotels} locale={locale} />

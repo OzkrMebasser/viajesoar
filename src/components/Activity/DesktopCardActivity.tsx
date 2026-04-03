@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import type { ActivityCardData } from "@/types/activities";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import BadgeGlower from "@/components/ui/BadgeGlower";
@@ -23,9 +24,19 @@ import { BsWatch } from "react-icons/bs";
 //   type ActivityMode,
 // } from "../OptionalsTab.utils";
 
-import { t, DIFFICULTY_COLOR, DIFFICULTY_LABEL, CategoryIcon,
-         ACTIVITY_MODE_ICON, ACTIVITY_MODE_LABEL } from "@/types/activities.utils";
-import type { Locale, Difficulty, ActivityMode } from "@/types/activities.utils";
+import {
+  t,
+  DIFFICULTY_COLOR,
+  DIFFICULTY_LABEL,
+  CategoryIcon,
+  ACTIVITY_MODE_ICON,
+  ACTIVITY_MODE_LABEL,
+} from "@/types/activities.utils";
+import type {
+  Locale,
+  Difficulty,
+  ActivityMode,
+} from "@/types/activities.utils";
 
 /* ─── INCLUSIONS MINI MODAL ───────────────────────────────────────────────── */
 function InclusionsModal({
@@ -307,7 +318,7 @@ export default function DesktopCardActivity({
               <FaImages className="w-4 h-4" />
             </BadgeGlower>
           )}
-          {hasInclusions && (
+          {/* {hasInclusions && (
             <BadgeGlower
               onClick={(e) => {
                 e.stopPropagation();
@@ -318,6 +329,19 @@ export default function DesktopCardActivity({
               {t(locale, "Más detalles", "More details")}{" "}
               <TbListDetails className="text-white text-[1rem]" />
             </BadgeGlower>
+          )} */}
+          {/* Inclusions mini modal */}
+          {opt.href && (
+            <Link
+              href={opt.href}
+              onClick={(e) => e.stopPropagation()}
+              className="uppercase flex items-center gap-1.5"
+            >
+              <BadgeGlower className="uppercase flex items-center gap-1.5">
+                {t(locale, "Más detalles", "More details")}
+                <TbListDetails className="text-white text-[1rem]" />
+              </BadgeGlower>
+            </Link>
           )}
         </div>
       </div>

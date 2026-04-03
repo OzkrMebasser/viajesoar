@@ -220,8 +220,6 @@ function emptyPagination(page: number) {
 }
 
 
-
-
 export async function getSimilarPackages(
   locale: Locale,
   regionId: string | null,
@@ -263,6 +261,45 @@ export async function getSimilarPackages(
   }
 
   const { data: pkgs, error } = await query;
+
+  if (error || !pkgs?.length) return [];
+
+  return await hydrateLocations<Package>(pkgs);
+}
+
+
+export async function getPackagesByCity(
+  cityId: string,
+  locale: Locale,
+  limit = 6
+): Promise<Package[]> {
+  const supabase = await createClient();
+
+  const { data: pkgs, error } = await supabase
+    .from("packages")
+    .select(`
+      id,
+      slug,
+      name,
+      description,
+      home_carousel_images,
+      duration,
+      price_from,
+      taxes,
+      currency,
+      visited_cities,
+      visited_countries,
+      internal_pkg_id,
+      optional_activities,
+      days,
+      nights,
+      includes_flight,
+      region_id
+    `)
+    .eq("locale", locale)
+    .eq("is_active", true)
+    .contains("visited_cities", [cityId])  // 👈 busca donde el array contiene el cityId
+    .limit(limit);
 
   if (error || !pkgs?.length) return [];
 

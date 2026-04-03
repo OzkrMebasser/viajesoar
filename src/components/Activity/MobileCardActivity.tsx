@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import type { ActivityCardData } from "@/types/activities";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import BadgeGlower from "@/components/ui/BadgeGlower";
@@ -17,9 +18,19 @@ import { BsWatch } from "react-icons/bs";
 import { PiApproximateEqualsBold, PiWarningCircleBold } from "react-icons/pi";
 import { BorderBeam } from "@/components/ui/BorderBeam";
 
-import { t, DIFFICULTY_COLOR, DIFFICULTY_LABEL, CategoryIcon,
-         ACTIVITY_MODE_ICON, ACTIVITY_MODE_LABEL } from "@/types/activities.utils";
-import type { Locale, Difficulty, ActivityMode } from "@/types/activities.utils";
+import {
+  t,
+  DIFFICULTY_COLOR,
+  DIFFICULTY_LABEL,
+  CategoryIcon,
+  ACTIVITY_MODE_ICON,
+  ACTIVITY_MODE_LABEL,
+} from "@/types/activities.utils";
+import type {
+  Locale,
+  Difficulty,
+  ActivityMode,
+} from "@/types/activities.utils";
 
 /* ─── INCLUSIONS MINI MODAL ───────────────────────────────────────────────── */
 function InclusionsModal({
@@ -324,7 +335,7 @@ export default function MobileCardActivity({
                   <FaImages className="w-4 h-4" />
                 </BadgeGlower>
               )}
-              {hasInclusions && (
+              {/* {hasInclusions && (
                 <BadgeGlower
                   onClick={(e) => {
                     e.stopPropagation();
@@ -335,6 +346,18 @@ export default function MobileCardActivity({
                   {t(locale, "Más detalles", "More details")}{" "}
                   <TbListDetails className="text-white text-[1rem]" />
                 </BadgeGlower>
+              )} */}
+              {opt.href && (
+                <Link
+                  href={opt.href}
+                  onClick={(e) => e.stopPropagation()}
+                  className="uppercase flex items-center gap-1.5"
+                >
+                  <BadgeGlower className="uppercase flex items-center gap-1.5">
+                    {t(locale, "Más detalles", "More details")}
+                    <TbListDetails className="text-white text-[1rem]" />
+                  </BadgeGlower>
+                </Link>
               )}
             </div>
           </div>

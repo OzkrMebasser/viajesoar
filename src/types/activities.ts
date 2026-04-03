@@ -7,6 +7,7 @@ import type { Locale } from "@/types/locale";
 export interface OptionalActivity {
   id: string;
   name: string;
+  slug: string;
   locale: Locale;
   description: string;
   description_sections: { subtitle: string; description: string }[] | null;
@@ -116,6 +117,7 @@ export interface ActivityCardData {
   description: string;
   description_sections: { subtitle: string; description: string }[] | null;
   notes: string | null;
+  href?: string | null;
 
   price: number | null;
   currency: string | null;
@@ -134,7 +136,6 @@ export interface ActivityCardData {
 
   is_featured: boolean | null;
 }
-
 
 
 

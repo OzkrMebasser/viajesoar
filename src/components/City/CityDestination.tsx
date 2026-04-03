@@ -4,18 +4,44 @@ import { useState, useMemo } from "react";
 
 import type { DestinationCountry, Destination } from "@/types/destinations";
 import type { DestinationActivity } from "@/types/activities";
+import type { Package } from "@/types/packages";
 
 import SplitText from "@/components/SplitText";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
+import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
 
 import DesktopCardActivity from "@/components/Activity/DesktopCardActivity";
 import MobileCardActivity from "@/components/Activity/MobileCardActivity";
 import { t, type Locale } from "@/types/activities.utils";
 
-import { FaSearch, FaTimes, FaGlobe } from "react-icons/fa";
+import {
+  FaSearch,
+  FaTimes,
+  FaGlobe,
+  FaPlane,
+  FaMoon,
+  FaSun,
+  FaMapMarkerAlt,
+  FaGlobeEurope,
+  FaGlobeAmericas,
+  FaGlobeAsia,
+  FaGlobeAfrica,
+} from "react-icons/fa";
+import { GiEarthAmerica, GiPalmTree, GiAztecCalendarSun } from "react-icons/gi";
 import { MdTravelExplore } from "react-icons/md";
+
+const iconMap: Record<string, React.ComponentType<any>> = {
+  FaGlobeEurope,
+  MdTravelExplore,
+  GiEarthAmerica,
+  FaGlobeAsia,
+  FaGlobeAmericas,
+  GiPalmTree,
+  FaGlobeAfrica,
+  GiAztecCalendarSun,
+};
 
 interface Props {
   locale: Locale;
@@ -24,6 +50,7 @@ interface Props {
   country: DestinationCountry;
   city: Destination;
   activities: DestinationActivity[];
+  cityPackages: Package[];
 }
 
 export default function CityDestination({
@@ -33,6 +60,7 @@ export default function CityDestination({
   country,
   city,
   activities,
+  cityPackages,
 }: Props) {
   const [query, setQuery] = useState("");
   const [activeDesktop, setActiveDesktop] = useState<string | null>(
@@ -248,10 +276,23 @@ export default function CityDestination({
                 } as React.CSSProperties
               }
             >
-              {filtered.map((activity) => (
+              {/* {filtered.map((activity) => (
                 <DesktopCardActivity
                   key={activity.id}
                   opt={activity}
+                  isActive={activeDesktop === activity.id}
+                  onClick={() => setActiveDesktop(activity.id)}
+                  onOpenGallery={() => setGalleryActivity(activity)}
+                  locale={locale}
+                />
+              ))} */}
+              {filtered.map((activity) => (
+                <DesktopCardActivity
+                  key={activity.id}
+                  opt={{
+                    ...activity,
+                    href: `/${locale}/${basePath}/${regionSlug}/${country.slug}/${city.slug}/${activity.slug}`,
+                  }}
                   isActive={activeDesktop === activity.id}
                   onClick={() => setActiveDesktop(activity.id)}
                   onOpenGallery={() => setGalleryActivity(activity)}
@@ -265,13 +306,12 @@ export default function CityDestination({
               {filtered.map((activity) => (
                 <MobileCardActivity
                   key={activity.id}
-                  opt={activity}
-                  isActive={activeMobile === activity.id}
-                  onClick={() =>
-                    setActiveMobile((prev) =>
-                      prev === activity.id ? null : activity.id,
-                    )
-                  }
+                  opt={{
+                    ...activity,
+                    href: `/${locale}/${basePath}/${regionSlug}/${country.slug}/${city.slug}/${activity.slug}`,
+                  }}
+                  isActive={activeDesktop === activity.id}
+                  onClick={() => setActiveDesktop(activity.id)}
                   onOpenGallery={() => setGalleryActivity(activity)}
                   locale={locale}
                 />
@@ -279,7 +319,170 @@ export default function CityDestination({
             </div>
           </>
         )}
-        {/*Go back to all countries*/}
+
+        {/* ── PACKAGES ── */}
+        {cityPackages.length > 0 && (
+          <div className="mt-16">
+            <div className="mb-10">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]/40" />
+                <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
+                  {t(locale, "Paquetes Disponibles", "Available Packages")}
+                </h2>
+              </div>
+              <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
+                {t(
+                  locale,
+                  `Paquetes que incluyen ${city.name}`,
+                  `Packages that include ${city.name}`,
+                )}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cityPackages.map((pkg) => (
+                <article
+                  key={pkg.id}
+                  className="glass-card border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 group h-full flex flex-col"
+                >
+                  <div className="absolute inset-0 opacity-90 pointer-events-none">
+                    <CardParticlesCanvas />
+                  </div>
+
+                  {/* Image */}
+                  <div className="relative h-56 overflow-hidden flex-shrink-0">
+                    <CardsSlideShow
+                      images={pkg.home_carousel_images || []}
+                      interval={4000}
+                      className="w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none" />
+
+                    <div className="absolute top-3 left-3 pointer-events-none">
+                      <span className="text-[var(--accent)] text-[10px] tracking-[0.25em] uppercase font-semibold border border-white/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
+                        {pkg.internal_pkg_id ?? "VS-00000"}
+                      </span>
+                    </div>
+
+                    <div className="absolute bottom-3 left-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-4 py-2 pointer-events-none">
+                      <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-0.5">
+                        {t(locale, "Desde", "From")}
+                      </p>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-[var(--accent)] font-bold text-xl">
+                          ${Number(pkg.price_from).toLocaleString()}
+                        </span>
+                        <span className="text-white/50 text-xs">
+                          {pkg.currency}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5 flex flex-col flex-1">
+                    <SplitText
+                      text={pkg.name}
+                      className="font-bold text-lg uppercase leading-tight mb-2 text-[var(--accent)]"
+                      delay={25}
+                      duration={0.5}
+                      splitType="chars"
+                      from={{ opacity: 0, y: 20 }}
+                      to={{ opacity: 1, y: 0 }}
+                      textAlign="left"
+                    />
+
+                    {pkg.description && (
+                      <p className="text-[var(--text)]/80 text-sm leading-relaxed line-clamp-3 mb-4">
+                        {pkg.description}
+                      </p>
+                    )}
+
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      {pkg.days && (
+                        <div className="flex items-center gap-1.5 text-[var(--text)]/80 text-xs">
+                          <FaSun className="text-[var(--accent)]" />
+                          <span>
+                            <strong className="text-[var(--text)]">
+                              {pkg.days}
+                            </strong>{" "}
+                            {t(locale, "días", "days")}
+                          </span>
+                        </div>
+                      )}
+                      {pkg.days && pkg.nights && (
+                        <span className="text-[var(--accent)]/70">|</span>
+                      )}
+                      {pkg.nights && (
+                        <div className="flex items-center gap-1.5 text-[var(--text)]/80 text-xs">
+                          <FaMoon className="text-[var(--accent)]" />
+                          <span>
+                            <strong className="text-[var(--text)]">
+                              {pkg.nights}
+                            </strong>{" "}
+                            {t(locale, "noches", "nights")}
+                          </span>
+                        </div>
+                      )}
+                      {pkg.includes_flight && (
+                        <>
+                          <span className="text-[var(--accent)]/70">|</span>
+                          <div className="flex items-center gap-1.5 text-white/70 text-xs">
+                            <FaPlane className="text-[var(--accent)]" />
+                            <strong className="text-[var(--text)]">
+                              {t(locale, "Vuelo inc.", "Flight inc.")}
+                            </strong>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="border-t border-theme opacity-45 mb-4" />
+
+                    {pkg.region &&
+                      (() => {
+                        const IconComponent =
+                          iconMap[pkg.region.icon ?? ""] || MdTravelExplore;
+                        return (
+                          <div className="flex items-center gap-2 text-[12px] mb-3">
+                            <IconComponent className="text-[var(--accent)]" />
+                            <span className="uppercase tracking-[0.25em] text-theme font-bold">
+                              {pkg.region.name}
+                            </span>
+                          </div>
+                        );
+                      })()}
+
+                    {pkg.visited_cities?.length > 0 && (
+                      <div className="flex flex-col gap-1 text-xs text-[var(--accent)] mb-4">
+                        <div className="flex items-center gap-2">
+                          <FaMapMarkerAlt className="flex-shrink-0 text-[var(--accent)]" />
+                          <p className="text-theme text-[12px] uppercase tracking-wide">
+                            {t(locale, "Ciudades visitadas", "Visited Cities")}
+                          </p>
+                        </div>
+                        <div className="ml-6 flex flex-wrap gap-2 text-theme text-[12px]">
+                          {pkg.visited_cities.map((c) => (
+                            <span key={c.id}>- {c.name}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <ButtonArrow
+                      type="button"
+                      href={`/${locale === "es" ? "es/paquetes" : "en/packages"}/${pkg.slug}`}
+                      title={t(locale, "Ver paquete", "View package")}
+                    />
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Go back */}
         <ButtonArrow
           href={`/${locale}/${basePath}/${regionSlug}/${country.slug}`}
           className="mx-auto mt-12 mb-20 animate-pulse"
