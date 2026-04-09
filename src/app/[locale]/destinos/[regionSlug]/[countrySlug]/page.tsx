@@ -23,6 +23,7 @@ export default async function CountryPage({
   if (!country || !region) notFound();
 
   const cities = await getDestinationsByCountry(country.id, locale);
+  // console.log(cities)
 
   return (
     <CountryDestination

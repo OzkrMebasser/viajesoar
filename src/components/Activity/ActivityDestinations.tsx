@@ -5,7 +5,8 @@ import type { DestinationCountry, Destination } from "@/types/destinations";
 import type { DestinationActivity } from "@/types/activities";
 import { t } from "@/types/activities.utils";
 import { useRouter } from "next/navigation";
-
+import BadgeGlower from "@/components/ui/BadgeGlower";
+import BadgeAccent from "@/components/ui/BadgeAccent";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
@@ -23,7 +24,7 @@ interface Props {
   country: DestinationCountry;
   city: Destination;
   activity: DestinationActivity;
-   backHref?: string; 
+  backHref?: string;
 }
 
 export default function ActivityDestination({
@@ -34,7 +35,7 @@ export default function ActivityDestination({
   country,
   city,
   activity,
-   backHref, 
+  backHref,
 }: Props) {
   const basePath = locale === "es" ? "destinos" : "destinations";
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -58,7 +59,7 @@ export default function ActivityDestination({
       />
 
       {/* ── HERO ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+      <section className="relative h-[70vh] sm:h-[60vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
         <div className="absolute inset-0 z-0">
           {galleryImages.length > 0 ? (
             <CardsSlideShow
@@ -73,7 +74,8 @@ export default function ActivityDestination({
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10">
+        {/*Titulo de la excursion*/}
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 h-80 lg:h-full pb-16 lg:pt-28">
           {activity.category && (
             <div className="flex items-center gap-2 mb-4">
               <Ticket className="text-[var(--accent)] w-4 h-4" />
@@ -85,7 +87,7 @@ export default function ActivityDestination({
 
           <SplitText
             text={activity.name}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 uppercase "
             delay={25}
             duration={0.5}
             splitType="chars"
@@ -99,23 +101,24 @@ export default function ActivityDestination({
             {cityName}, {countryName}
           </p>
 
-          {activity.description && (
+          {/* {activity.description && (
             <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
               {activity.description}
             </div>
-          )}
+          )} */}
 
           {activity.price !== null && activity.price !== undefined && (
             <p className="text-white/70 text-sm flex items-center gap-1.5 mt-4">
-              <DollarSign className="text-[var(--accent)] w-4 h-4" />
-              {t(locale, "Desde", "From")} ${activity.price}
+              {t(locale, "Desde", "From")}
+              {/* {t(locale, "Desde", "From")} ${activity.price} */}
+              <BadgeAccent>$ {activity.price} USD</BadgeAccent>
             </p>
           )}
         </div>
       </section>
 
       {/* ── CONTENT ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-re">
         {/* Section header */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-2">
@@ -124,7 +127,7 @@ export default function ActivityDestination({
               {t(locale, "Detalles", "Details")}
             </h2>
           </div>
-          <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
+          <p className=" text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
             {t(
               locale,
               `Conoce más sobre ${activity.name}`,
@@ -134,7 +137,8 @@ export default function ActivityDestination({
         </div>
 
         {/* Description card */}
-        <div className="glass-card border border-white/10 rounded-sm p-6 mb-6">
+        <div 
+        className="mb-4 bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 hover:border-[var(--accent)]/20 transition-colors">
           <p className="text-[var(--text)]/80 text-sm leading-relaxed">
             {activity.description}
           </p>
@@ -143,7 +147,7 @@ export default function ActivityDestination({
         {/* Inclusions */}
         {((activity.included?.length ?? 0) > 0 ||
           (activity.not_included?.length ?? 0) > 0) && (
-          <div className="glass-card border border-white/10 rounded-sm p-6 mb-6">
+          <div className="mb-4 bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 hover:border-[var(--accent)]/20 transition-colors">
             <h3 className="text-theme-tittles font-bold text-sm uppercase tracking-widest mb-4">
               {t(locale, "Incluye / No incluye", "Includes / Not included")}
             </h3>
@@ -194,7 +198,7 @@ export default function ActivityDestination({
 
         {/* Notes */}
         {activity.notes && (
-          <div className="glass-card border border-amber-500/20 rounded-sm p-6 mb-6 flex items-start gap-3">
+          <div className="mb-4 bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 hover:border-[var(--accent)]/20 transition-colors">
             <span className="text-amber-500 text-lg flex-shrink-0">⚠</span>
             <p className="text-[var(--text)]/80 text-sm leading-relaxed">
               {activity.notes}

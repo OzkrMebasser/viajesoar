@@ -27,6 +27,8 @@ export default async function ActivityPage({
     getCountryBySlug(countrySlug, locale),
   ]);
 
+  // console.log(activity, city, country);
+
   if (!activity || !city || !country) notFound();
   // if (activity.destination_id !== city.id) notFound();
 
