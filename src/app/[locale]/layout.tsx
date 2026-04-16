@@ -27,42 +27,16 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-  <html lang={locale} suppressHydrationWarning>
-    <head>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            try {
-              var t = localStorage.getItem('theme');
-              if (t === 'light' || t === 'vibrant' || t === 'dark') {
-                document.documentElement.setAttribute('data-theme', t);
-              }
-            } catch(e) {}
-          `,
-        }}
-      />
-    </head>
-  <body>
     <NextIntlClientProvider messages={messages}>
-    <FavoritesProvider>
-    <ThemeProvider>
-      
-        {/* <FavoritesProvider> */}
+      <FavoritesProvider>
+        <ThemeProvider>
           <Navigation />
           <AirplaneCursor />
-          {/* <WorldMapLoader /> */}
           {children}
-          {/* <GoogleAnalytics gaId="G-pendiente agregar" /> */}
-
           <Footer />
-        {/* </FavoritesProvider> */}
-        <WhatsAppChat />
-    
-    </ThemeProvider>
-    </FavoritesProvider>
-      </NextIntlClientProvider>
-  </body>
-</html>
-
+          <WhatsAppChat />
+        </ThemeProvider>
+      </FavoritesProvider>
+    </NextIntlClientProvider>
   );
 }

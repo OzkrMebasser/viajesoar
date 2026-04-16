@@ -77,7 +77,7 @@ const Navigation = () => {
     { label: t("contact"), href: routes.contact[locale] },
   ];
 
-  // Mapeo basado en tu configuración de routing real
+
 
   const routeMapping: Record<Locale, Record<string, string>> = {
     es: {
@@ -97,7 +97,7 @@ const Navigation = () => {
       "/destinations": "/destinos",
       "/tours": "/tours",
       "/offers": "/ofertas",
-      "/blog": "/blog-es",
+      "/blog": "/blog",
       "/contact": "/contacto",
     },
   };
@@ -311,6 +311,7 @@ const Navigation = () => {
           <div className="flex items-center justify-between h-16  ">
             <button
               type="button"
+              title="Toggle menu"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

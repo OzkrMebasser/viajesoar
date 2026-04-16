@@ -24,6 +24,7 @@ interface FocusRect {
   height: number;
 }
 
+
 const TrueFocus: React.FC<TrueFocusProps> = ({
   sentence = 'True Focus',
   separator = ' ',
@@ -115,25 +116,54 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
     return () => cancelAnimationFrame(raf);
   }, [currentIndex]);
 
-  const allWordsRect = (() => {
-    if (!containerRef.current || wordRefs.current.length === 0) return { x: 0, y: 0, width: 0, height: 0 };
-    const parentRect = containerRef.current.getBoundingClientRect();
-    const rects = wordRefs.current
-      .filter(Boolean)
-      .map(el => el!.getBoundingClientRect());
-    if (rects.length === 0) return { x: 0, y: 0, width: 0, height: 0 };
-    const left   = Math.min(...rects.map(r => r.left));
-    const top    = Math.min(...rects.map(r => r.top));
-    const right  = Math.max(...rects.map(r => r.right));
-    const bottom = Math.max(...rects.map(r => r.bottom));
-    return {
-      x: left - parentRect.left,
-      y: top - parentRect.top,
-      width: right - left,
-      height: bottom - top,
-    };
-  })();
+  // const allWordsRect = (() => {
+  //   if (!containerRef.current || wordRefs.current.length === 0) return { x: 0, y: 0, width: 0, height: 0 };
+  //   const parentRect = containerRef.current.getBoundingClientRect();
+  //   const rects = wordRefs.current
+  //     .filter(Boolean)
+  //     .map(el => el!.getBoundingClientRect());
+  //   if (rects.length === 0) return { x: 0, y: 0, width: 0, height: 0 };
+  //   const left   = Math.min(...rects.map(r => r.left));
+  //   const top    = Math.min(...rects.map(r => r.top));
+  //   const right  = Math.max(...rects.map(r => r.right));
+  //   const bottom = Math.max(...rects.map(r => r.bottom));
+  //   return {
+  //     x: left - parentRect.left,
+  //     y: top - parentRect.top,
+  //     width: right - left,
+  //     height: bottom - top,
+  //   };
+  // })();
 
+  const imageRef = useRef<HTMLImageElement | null>(null);
+
+// Reemplaza el allWordsRect existente con este:
+const allWordsRect = (() => {
+  if (!containerRef.current) return { x: 0, y: 0, width: 0, height: 0 };
+  const parentRect = containerRef.current.getBoundingClientRect();
+  
+  const wordRects = wordRefs.current
+    .filter(Boolean)
+    .map(el => el!.getBoundingClientRect());
+  
+  // ← incluye la imagen en el cálculo
+  const imageRect = imageRef.current?.getBoundingClientRect();
+  const allRects = imageRect ? [...wordRects, imageRect] : wordRects;
+  
+  if (allRects.length === 0) return { x: 0, y: 0, width: 0, height: 0 };
+  
+  const left   = Math.min(...allRects.map(r => r.left));
+  const top    = Math.min(...allRects.map(r => r.top));
+  const right  = Math.max(...allRects.map(r => r.right));
+  const bottom = Math.max(...allRects.map(r => r.bottom));
+  
+  return {
+    x: left - parentRect.left,
+    y: top - parentRect.top,
+    width: right - left,
+    height: bottom - top,
+  };
+})();
   const handleMouseEnter = (index: number) => {
     if (manualMode) {
       setLastActiveIndex(index);
@@ -177,6 +207,7 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
       style={{ outline: 'none', userSelect: 'none' }}
     >
       <Image
+       ref={imageRef} 
         src="/VIAJES-soar-logo-blues.png"
         alt="Logo"
         width={90}

@@ -9,7 +9,21 @@ import RegionsHomeSlideGSAP from "@/components/Home/RegionsSlide/RegionsHomeSlid
 import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 import CubeEffectSlider from "@/components/CubeEffectSlider";
 
-// ... generateMetadata igual ...
+// ... Generate metadata based on locale
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
+  const { locale } = params;
+  
+
+  const title = locale === 'en' ? 'Welcome to VIAJESOAR' : 'Bienvenido a VIAJESOAR';
+  const description = locale === 'en' 
+    ? 'Discover amazing travel packages and tours around the world with VIAJESOAR.' 
+    : 'Descubre increíbles paquetes de viaje y tours alrededor del mundo con VIAJESOAR.';
+
+  return {
+    title,
+    description,
+  };
+}
 
 export default async function Home(props: { params: Promise<{ locale: Locale }> }) {
   const params = await props.params;
@@ -19,7 +33,7 @@ export default async function Home(props: { params: Promise<{ locale: Locale }> 
     getHeroDestinations(params.locale),
     getDestinationRegions(params.locale),
     getPackages(params.locale, 1),
-    getHomeFeaturedTours(params.locale), // ← AGREGAR AL PROMISE.ALL
+    getHomeFeaturedTours(params.locale), 
   ]);
 
   return (
@@ -27,7 +41,7 @@ export default async function Home(props: { params: Promise<{ locale: Locale }> 
       <HeroSlides locale={params.locale} data={heroData} />
       <RegionsHomeSlideGSAP locale={params.locale} regions={regionsData} />
       <PackagesSlideGSAP locale={params.locale} packages={packages} />
-      <CubeEffectSlider tours={toursData} /> {/* ← PASAR LA PROP */}
+      <CubeEffectSlider tours={toursData} /> 
     </div>
   );
 }
