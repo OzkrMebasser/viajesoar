@@ -21,15 +21,15 @@ export default async function Page({
 
   const [similarPackages, optionals] = await Promise.all([
     getSimilarPackages(locale, pkg.region_id ?? null, pkgSlug, 3),
-    hydrateOptionals(optionalIds, locale), // ← paralelo con similarPackages
+    hydrateOptionals(optionalIds, locale), 
   ]);
 
   return (
     <PackageInfoFull
       pkg={pkg}
-      locale={locale} // ← también fix: estabas hardcodeando "en"
+      locale={locale} 
       similarPackages={similarPackages}
-      optionals={optionals} // ← pasar
+      optionals={optionals} 
     />
   );
 }

@@ -2,15 +2,19 @@
 
 import type { Locale } from "@/types/locale";
 import type { DestinationCountry, Destination } from "@/types/destinations";
+import SimilarTours from "@/components/Activity/Tours/SimilarTours";
 import type { DestinationActivity } from "@/types/activities";
 import { t } from "@/types/activities.utils";
 import { useRouter } from "next/navigation";
-import BadgeGlower from "@/components/ui/BadgeGlower";
+import { IoTicket } from "react-icons/io5";
+import ButtonAccent from "@/components/ui/ButtonAccent";
 import BadgeAccent from "@/components/ui/BadgeAccent";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
 import SplitText from "@/components/SplitText";
+import { FaImages } from "react-icons/fa";
+import { RiArrowGoBackFill } from "react-icons/ri";
 
 import { MapPin, Ticket, DollarSign } from "lucide-react";
 import { FaGlobe } from "react-icons/fa";
@@ -21,10 +25,11 @@ interface Props {
   regionSlug: string;
   cityName: string;
   countryName: string;
-  country: DestinationCountry;
-  city: Destination;
+  country?: DestinationCountry | null; // ← opcional
+  city?: Destination | null;
   activity: DestinationActivity;
   backHref?: string;
+  similarTours?: DestinationActivity[];
 }
 
 export default function ActivityDestination({
@@ -36,6 +41,7 @@ export default function ActivityDestination({
   city,
   activity,
   backHref,
+  similarTours,
 }: Props) {
   const basePath = locale === "es" ? "destinos" : "destinations";
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -137,8 +143,7 @@ export default function ActivityDestination({
         </div>
 
         {/* Description card */}
-        <div 
-        className="mb-4 bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 hover:border-[var(--accent)]/20 transition-colors">
+        <div className="mb-4 bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 hover:border-[var(--accent)]/20 transition-colors">
           <p className="text-[var(--text)]/80 text-sm leading-relaxed">
             {activity.description}
           </p>
@@ -206,43 +211,49 @@ export default function ActivityDestination({
           </div>
         )}
 
-        {/* Gallery button */}
-        {galleryImages.length > 0 && (
-          <button
-            onClick={() => setGalleryOpen(true)}
-            className="mb-8 text-[var(--accent)] text-xs tracking-widest uppercase border border-[var(--accent)]/40 px-4 py-2 rounded-sm hover:bg-[var(--accent)]/10 transition-colors"
-          >
-            {t(
+        <div className="flex columns-3 flex-wrap">
+          {/* Gallery button */}
+          {galleryImages.length > 0 && (
+            <ButtonAccent
+              onClick={() => setGalleryOpen(true)}
+              className="mx-auto mt-4 mb-8 "
+              title={t(
+                locale,
+                `Ver galería (${galleryImages.length} fotos)`,
+                `View gallery (${galleryImages.length} photos)`,
+              )}
+              icon={FaImages}
+            />
+          )}{" "}
+          {/* Go back */}
+          <ButtonAccent
+            // onClick={backHref ? () => router.push(backHref) : () => router.back()}
+            className="mx-auto mt-4 mb-8 "
+            title={t(locale, "Comprar esta actividad", "Buy this activity")}
+            icon={IoTicket}
+          />
+          <ButtonAccent
+            onClick={
+              backHref ? () => router.push(backHref) : () => router.back()
+            }
+            className="mx-auto mt-4 mb-8 animate-pulse"
+            title={t(
               locale,
-              `Ver galería (${galleryImages.length} fotos)`,
-              `View gallery (${galleryImages.length} photos)`,
+              "Regresar a página anterior",
+              "Go back to previous page",
             )}
-          </button>
-        )}
-
+            icon={RiArrowGoBackFill}
+          />
+        </div>
         {/* Separator */}
-        <div className="border-t border-theme opacity-45 mb-8" />
-
-        {/* Go back */}
-        {/* <ButtonArrow
-          href={`/${locale}/${basePath}/${regionSlug}/${country.slug}/${city.slug}`}
-          className="mx-auto mt-4 mb-20 animate-pulse"
-          title={t(
-            locale,
-            `Regresar a más actividades de ${cityName}`,
-            `Return to more activities in ${cityName}`,
-          )}
-        /> */}
-
-        <ButtonArrow
-          onClick={backHref ? () => router.push(backHref) : () => router.back()}
-          className="mx-auto mt-4 mb-20 animate-pulse"
-          title={t(
-            locale,
-            "Regresar a página anterior",
-            "Go back to previous page",
-          )}
-        />
+        <div className="border-t border-theme opacity-45 " />
+        {similarTours && similarTours.length > 0 && (
+          <SimilarTours
+            tours={similarTours}
+            locale={locale}
+            cityName={cityName}
+          />
+        )}
       </div>
     </div>
   );

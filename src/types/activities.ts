@@ -39,7 +39,7 @@ export interface OptionalActivity {
   address: string | null;
 
   // Tags
-  tags: string[] | null;          // ← AGREGAR
+  tags: string[] | null; // ← AGREGAR
 
   // Flags
   is_featured: boolean | null;
@@ -95,7 +95,7 @@ export interface DestinationActivity {
   is_active: boolean;
   is_recommended: boolean | null;
   is_featured: boolean | null;
-
+  home_featured: boolean | null;
   sort_order: number | null;
 
   source: string | null;
@@ -137,7 +137,9 @@ export interface ActivityCardData {
   is_featured: boolean | null;
 }
 
-
-
 export type Difficulty = "easy" | "moderate" | "hard";
 export type ActivityMode = "group" | "private" | "semiPrivate" | "selfGuided";
+export interface DestinationActivityWithLocation extends DestinationActivity {
+  city_name: string | null;
+  country_name: string | null;
+}

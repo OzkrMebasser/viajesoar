@@ -2,8 +2,12 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import type { Locale } from "@/types/locale";
 import { getCountryBySlug } from "@/lib/data/destinations/regions";
-import { getCityBySlug, getActivitiesByDestination } from "@/lib/data/destinations/cities";
-import { getActivityBySlug } from "@/lib/data/destinations/activities";
+import { getCityBySlug } from "@/lib/data/destinations/cities";
+import {
+  getActivityBySlug,
+  getSimilarTours,
+} from "@/lib/data/destinations/activities";
+
 import ActivityDestination from "@/components/Activity/ActivityDestinations";
 
 export const revalidate = 3600;
@@ -18,7 +22,8 @@ export default async function ActivityPage({
     activitySlug: string;
   }>;
 }) {
-  const { regionSlug, countrySlug, destinationCitySlug, activitySlug } = await params;
+  const { regionSlug, countrySlug, destinationCitySlug, activitySlug } =
+    await params;
   const locale = (await getLocale()) as Locale;
 
   const [activity, city, country] = await Promise.all([
@@ -28,7 +33,13 @@ export default async function ActivityPage({
   ]);
 
   if (!activity || !city || !country) notFound();
-  // if (activity.destination_id !== city.id) notFound();
+
+  const similarTours = await getSimilarTours(
+    locale,
+    activity.destination_id ?? null,
+    activitySlug,
+    6,
+  );
 
   return (
     <ActivityDestination
@@ -39,6 +50,7 @@ export default async function ActivityPage({
       country={country}
       city={city}
       activity={activity}
+      similarTours={similarTours}
     />
   );
 }

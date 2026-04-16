@@ -17,8 +17,6 @@ import ButtonArrow from "./ui/ButtonArrow";
 
 type Locale = "es" | "en";
 
-
-
 const translations = {
   es: {
     quickLinks: "Enlaces Rápidos",
@@ -26,6 +24,7 @@ const translations = {
     destinations: "Destinos",
     flights: "Vuelos",
     offers: "Ofertas",
+    tours: "Tours",
     contact: "Contacto",
     company: "Empresa",
     about: "Acerca de",
@@ -54,6 +53,7 @@ const translations = {
     destinations: "Destinations",
     flights: "Flights",
     offers: "Offers",
+    tours: "Tours",
     contact: "Contact",
     company: "Company",
     about: "About",
@@ -95,7 +95,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
   const quickLinks = [
     { label: t.services, href: "#" },
     { label: t.destinations, href: "#" },
-    { label: t.flights, href: "#" },
+    { label: t.tours, href: "#" },
     { label: t.offers, href: "#" },
     { label: t.contact, href: "#" },
   ];

@@ -41,7 +41,8 @@ const routes: Record<string, { [key in Locale]: string }> = {
   home: { es: "/", en: "/" },
   packages: { es: "/paquetes", en: "/packages" },
   destinations: { es: "/destinos", en: "/destinations" },
-  flights: { es: "/vuelos", en: "/flights" },
+  tours: { es: "/tours", en: "/tours" },
+  // flights: { es: "/vuelos", en: "/flights" },
   offers: { es: "/ofertas", en: "/offers" },
   blog: { es: "/blog", en: "/blog" },
   contact: { es: "/contacto", en: "/contact" },
@@ -70,40 +71,39 @@ const Navigation = () => {
     { label: t("home"), href: routes.home[locale] },
     { label: t("packages"), href: routes.packages[locale] },
     { label: t("destinations"), href: routes.destinations[locale] },
-    { label: t("flights"), href: routes.flights[locale] },
+    { label: t("tours"), href: routes.tours[locale] },
     { label: t("offers"), href: routes.offers[locale] },
     { label: t("blog"), href: routes.blog[locale] },
     { label: t("contact"), href: routes.contact[locale] },
   ];
 
-  const toggleLanguage = () => {
-    const next: Locale = locale === "es" ? "en" : "es";
+  // Mapeo basado en tu configuración de routing real
 
-    // Mapeo basado en tu configuración de routing real
-    const routeMapping: Record<string, string> = {
-      // Rutas en español -> inglés
+  const routeMapping: Record<Locale, Record<string, string>> = {
+    es: {
       "/": "/",
       "/iniciar-sesion": "/login",
       "/servicios": "/services",
       "/destinos": "/destinations",
-      "/vuelos": "/flights",
+      "/tours": "/tours",
       "/ofertas": "/offers",
       "/blog-es": "/blog",
       "/contacto": "/contact",
-      // Rutas en inglés -> español
+    },
+    en: {
+      "/": "/",
       "/login": "/iniciar-sesion",
       "/services": "/servicios",
       "/destinations": "/destinos",
-      "/flights": "/vuelos",
+      "/tours": "/tours",
       "/offers": "/ofertas",
       "/blog": "/blog-es",
       "/contact": "/contacto",
-    };
-
-    // Obtener la ruta correspondiente o usar "/" como fallback
-    const newPath = routeMapping[pathname] || "/";
-
-    // Navegar al nuevo path con el locale correcto
+    },
+  };
+  const toggleLanguage = () => {
+    const next: Locale = locale === "es" ? "en" : "es";
+    const newPath = routeMapping[locale][pathname] || "/";
     router.replace(newPath as any, { locale: next });
   };
 

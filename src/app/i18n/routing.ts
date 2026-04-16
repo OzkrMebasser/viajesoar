@@ -41,6 +41,10 @@ export const routing = defineRouting({
       en: "/favorites",
       es: "/favoritos",
     },
+    "/tours": {
+      en: "/tours",
+      es: "/tours",
+    },
     "/flights": {
       en: "/flights",
       es: "/vuelos",

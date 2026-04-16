@@ -15,4 +15,7 @@ export {
 export {
   getActivityBySlug,
   getActivitiesByDestination,
+  getAllActivities,
+  getActivityBySlugWithLocation,
+  getHomeFeaturedTours 
 } from "./activities";
