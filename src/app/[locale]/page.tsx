@@ -10,8 +10,8 @@ import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 import CubeEffectSlider from "@/components/CubeEffectSlider";
 
 // ... Generate metadata based on locale
-export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
-  const { locale } = params;
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params; 
   
 
   const title = locale === 'en' ? 'Welcome to VIAJESOAR' : 'Bienvenido a VIAJESOAR';

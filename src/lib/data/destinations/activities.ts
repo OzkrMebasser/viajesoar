@@ -221,7 +221,7 @@ export async function getHomeFeaturedTours(
     .order("sort_order", { ascending: true })
     .limit(limit);
 
-  console.log("🔍 home_featured query →", { locale, data, error }); // ← AGREGA ESTO
+  // console.log("🔍 home_featured query →", { locale, data, error }); 
 
   if (error || !data?.length) {
     console.error("Error fetching home featured tours:", error);

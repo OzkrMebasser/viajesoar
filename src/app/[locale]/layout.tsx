@@ -10,7 +10,13 @@ import { FavoritesProvider } from "@/lib/context/FavoritesProvider";
 import { ThemeProvider } from "@/lib/context/ThemeContext";
 import WhatsAppChat from "@/components/WhatsAppChat";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { getNavRegions } from "@/lib/data/destinations";
+import type { NavRegion } from "@/lib/data/destinations";
 
+import type { Locale } from "@/types/locale";
+
+
+  
 export default async function LocaleLayout({
   children,
   params,
@@ -18,11 +24,13 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+const { locale } = await params;
 
-  if (!routing.locales.includes(locale as any)) {
-    notFound();
-  }
+if (!routing.locales.includes(locale as any)) {
+  notFound();
+}
+
+const navRegions = await getNavRegions(locale as Locale);
 
   const messages = await getMessages();
 
@@ -30,7 +38,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages}>
       <FavoritesProvider>
         <ThemeProvider>
-          <Navigation />
+          <Navigation  navRegions={navRegions} />
           <AirplaneCursor />
           {children}
           <Footer />

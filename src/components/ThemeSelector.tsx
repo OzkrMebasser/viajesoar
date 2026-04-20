@@ -20,7 +20,7 @@ export default function ThemeSelector() {
   if (!mounted) return <div className="p-2 w-9 h-9" />;
 
   return (
-    <div className="relative nav">
+    <div className="relative z-60">
       <button
         onClick={() => setOpen(!open)}
         className="p-2 text-theme rounded-lg transition-colors hover:bg-[var(--bg-secondary)]"
@@ -29,7 +29,7 @@ export default function ThemeSelector() {
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full mt-2 flex flex-col shadow-lg z-10 rounded bg-theme-secondary">
+        <div className="absolute left-0 right-0 top-full mt-2 flex flex-col shadow-lg z-1 rounded bg-theme-secondary">
           {themes.map((t) => (
             <button
               key={t.value}

@@ -10,12 +10,15 @@ export {
 
 export {
   getDestinationRegions,
+  getNavRegions,
 } from "./regions";
+
+export type { NavRegion, NavCountry, NavCity } from "./regions";
 
 export {
   getActivityBySlug,
   getActivitiesByDestination,
   getAllActivities,
   getActivityBySlugWithLocation,
-  getHomeFeaturedTours 
+  getHomeFeaturedTours,
 } from "./activities";

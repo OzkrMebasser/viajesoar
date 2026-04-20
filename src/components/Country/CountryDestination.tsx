@@ -34,7 +34,7 @@ export default function CountryDestination({
 }: Props) {
   const [query, setQuery] = useState("");
 
-  console.log(regionName)
+  // console.log(regionName)
   const filtered = useMemo(() => {
     if (!query.trim()) return cities;
     const normalize = (str: string) =>
