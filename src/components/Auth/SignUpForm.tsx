@@ -4,11 +4,13 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { Eye, EyeOff, Mail, Lock, User, Phone, Wand2, Loader2, CheckCircle2, XCircle } from "lucide-react";
 
 const signUpSchema = z.object({
   fullName: z.string().min(2, "Full Name must be at least 2 characters."),
   email: z.string().email("Invalid email address."),
-  password: z.string()
+  password: z
+    .string()
     .min(8, "At least 8 characters.")
     .regex(/[A-Z]/, "At least one uppercase letter.")
     .regex(/[a-z]/, "At least one lowercase letter.")
@@ -16,9 +18,11 @@ const signUpSchema = z.object({
     .regex(/[@$!%*?&#]/, "At least one special character (@$!%*?&#)."),
 });
 
-const DEFAULT_AVATAR = "https://images.pexels.com/photos/9951800/pexels-photo-9951800.jpeg";
+interface SignUpFormProps {
+  locale?: "es" | "en";
+}
 
-export default function SignUpForm() {
+export default function SignUpForm({ locale = "es" }: SignUpFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -26,10 +30,45 @@ export default function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const router = useRouter();
 
-  // Password validation checks
+  const t = {
+    es: {
+      fullName: "Nombre completo",
+      email: "Correo electrónico",
+      phone: "Teléfono (opcional)",
+      password: "Contraseña",
+      suggest: "Sugerir",
+      signup: "Crear cuenta",
+      signingUp: "Creando cuenta...",
+      checks: {
+        length: "Mínimo 8 caracteres",
+        uppercase: "Una mayúscula",
+        lowercase: "Una minúscula",
+        number: "Un número",
+        special: "Un carácter especial (@$!%*?&#)",
+      },
+      successMsg: "Revisa tu email para confirmar tu cuenta.",
+    },
+    en: {
+      fullName: "Full name",
+      email: "Email address",
+      phone: "Phone (optional)",
+      password: "Password",
+      suggest: "Suggest",
+      signup: "Create account",
+      signingUp: "Creating account...",
+      checks: {
+        length: "At least 8 characters",
+        uppercase: "One uppercase letter",
+        lowercase: "One lowercase letter",
+        number: "One number",
+        special: "One special character (@$!%*?&#)",
+      },
+      successMsg: "Check your email to confirm your account.",
+    },
+  }[locale];
+
   const validations = {
     length: password.length >= 8,
     uppercase: /[A-Z]/.test(password),
@@ -45,32 +84,25 @@ export default function SignUpForm() {
     const lower = "abcdefghijklmnopqrstuvwxyz";
     const numbers = "0123456789";
     const special = "@$!%*?&#";
-
     const mandatory = [
       upper[Math.floor(Math.random() * upper.length)],
       lower[Math.floor(Math.random() * lower.length)],
       numbers[Math.floor(Math.random() * numbers.length)],
       special[Math.floor(Math.random() * special.length)],
     ];
-
     const allChars = upper + lower + numbers + special;
-    const remainingLength = 12 - mandatory.length;
-
-    for (let i = 0; i < remainingLength; i++) {
+    for (let i = 0; i < 8; i++) {
       mandatory.push(allChars[Math.floor(Math.random() * allChars.length)]);
     }
-
-    const shuffled = mandatory.sort(() => Math.random() - 0.5).join("");
-    setPassword(shuffled);
+    setPassword(mandatory.sort(() => Math.random() - 0.5).join(""));
+    setShowPassword(true);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
     setError(null);
 
-    // Validar datos
     const validation = signUpSchema.safeParse({ fullName, email, password });
     if (!validation.success) {
       setError(validation.error.errors[0].message);
@@ -78,15 +110,11 @@ export default function SignUpForm() {
       return;
     }
 
-    // Crear usuario - el trigger creará automáticamente el perfil
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { 
-          full_name: fullName,
-          phone: phone 
-        },
+        data: { full_name: fullName, phone },
       },
     });
 
@@ -96,96 +124,154 @@ export default function SignUpForm() {
       return;
     }
 
-    // Ya no necesitamos crear el perfil manualmente - el trigger lo hace automáticamente
-    alert("Check your email to confirm your account before logging in. You can upload your avatar after logging in.");
+    alert(t.successMsg);
     router.push("/");
     setLoading(false);
   };
 
-  return (
-    <form onSubmit={handleSignUp} className="flex flex-col gap-3">
-      <input
-        type="text"
-        placeholder="Full Name"
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}
-        className="border p-2 rounded"
-        required
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 rounded"
-        required
-      />
-      <input
-        type="tel"
-        placeholder="Phone"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="border p-2 rounded"
-      />
+  const inputClass =
+    "w-full py-3 rounded-sm border text-sm outline-none transition-all duration-200 bg-transparent";
+  const inputStyle = { borderColor: "var(--accent)", color: "var(--text)" };
 
-      <div className="flex gap-2">
-        <div className="relative w-full">
+  return (
+    <form onSubmit={handleSignUp} className="flex flex-col gap-4 ">
+      {/* Full Name */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--accent)", opacity: 0.8 }}>
+          {t.fullName}
+        </label>
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--accent)", opacity: 0.5 }} />
           <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 rounded w-full pr-10"
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Jane Doe"
             required
+            className={`${inputClass} pl-10 pr-4`}
+            style={inputStyle}
           />
+        </div>
+      </div>
+
+      {/* Email */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--accent)", opacity: 0.8 }}>
+          {t.email}
+        </label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--accent)", opacity: 0.5 }} />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+            className={`${inputClass} pl-10 pr-4`}
+            style={inputStyle}
+          />
+        </div>
+      </div>
+
+      {/* Phone */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--accent)", opacity: 0.8 }}>
+          {t.phone}
+        </label>
+        <div className="relative">
+          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--accent)", opacity: 0.5 }} />
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+52 000 000 0000"
+            className={`${inputClass} pl-10 pr-4`}
+            style={inputStyle}
+          />
+        </div>
+      </div>
+
+      {/* Password */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--accent)", opacity: 0.8 }}>
+          {t.password}
+        </label>
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--accent)", opacity: 0.5 }} />
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              className={`${inputClass} pl-10 pr-10`}
+              style={inputStyle}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 transition-opacity hover:opacity-100"
+              style={{ color: "var(--accent)", opacity: 0.5 }}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            onClick={generatePassword}
+            title={t.suggest}
+            className="px-3 rounded-sm border text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 hover:border-[var(--accent)] whitespace-nowrap"
+            style={{ borderColor: "rgba(255,255,255,0.15)", color: "var(--accent)" }}
           >
-            {showPassword ? "👁️" : "👁️‍🗨️"}
+            <Wand2 className="w-3.5 h-3.5" />
+            {t.suggest}
           </button>
         </div>
-        <button
-          type="button"
-          onClick={generatePassword}
-          className="bg-gray-200 px-3 rounded hover:bg-gray-300"
-        >
-          Suggest
-        </button>
+
+        {/* Validation checks */}
+        {password.length > 0 && (
+          <div className="grid grid-cols-1 gap-1 mt-1">
+            {(Object.entries(validations) as [keyof typeof validations, boolean][]).map(([key, valid]) => (
+              <span
+                key={key}
+                className="flex items-center gap-1.5 text-xs transition-colors duration-200"
+                style={{ color: valid ? "var(--accent)" : "rgba(239,68,68,0.7)" }}
+              >
+                {valid ? (
+                  <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
+                ) : (
+                  <XCircle className="w-3 h-3 flex-shrink-0" />
+                )}
+                {t.checks[key]}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Password requirements */}
-      <div className="text-sm space-y-1">
-        <p className={validations.length ? "text-green-600" : "text-red-500"}>
-          • At least 8 characters
+      {/* Error */}
+      {error && (
+        <p className="text-xs px-3 py-2 rounded-sm border border-red-500/30 bg-red-500/10 text-red-400">
+          {error}
         </p>
-        <p className={validations.uppercase ? "text-green-600" : "text-red-500"}>
-          • At least one uppercase letter
-        </p>
-        <p className={validations.lowercase ? "text-green-600" : "text-red-500"}>
-          • At least one lowercase letter
-        </p>
-        <p className={validations.number ? "text-green-600" : "text-red-500"}>
-          • At least one number
-        </p>
-        <p className={validations.special ? "text-green-600" : "text-red-500"}>
-          • At least one special character (@$!%*?&#)
-        </p>
-      </div>
+      )}
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-
+      {/* Submit */}
       <button
         type="submit"
-        disabled={loading}
-        className={`py-2 rounded text-white ${
-          allValid
-            ? "bg-blue-500 hover:bg-blue-600"
-            : "bg-gray-400 cursor-not-allowed"
-        }`}
+        disabled={loading || !allValid}
+        className="w-full py-3 rounded-sm font-semibold text-sm tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 mt-1"
+        style={{
+          background: allValid ? "var(--accent)" : "rgba(255,255,255,0.1)",
+          color: allValid ? "#000" : "var(--text)",
+          opacity: loading ? 0.7 : 1,
+          cursor: !allValid ? "not-allowed" : "pointer",
+        }}
       >
-        {loading ? "Signing up..." : "Sign Up"}
+        {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+        {loading ? t.signingUp : t.signup}
       </button>
     </form>
   );

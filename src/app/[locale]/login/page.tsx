@@ -1,14 +1,13 @@
 import AuthForm from "@/components/Auth/AuthForm";
-import { useTranslations } from "next-intl";
+import { getLocale } from "next-intl/server";
+import type { Locale } from "@/types/locale";
 
-export default function LoginPage() {
-    const t = useTranslations("Navigation");
-  
-  
+export default async function LoginPage() {
+  const locale = await getLocale() as Locale;
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
-      
-      <AuthForm />
+      <AuthForm locale={locale} />
     </main>
   );
 }

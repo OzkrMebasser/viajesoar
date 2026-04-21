@@ -10,200 +10,200 @@ type Locale = "es" | "en";
 
 // ── Desktop Slide Panel ───────────────────────────────────────────────────────
 
-function DesktopSlidePanel({
-  locale,
-  regions,
-  onClose,
-}: {
-  locale: Locale;
-  regions: NavRegion[];
-  onClose: () => void;
-}) {
-  const [activeRegionId, setActiveRegionId] = useState<string | null>(null);
-  const [activeCountryId, setActiveCountryId] = useState<string | null>(null);
-  const basePath = locale === "es" ? "destinos" : "destinations";
+// function DesktopSlidePanel({
+//   locale,
+//   regions,
+//   onClose,
+// }: {
+//   locale: Locale;
+//   regions: NavRegion[];
+//   onClose: () => void;
+// }) {
+//   const [activeRegionId, setActiveRegionId] = useState<string | null>(null);
+//   const [activeCountryId, setActiveCountryId] = useState<string | null>(null);
+//   const basePath = locale === "es" ? "destinos" : "destinations";
 
-  return (
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 z-[10004]" onClick={onClose} />
+//   return (
+//     <>
+//       {/* Backdrop */}
+//       <div className="fixed inset-0 z-[10004]" onClick={onClose} />
 
-      {/* Panel */}
-      <div
-        className="fixed top-0 left-0 h-full w-80 z-[10005]
-                   bg-gradient-theme border-r border-[var(--accent)]/15
-                   flex flex-col overflow-hidden
-                   animate-in slide-in-from-left-2 duration-300"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-[var(--text)]/10 flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-0.5 h-3 bg-[var(--accent)] rounded-full" />
-            <span className="text-[var(--accent)] text-sm tracking-wider uppercase">
-              {locale === "es" ? "Destinos" : "Destinations"}
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-theme opacity-40 hover:opacity-100 transition-opacity text-xs"
-          >
-            ✕
-          </button>
-        </div>
+//       {/* Panel */}
+//       <div
+//         className="fixed top-0 left-0 h-full w-80 z-[10005]
+//                    bg-gradient-theme border-r border-[var(--accent)]/15
+//                    flex flex-col overflow-hidden
+//                    animate-in slide-in-from-left-2 duration-300"
+//       >
+//         {/* Header */}
+//         <div className="flex items-center justify-between px-4 py-4 border-b border-[var(--text)]/10 flex-shrink-0">
+//           <div className="flex items-center gap-2">
+//             <div className="w-0.5 h-3 bg-[var(--accent)] rounded-full" />
+//             <span className="text-[var(--accent)] text-sm tracking-wider uppercase">
+//               {locale === "es" ? "Destinos" : "Destinations"}
+//             </span>
+//           </div>
+//           <button
+//             type="button"
+//             onClick={onClose}
+//             className="text-theme opacity-40 hover:opacity-100 transition-opacity text-xs"
+//           >
+//             ✕
+//           </button>
+//         </div>
 
-        {/* Ver todos */}
-        <Link
-          href={`/${basePath}` as any}
-          onClick={onClose}
-          className="flex items-center justify-between px-4 py-3 text-sm uppercase
-                     tracking-wider text-[var(--accent)] border-b border-[var(--text)]/10
-                     hover:bg-[var(--accent)]/5 transition-colors flex-shrink-0"
-        >
-          {locale === "es" ? "Ver todos los destinos" : "See all destinations"}
-          <FaArrowRight className="w-2 h-2" />
-        </Link>
+//         {/* Ver todos */}
+//         <Link
+//           href={`/${basePath}` as any}
+//           onClick={onClose}
+//           className="flex items-center justify-between px-4 py-3 text-sm uppercase
+//                      tracking-wider text-[var(--accent)] border-b border-[var(--text)]/10
+//                      hover:bg-[var(--accent)]/5 transition-colors flex-shrink-0"
+//         >
+//           {locale === "es" ? "Ver todos los destinos" : "See all destinations"}
+//           <FaArrowRight className="w-2 h-2" />
+//         </Link>
 
-        {/* Lista scrollable */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[var(--accent)]/20 scrollbar-track-transparent">
-          {regions.map((region) => (
-            <div
-              key={region.id}
-              className="border-b border-[var(--text)]/10 last:border-0"
-            >
-              {/* Región */}
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveRegionId(
-                    activeRegionId === region.id ? null : region.id,
-                  );
-                  setActiveCountryId(null);
-                }}
-                className={`w-full flex items-center justify-between px-4 py-3 text-left
-                            text-sm uppercase tracking-wider transition-all duration-150
-                            ${
-                              activeRegionId === region.id
-                                ? "text-[var(--accent)] bg-[var(--accent)]/5 border-l-2 border-[var(--accent)]"
-                                : "text-theme opacity-60 hover:opacity-100 hover:bg-[var(--accent)]/5 border-l-2 border-transparent"
-                            }`}
-              >
-                <span>{region.name}</span>
-                <ChevronDown
-                  className={`w-3 h-3 opacity-40 transition-transform duration-200
-                              ${activeRegionId === region.id ? "rotate-180" : ""}`}
-                />
-              </button>
+//         {/* Lista scrollable */}
+//         <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[var(--accent)]/20 scrollbar-track-transparent">
+//           {regions.map((region) => (
+//             <div
+//               key={region.id}
+//               className="border-b border-[var(--text)]/10 last:border-0"
+//             >
+//               {/* Región */}
+//               <button
+//                 type="button"
+//                 onClick={() => {
+//                   setActiveRegionId(
+//                     activeRegionId === region.id ? null : region.id,
+//                   );
+//                   setActiveCountryId(null);
+//                 }}
+//                 className={`w-full flex items-center justify-between px-4 py-3 text-left
+//                             text-sm uppercase tracking-wider transition-all duration-150
+//                             ${
+//                               activeRegionId === region.id
+//                                 ? "text-[var(--accent)] bg-[var(--accent)]/5 border-l-2 border-[var(--accent)]"
+//                                 : "text-theme opacity-60 hover:opacity-100 hover:bg-[var(--accent)]/5 border-l-2 border-transparent"
+//                             }`}
+//               >
+//                 <span>{region.name}</span>
+//                 <ChevronDown
+//                   className={`w-3 h-3 opacity-40 transition-transform duration-200
+//                               ${activeRegionId === region.id ? "rotate-180" : ""}`}
+//                 />
+//               </button>
 
-              {/* Países */}
-              {activeRegionId === region.id && (
-                <div className="bg-[var(--accent)]/5">
-                  <div className="px-4 py-1.5">
-                    <span className="text-[var(--accent)] text-sm tracking-wider uppercase">
-                      {locale === "es" ? "Países" : "Countries"}
-                    </span>
-                  </div>
+//               {/* Países */}
+//               {activeRegionId === region.id && (
+//                 <div className="bg-[var(--accent)]/5">
+//                   <div className="px-4 py-1.5">
+//                     <span className="text-[var(--accent)] text-sm tracking-wider uppercase">
+//                       {locale === "es" ? "Países" : "Countries"}
+//                     </span>
+//                   </div>
 
-                  {region.countries.length === 0 ? (
-                    <p className="px-4 pb-3 text-theme opacity-20 text-sm italic">
-                      {locale === "es" ? "Próximamente" : "Coming soon"}
-                    </p>
-                  ) : (
-                    region.countries.map((country) => (
-                      <div key={country.id}>
-                        <div
-                          className={`flex items-center justify-between border-l-2 transition-all
-                                      ${
-                                        activeCountryId === country.id
-                                          ? "border-[var(--accent)] bg-[var(--accent)]/10"
-                                          : "border-transparent"
-                                      }`}
-                        >
-                          <Link
-                            href={
-                              `/${basePath}/${region.slug}/${country.slug}` as any
-                            }
-                            onClick={onClose}
-                            className="flex-1 px-4 py-2.5 text-sm uppercase tracking-wider
-                                       text-theme opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all"
-                          >
-                            {country.name}
-                          </Link>
-                          {country.cities.length > 0 && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setActiveCountryId(
-                                  activeCountryId === country.id
-                                    ? null
-                                    : country.id,
-                                )
-                              }
-                              className="px-3 py-2.5"
-                            >
-                              <ChevronRight
-                                className={`w-3 h-3 text-theme opacity-30 transition-transform duration-200
-                                            ${activeCountryId === country.id ? "rotate-90" : ""}`}
-                              />
-                            </button>
-                          )}
-                        </div>
+//                   {region.countries.length === 0 ? (
+//                     <p className="px-4 pb-3 text-theme opacity-20 text-sm italic">
+//                       {locale === "es" ? "Próximamente" : "Coming soon"}
+//                     </p>
+//                   ) : (
+//                     region.countries.map((country) => (
+//                       <div key={country.id}>
+//                         <div
+//                           className={`flex items-center justify-between border-l-2 transition-all
+//                                       ${
+//                                         activeCountryId === country.id
+//                                           ? "border-[var(--accent)] bg-[var(--accent)]/10"
+//                                           : "border-transparent"
+//                                       }`}
+//                         >
+//                           <Link
+//                             href={
+//                               `/${basePath}/${region.slug}/${country.slug}` as any
+//                             }
+//                             onClick={onClose}
+//                             className="flex-1 px-4 py-2.5 text-sm uppercase tracking-wider
+//                                        text-theme opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all"
+//                           >
+//                             {country.name}
+//                           </Link>
+//                           {country.cities.length > 0 && (
+//                             <button
+//                               type="button"
+//                               onClick={() =>
+//                                 setActiveCountryId(
+//                                   activeCountryId === country.id
+//                                     ? null
+//                                     : country.id,
+//                                 )
+//                               }
+//                               className="px-3 py-2.5"
+//                             >
+//                               <ChevronRight
+//                                 className={`w-3 h-3 text-theme opacity-30 transition-transform duration-200
+//                                             ${activeCountryId === country.id ? "rotate-90" : ""}`}
+//                               />
+//                             </button>
+//                           )}
+//                         </div>
 
-                        {/* Ciudades */}
-                        {activeCountryId === country.id &&
-                          country.cities.length > 0 && (
-                            <div className="bg-[var(--accent)]/5 pb-1">
-                              <div className="px-6 py-1">
-                                <span className="text-[var(--accent)] text-sm tracking-wider uppercase">
-                                  {locale === "es" ? "Ciudades" : "Cities"}
-                                </span>
-                              </div>
-                              {country.cities.map((city) => (
-                                <Link
-                                  key={city.id}
-                                  href={
-                                    `/${basePath}/${region.slug}/${country.slug}/${city.slug}` as any
-                                  }
-                                  onClick={onClose}
-                                  className="flex items-center gap-2 px-6 py-2 text-sm uppercase
-                                           tracking-wider text-theme opacity-50 hover:opacity-100
-                                           hover:text-[var(--accent)] hover:bg-[var(--accent)]/5
-                                           transition-all group"
-                                >
-                                  <span
-                                    className="w-1 h-1 rounded-full bg-[var(--accent)]/35
-                                                 group-hover:bg-[var(--accent)] transition-colors flex-shrink-0"
-                                  />
-                                  {city.name}
-                                </Link>
-                              ))}
-                              <div className="mx-4 mt-1 pt-2 border-t border-[var(--text)]/10">
-                                <Link
-                                  href={
-                                    `/${basePath}/${region.slug}/${country.slug}` as any
-                                  }
-                                  onClick={onClose}
-                                  className="flex items-center gap-1.5 text-sm text-[var(--accent)]
-                                           uppercase tracking-wider hover:opacity-70 transition-opacity"
-                                >
-                                  {locale === "es" ? "Ver todo" : "See all"}
-                                  <FaArrowRight className="w-2 h-2" />
-                                </Link>
-                              </div>
-                            </div>
-                          )}
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
+//                         {/* Ciudades */}
+//                         {activeCountryId === country.id &&
+//                           country.cities.length > 0 && (
+//                             <div className="bg-[var(--accent)]/5 pb-1">
+//                               <div className="px-6 py-1">
+//                                 <span className="text-[var(--accent)] text-sm tracking-wider uppercase">
+//                                   {locale === "es" ? "Ciudades" : "Cities"}
+//                                 </span>
+//                               </div>
+//                               {country.cities.map((city) => (
+//                                 <Link
+//                                   key={city.id}
+//                                   href={
+//                                     `/${basePath}/${region.slug}/${country.slug}/${city.slug}` as any
+//                                   }
+//                                   onClick={onClose}
+//                                   className="flex items-center gap-2 px-6 py-2 text-sm uppercase
+//                                            tracking-wider text-theme opacity-50 hover:opacity-100
+//                                            hover:text-[var(--accent)] hover:bg-[var(--accent)]/5
+//                                            transition-all group"
+//                                 >
+//                                   <span
+//                                     className="w-1 h-1 rounded-full bg-[var(--accent)]/35
+//                                                  group-hover:bg-[var(--accent)] transition-colors flex-shrink-0"
+//                                   />
+//                                   {city.name}
+//                                 </Link>
+//                               ))}
+//                               <div className="mx-4 mt-1 pt-2 border-t border-[var(--text)]/10">
+//                                 <Link
+//                                   href={
+//                                     `/${basePath}/${region.slug}/${country.slug}` as any
+//                                   }
+//                                   onClick={onClose}
+//                                   className="flex items-center gap-1.5 text-sm text-[var(--accent)]
+//                                            uppercase tracking-wider hover:opacity-70 transition-opacity"
+//                                 >
+//                                   {locale === "es" ? "Ver todo" : "See all"}
+//                                   <FaArrowRight className="w-2 h-2" />
+//                                 </Link>
+//                               </div>
+//                             </div>
+//                           )}
+//                       </div>
+//                     ))
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
 
 // ── Mobile Accordion ──────────────────────────────────────────────────────────
 
@@ -594,13 +594,13 @@ export function MegaMenuDestinations({
       </div>
 
       {/* Panel lateral desktop */}
-      {isDestinationsPanelOpen && (
+      {/* {isDestinationsPanelOpen && (
         <DesktopSlidePanel
           locale={locale}
           regions={regions}
           onClose={() => onDestinationsPanelClose?.()}
         />
-      )}
+      )} */}
     </>
   );
 }
