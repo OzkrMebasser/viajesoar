@@ -128,3 +128,61 @@ export function useSearch(locale: SearchLocale) {
     handleSearchToggle,
   };
 }
+
+
+
+export function useHeroSearch(locale: SearchLocale) {
+  const [searchQuery, setSearchQuery]     = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching]     = useState(false);
+  const [allResults, setAllResults]       = useState<SearchResult[]>([]);
+  const [isReady, setIsReady]             = useState(false);
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Precarga al montar — sin esperar isSearchOpen
+  useEffect(() => {
+    fetch(`/api/search/all?locale=${locale}`)
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((json) => { setAllResults(json.results ?? []); setIsReady(true); })
+      .catch(() => setIsReady(false));
+  }, [locale]);
+
+  // Filtrado local con debounce + fallback a /api/search
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      const q = normalize(searchQuery);
+
+      if (q.length < 2) { setSearchResults([]); return; }
+
+      if (isReady) {
+        setSearchResults(
+          allResults.filter(
+            (r) =>
+              normalize(r.title).includes(q) ||
+              normalize(r.description).includes(q),
+          ),
+        );
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const res  = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}&locale=${locale}`);
+        if (!res.ok) throw new Error();
+        const json = await res.json();
+        setSearchResults(json.results ?? []);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 150);
+
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [searchQuery, allResults, isReady, locale]);
+
+  return { searchQuery, searchResults, isSearching, setSearchQuery };
+}

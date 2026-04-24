@@ -53,7 +53,6 @@ export default function RegionDestination({
 }: Props) {
   const [query, setQuery] = useState("");
 
-
   const filtered = useMemo(() => {
     if (!query.trim()) return countries;
     const normalize = (str: string) =>
@@ -73,9 +72,42 @@ export default function RegionDestination({
   const IconComponent = iconMap[region.icon ?? ""] || MdTravelExplore;
 
   return (
-    <div className="min-h-screen bg-gradient-theme">
+    <section className="min-h-screen bg-gradient-theme">
+      {/* ── REGION INFO ── */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
+        {/* Icon + eyebrow */}
+        <div className="flex items-center gap-2 mb-4">
+          <IconComponent className="text-[var(--accent)] text-xl" />
+          <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
+            {region.description}
+          </span>
+        </div>
+
+        <SplitText
+          text={region.name}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
+          delay={25}
+          duration={0.5}
+          splitType="chars"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="left"
+        />
+
+        {region.long_description && (
+          <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
+            {region.long_description}
+          </div>
+        )}
+
+        <p className="text-white/50 text-xs mt-4 tracking-widest uppercase">
+          {countries.length}{" "}
+          {t(locale, "países disponibles", "countries available")}
+        </p>
+      </div>
       {/* ── HERO BAND ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
+        {/* ── HERO IMAGES OF REGION ── */}
         <div className="absolute inset-0 z-0">
           {Array.isArray(region.images) && region.images.length > 0 ? (
             <CardsSlideShow
@@ -99,42 +131,44 @@ export default function RegionDestination({
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
+      </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10">
-          {/* Icon + eyebrow */}
-          <div className="flex items-center gap-2 mb-4">
-            <IconComponent className="text-[var(--accent)] text-xl" />
-            <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
-              {region.description}
-            </span>
-          </div>
-
-          <SplitText
-            text={region.name}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
-            delay={25}
-            duration={0.5}
-            splitType="chars"
-            from={{ opacity: 0, y: 20 }}
-            to={{ opacity: 1, y: 0 }}
-            textAlign="left"
+      {/* Scroll indicator */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
+        onClick={() =>
+          document
+            .getElementById("countries-search")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+      >
+        <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
+          scroll
+        </span>
+        {[0, 0.2].map((delay, i) => (
+          <div
+            key={i}
+            className="w-3 h-3 border-r border-b border-white/60"
+            style={{
+              transform: "rotate(45deg)",
+              animation: "chevBounce 1.4s ease-in-out infinite",
+              animationDelay: `${delay}s`,
+            }}
           />
-
-          {region.long_description && (
-            <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
-              {region.long_description}
-            </div>
-          )}
-
-          <p className="text-white/50 text-xs mt-4 tracking-widest uppercase">
-            {countries.length}{" "}
-            {t(locale, "países disponibles", "countries available")}
-          </p>
-        </div>
-      </section>
-
+        ))}
+        <style>{`
+    @keyframes chevBounce {
+      0%   { translate: 0 0px;  opacity: 0.3; }
+      50%  { translate: 0 5px;  opacity: 1; }
+      100% { translate: 0 0px;  opacity: 0.3; }
+    }
+  `}</style>
+      </div>
       {/* ── SEARCH BAR (sticky) ── */}
-      <div className="bg-gradient-theme py-5 sticky top-0 z-30 backdrop-blur-md border-b border-white/5">
+      <div
+        id="countries-search"
+        className="bg-gradient-theme pt-16 sticky top-0 z-30 backdrop-blur-md border-b border-white/5"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="relative max-w-xl">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
@@ -329,6 +363,6 @@ export default function RegionDestination({
           )}
         ></ButtonArrow>
       </div>
-    </div>
+    </section>
   );
 }
