@@ -53,9 +53,40 @@ export default function CountryDestination({
   const basePath = locale === "es" ? "destinos" : "destinations";
 
   return (
-    <div className="min-h-screen bg-gradient-theme">
+    <section className="min-h-screen bg-gradient-theme">
+      {/* ── COUNTRY INFO ── */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
+        {" "}
+        {/* Eyebrow */}
+        {country.description && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
+              {country.description}
+            </span>
+          </div>
+        )}
+        <SplitText
+          text={country.name}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
+          delay={25}
+          duration={0.5}
+          splitType="chars"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="left"
+        />
+        {country.long_description && (
+          <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
+            {country.long_description}
+          </div>
+        )}
+        <p className="text-white/50 text-xs mt-4 tracking-widest uppercase">
+          {cities.length}{" "}
+          {t(locale, "ciudades disponibles", "cities available")}
+        </p>
+      </div>
       {/* ── HERO BAND ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         <div className="absolute inset-0 z-0">
           {Array.isArray(country.images) && country.images.length > 0 ? (
             <CardsSlideShow
@@ -76,79 +107,45 @@ export default function CountryDestination({
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10">
-          {/* Eyebrow */}
-          {country.description && (
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
-                {country.description}
-              </span>
-            </div>
-          )}
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10"></div>
+      </div>
 
-          <SplitText
-            text={country.name}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
-            delay={25}
-            duration={0.5}
-            splitType="chars"
-            from={{ opacity: 0, y: 20 }}
-            to={{ opacity: 1, y: 0 }}
-            textAlign="left"
+      {/* Scroll indicator */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
+        onClick={() =>
+          document
+            .getElementById("cities-search")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+      >
+        <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
+          scroll
+        </span>
+        {[0, 0.2].map((delay, i) => (
+          <div
+            key={i}
+            className="w-3 h-3 border-r border-b border-white/60"
+            style={{
+              transform: "rotate(45deg)",
+              animation: "chevBounce 1.4s ease-in-out infinite",
+              animationDelay: `${delay}s`,
+            }}
           />
-
-          {country.long_description && (
-            <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
-              {country.long_description}
-            </div>
-          )}
-
-          <p className="text-white/50 text-xs mt-4 tracking-widest uppercase">
-            {cities.length}{" "}
-            {t(locale, "ciudades disponibles", "cities available")}
-          </p>
-        </div>
-      </section>
-
-      {/* ── SEARCH BAR (sticky) ── */}
-      <div className="bg-gradient-theme py-5 sticky top-0 z-30 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative max-w-xl">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t(
-                locale,
-                "Buscar por ciudad...",
-                "Search by city...",
-              )}
-              className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
-              >
-                <FaTimes className="text-xs" />
-              </button>
-            )}
-          </div>
-          {query && (
-            <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
-              {filtered.length}{" "}
-              {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
-            </p>
-          )}
-        </div>
+        ))}
+        <style>{`
+    @keyframes chevBounce {
+      0%   { translate: 0 0px;  opacity: 0.3; }
+      50%  { translate: 0 5px;  opacity: 1; }
+      100% { translate: 0 0px;  opacity: 0.3; }
+    }
+  `}</style>
       </div>
 
       {/* ── CITIES GRID ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme"  id="cities-search">
         {/* Section header */}
-        <div className="mb-10">
+        <div className="mb-4 pt-10">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]" />
             <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
@@ -162,6 +159,43 @@ export default function CountryDestination({
               `Explore the best of ${country.name}`,
             )}
           </p>
+        </div>
+        {/* ── SEARCH BAR (sticky) ── */}
+        <div
+         
+          className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="relative max-w-xl">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(
+                  locale,
+                  "Buscar por ciudad...",
+                  "Search by city...",
+                )}
+                className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
+                >
+                  <FaTimes className="text-xs" />
+                </button>
+              )}
+            </div>
+            {query && (
+              <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
+                {filtered.length}{" "}
+                {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
+              </p>
+            )}
+          </div>
         </div>
         {/* Empty state */}
         {filtered.length === 0 ? (
@@ -313,6 +347,6 @@ export default function CountryDestination({
           )}
         ></ButtonArrow>
       </div>
-    </div>
+    </section>
   );
 }

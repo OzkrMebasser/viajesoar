@@ -38,18 +38,14 @@ interface Props {
 const HeroSlidesSearch = ({ locale, data }: Props) => {
   // States
   const [clientReady, setClientReady] = useState(false);
-  const [order, setOrder]             = useState<number[]>([]);
+  const [order, setOrder] = useState<number[]>([]);
   const [detailsEven, setDetailsEven] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
 
   // ── Estado del buscador elevado aquí — sobrevive cambios de slide ──────────
-  const {
-    searchQuery,
-    searchResults,
-    isSearching,
-    setSearchQuery,
-  } = useHeroSearch(locale as SearchLocale);
+  const { searchQuery, searchResults, isSearching, setSearchQuery } =
+    useHeroSearch(locale as SearchLocale);
 
   const {
     orderRef,
@@ -85,7 +81,9 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
   useEffect(() => {
     isMountedRef.current = true;
-    return () => { isMountedRef.current = false; };
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -104,12 +102,22 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
     }
   }, [data.length, order.length]);
 
-  useEffect(() => { orderRef.current = order; }, [order]);
-
-  useEffect(() => { detailsEvenRef.current = detailsEven; }, [detailsEven]);
+  useEffect(() => {
+    orderRef.current = order;
+  }, [order]);
 
   useEffect(() => {
-    if (!containerRef.current || data.length === 0 || order.length === 0 || !clientReady) return;
+    detailsEvenRef.current = detailsEven;
+  }, [detailsEven]);
+
+  useEffect(() => {
+    if (
+      !containerRef.current ||
+      data.length === 0 ||
+      order.length === 0 ||
+      !clientReady
+    )
+      return;
 
     gsap.killTweensOf("*");
     setInitialized(false);
@@ -118,8 +126,8 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
     let checkInterval: NodeJS.Timeout | null = null;
 
     const tryInitialize = () => {
-      const currentOrder  = orderRef.current;
-      const activeIndex   = currentOrder[0];
+      const currentOrder = orderRef.current;
+      const activeIndex = currentOrder[0];
       const detailsActive = detailsEvenRef.current
         ? detailsEvenElementRef.current
         : detailsOddElementRef.current;
@@ -130,8 +138,14 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
         detailsOddElementRef.current &&
         cardRefs.current[activeIndex]
       ) {
-        if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
-        if (isMountedRef.current) { initializeAnimations(); setInitialized(true); }
+        if (checkInterval) {
+          clearInterval(checkInterval);
+          checkInterval = null;
+        }
+        if (isMountedRef.current) {
+          initializeAnimations();
+          setInitialized(true);
+        }
       }
     };
 
@@ -139,7 +153,10 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
     return () => {
       if (checkInterval) clearInterval(checkInterval);
-      if (loopTimeoutRef.current) { clearTimeout(loopTimeoutRef.current); loopTimeoutRef.current = null; }
+      if (loopTimeoutRef.current) {
+        clearTimeout(loopTimeoutRef.current);
+        loopTimeoutRef.current = null;
+      }
       gsap.killTweensOf("*");
       setIsAnimating(false);
       setInitialized(false);
@@ -148,8 +165,8 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
   const showMap = useFadeOutMap({
     selector: ".worldmap-container",
-    trigger:  data.length > 0,
-    delay:    2000,
+    trigger: data.length > 0,
+    delay: 2000,
     duration: 3,
   });
 
@@ -169,12 +186,12 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
     const container = containerRef.current;
     if (!container) return;
 
-    const width  = container.offsetWidth;
+    const width = container.offsetWidth;
     const height = container.offsetHeight;
     viewportRef.current = { width, height };
 
-    const responsive   = getResponsiveValues(width, height);
-    const ease         = ANIMATION_CONSTANTS.EASE;
+    const responsive = getResponsiveValues(width, height);
+    const ease = ANIMATION_CONSTANTS.EASE;
     const currentOrder = orderRef.current;
     const [active, ...rest] = currentOrder;
     const firstData = data[active];
@@ -183,8 +200,12 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
     const initialRefs = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
     if (firstData) updateTextContent(initialRefs, firstData);
 
-    const detailsActive   = detailsEvenRef.current ? detailsEvenElementRef.current : detailsOddElementRef.current;
-    const detailsInactive = detailsEvenRef.current ? detailsOddElementRef.current  : detailsEvenElementRef.current;
+    const detailsActive = detailsEvenRef.current
+      ? detailsEvenElementRef.current
+      : detailsOddElementRef.current;
+    const detailsInactive = detailsEvenRef.current
+      ? detailsOddElementRef.current
+      : detailsEvenElementRef.current;
 
     if (!detailsActive || !detailsInactive || !cardRefs.current[active]) {
       console.warn("Required refs not available yet (fallback)");
@@ -192,7 +213,9 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
     }
 
     gsap.set(paginationRef.current, {
-      top: responsive.offsetTop + (responsive.isSmallMobile ? 40 : responsive.isMobile ? 50 : 0),
+      top:
+        responsive.offsetTop +
+        (responsive.isSmallMobile ? 40 : responsive.isMobile ? 50 : 0),
       y: responsive.paginationOffset,
       opacity: 0,
       zIndex: 30,
@@ -202,29 +225,61 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
     gsap.set(cardRefs.current[active], { x: 0, y: 0, width, height });
     gsap.set(cardContentRefs.current[active], { x: 0, y: 0, opacity: 0 });
-    gsap.set(detailsActive,   { opacity: 0, zIndex: 22, x: responsive.detailsXOffset });
-    gsap.set(detailsInactive, { opacity: 0, zIndex: 12 });
+    // gsap.set(detailsActive, {
+    //   opacity: 0,
+    //   zIndex: 22,
+    //   x: responsive.detailsXOffset,
+    // });
+    // gsap.set(detailsInactive, { opacity: 0, zIndex: 12 });
+    gsap.set(detailsActive, {
+      opacity: 0,
+      zIndex: 100, // antes: 22
+      x: responsive.detailsXOffset,
+    });
+    gsap.set(detailsInactive, { opacity: 0, zIndex: 90 });
 
-    const inactiveRefs = getTextRefs(!detailsEvenRef.current, evenRefs, oddRefs);
-    resetInactiveYPositions(inactiveRefs, responsive.yOffset1, responsive.yOffset2, responsive.yOffset3);
+    const inactiveRefs = getTextRefs(
+      !detailsEvenRef.current,
+      evenRefs,
+      oddRefs,
+    );
+    resetInactiveYPositions(
+      inactiveRefs,
+      responsive.yOffset1,
+      responsive.yOffset2,
+      responsive.yOffset3,
+    );
 
     gsap.set(progressRef.current, {
-      width: responsive.progressWidth * (1 / currentOrder.length) * (active + 1),
+      width:
+        responsive.progressWidth * (1 / currentOrder.length) * (active + 1),
     });
 
     rest.forEach((i, index) => {
-      const cardX = responsive.offsetLeft + responsive.coverXOffset + index * (responsive.cardWidth + responsive.gap);
+      const cardX =
+        responsive.offsetLeft +
+        responsive.coverXOffset +
+        index * (responsive.cardWidth + responsive.gap);
       gsap.set(cardRefs.current[i], {
-        x: cardX, y: responsive.offsetTop,
-        width: responsive.cardWidth, height: responsive.cardHeight,
-        zIndex: 30, borderRadius: 10,
+        x: cardX,
+        y: responsive.offsetTop,
+        width: responsive.cardWidth,
+        height: responsive.cardHeight,
+        zIndex: 30,
+        borderRadius: 10,
       });
       gsap.set(cardContentRefs.current[i], {
-        x: cardX, zIndex: 30,
-        y: responsive.offsetTop + responsive.cardHeight - responsive.cardContentOffset,
+        x: cardX,
+        zIndex: 30,
+        y:
+          responsive.offsetTop +
+          responsive.cardHeight -
+          responsive.cardContentOffset,
       });
       if (slideNumberRefs.current[i]) {
-        gsap.set(slideNumberRefs.current[i], { x: (index + 1) * responsive.numberSize });
+        gsap.set(slideNumberRefs.current[i], {
+          x: (index + 1) * responsive.numberSize,
+        });
       }
     });
 
@@ -244,52 +299,82 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
     });
 
     rest.forEach((i, index) => {
-      const x     = responsive.offsetLeft + index * (responsive.cardWidth + responsive.gap);
+      const x =
+        responsive.offsetLeft + index * (responsive.cardWidth + responsive.gap);
       const delay = ANIMATION_CONSTANTS.START_DELAY + 0.05 * index;
-      gsap.to(cardRefs.current[i],        { x, zIndex: 30, delay, ease });
+      gsap.to(cardRefs.current[i], { x, zIndex: 30, delay, ease });
       gsap.to(cardContentRefs.current[i], { x, zIndex: 30, delay, ease });
     });
 
-    gsap.to(paginationRef.current, { y: 0, opacity: 1, ease, delay: ANIMATION_CONSTANTS.START_DELAY });
-    gsap.to(navRef.current,        { y: 0, opacity: 1, ease, delay: ANIMATION_CONSTANTS.START_DELAY });
-    gsap.to(detailsActive,         { opacity: 1, x: 0,  ease, delay: ANIMATION_CONSTANTS.START_DELAY });
+    gsap.to(paginationRef.current, {
+      y: 0,
+      opacity: 1,
+      ease,
+      delay: ANIMATION_CONSTANTS.START_DELAY,
+    });
+    gsap.to(navRef.current, {
+      y: 0,
+      opacity: 1,
+      ease,
+      delay: ANIMATION_CONSTANTS.START_DELAY,
+    });
+    gsap.to(detailsActive, {
+      opacity: 1,
+      x: 0,
+      ease,
+      delay: ANIMATION_CONSTANTS.START_DELAY,
+    });
   };
 
   const step = (direction: "next" | "prev" = "next"): Promise<void> => {
     return new Promise((resolve) => {
-      if (isAnimating || !isMountedRef.current) { resolve(); return; }
+      if (isAnimating || !isMountedRef.current) {
+        resolve();
+        return;
+      }
 
       const currentDetails = detailsEvenRef.current
         ? detailsEvenElementRef.current
         : detailsOddElementRef.current;
-      if (currentDetails) gsap.set(currentDetails, { height: currentDetails.offsetHeight });
+      if (currentDetails)
+        gsap.set(currentDetails, { height: currentDetails.offsetHeight });
 
       setIsAnimating(true);
 
       const { width, height } = viewportRef.current;
       const responsive = getResponsiveValues(width, height);
-      const ease       = ANIMATION_CONSTANTS.EASE;
+      const ease = ANIMATION_CONSTANTS.EASE;
 
       const currentOrder = [...orderRef.current];
       let newOrder: number[];
       if (direction === "next") {
         const shiftedItem = currentOrder.shift();
-        newOrder = shiftedItem !== undefined ? [...currentOrder, shiftedItem] : currentOrder;
+        newOrder =
+          shiftedItem !== undefined
+            ? [...currentOrder, shiftedItem]
+            : currentOrder;
       } else {
         const poppedItem = currentOrder.pop();
-        newOrder = poppedItem !== undefined ? [poppedItem, ...currentOrder] : currentOrder;
+        newOrder =
+          poppedItem !== undefined
+            ? [poppedItem, ...currentOrder]
+            : currentOrder;
       }
 
-      orderRef.current       = newOrder;
+      orderRef.current = newOrder;
       detailsEvenRef.current = !detailsEvenRef.current;
       setOrder(newOrder);
       setDetailsEven(detailsEvenRef.current);
 
-      const detailsActive   = detailsEvenRef.current ? detailsEvenElementRef.current : detailsOddElementRef.current;
-      const detailsInactive = detailsEvenRef.current ? detailsOddElementRef.current  : detailsEvenElementRef.current;
+      const detailsActive = detailsEvenRef.current
+        ? detailsEvenElementRef.current
+        : detailsOddElementRef.current;
+      const detailsInactive = detailsEvenRef.current
+        ? detailsOddElementRef.current
+        : detailsEvenElementRef.current;
 
       const { evenRefs, oddRefs } = textRefs;
-      const activeRefs  = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
+      const activeRefs = getTextRefs(detailsEvenRef.current, evenRefs, oddRefs);
       const activeIndex = newOrder[0];
 
       if (!data[activeIndex]) {
@@ -301,60 +386,106 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
       updateTextContent(activeRefs, data[activeIndex]);
 
-      gsap.set(detailsActive, { zIndex: 22 });
-      gsap.to(detailsActive,  { opacity: 1, delay: ACTIVE_ANIMATION_DELAYS.DETAILS, ease });
+      gsap.set(detailsActive, { zIndex: 100 });
+      gsap.to(detailsActive, {
+        opacity: 1,
+        delay: ACTIVE_ANIMATION_DELAYS.DETAILS,
+        ease,
+      });
 
       animateActiveRefs(activeRefs, ease);
 
-      gsap.set(detailsInactive, { zIndex: 12 });
+      gsap.set(detailsInactive, { zIndex: 90 });
 
       const [active, ...rest] = newOrder;
       const prv = rest[rest.length - 1];
 
-      gsap.set(cardRefs.current[prv],    { zIndex: 10 });
+      gsap.set(cardRefs.current[prv], { zIndex: 10 });
       gsap.set(cardRefs.current[active], { zIndex: 20 });
-      gsap.to(cardRefs.current[prv],     { scale: 1, ease, duration: 1 });
+      gsap.to(cardRefs.current[prv], { scale: 1, ease, duration: 1 });
 
       gsap.to(cardContentRefs.current[active], {
-        y: responsive.offsetTop + responsive.cardHeight - responsive.cardContentFinalY,
-        opacity: 0, duration: 0.6, ease,
+        y:
+          responsive.offsetTop +
+          responsive.cardHeight -
+          responsive.cardContentFinalY,
+        opacity: 0,
+        duration: 0.6,
+        ease,
       });
 
-      if (slideNumberRefs.current[active]) gsap.to(slideNumberRefs.current[active], { x: 0, ease, duration: 1 });
-      if (slideNumberRefs.current[prv])    gsap.to(slideNumberRefs.current[prv], { x: -responsive.numberSize, ease, duration: 1 });
+      if (slideNumberRefs.current[active])
+        gsap.to(slideNumberRefs.current[active], { x: 0, ease, duration: 1 });
+      if (slideNumberRefs.current[prv])
+        gsap.to(slideNumberRefs.current[prv], {
+          x: -responsive.numberSize,
+          ease,
+          duration: 1,
+        });
 
       gsap.to(progressRef.current, {
         width: responsive.progressWidth * (1 / newOrder.length) * (active + 1),
-        ease, duration: 1,
+        ease,
+        duration: 1,
       });
 
       gsap.to(cardRefs.current[active], {
-        x: 0, y: 0, ease, width, height, borderRadius: 0, duration: 1,
+        x: 0,
+        y: 0,
+        ease,
+        width,
+        height,
+        borderRadius: 0,
+        duration: 1,
         onComplete: () => {
-          if (!isMountedRef.current) { resolve(); return; }
+          if (!isMountedRef.current) {
+            resolve();
+            return;
+          }
 
-          const xNew = responsive.offsetLeft + (rest.length - 1) * (responsive.cardWidth + responsive.gap);
+          const xNew =
+            responsive.offsetLeft +
+            (rest.length - 1) * (responsive.cardWidth + responsive.gap);
 
           gsap.set(cardRefs.current[prv], {
-            x: xNew, y: responsive.offsetTop,
-            width: responsive.cardWidth, height: responsive.cardHeight,
-            zIndex: 30, borderRadius: 10, scale: 1,
+            x: xNew,
+            y: responsive.offsetTop,
+            width: responsive.cardWidth,
+            height: responsive.cardHeight,
+            zIndex: 30,
+            borderRadius: 10,
+            scale: 1,
           });
 
           gsap.set(cardContentRefs.current[prv], {
             x: xNew,
-            y: responsive.offsetTop + responsive.cardHeight - responsive.cardContentOffset,
-            opacity: 1, zIndex: 40,
+            y:
+              responsive.offsetTop +
+              responsive.cardHeight -
+              responsive.cardContentOffset,
+            opacity: 1,
+            zIndex: 40,
           });
 
           if (slideNumberRefs.current[prv]) {
-            gsap.set(slideNumberRefs.current[prv], { x: rest.length * responsive.numberSize });
+            gsap.set(slideNumberRefs.current[prv], {
+              x: rest.length * responsive.numberSize,
+            });
           }
 
           gsap.set(detailsInactive, { opacity: 0 });
 
-          const inactiveRefs = getTextRefs(!detailsEvenRef.current, evenRefs, oddRefs);
-          resetInactiveYPositions(inactiveRefs, responsive.yOffset1, responsive.yOffset2, responsive.yOffset3);
+          const inactiveRefs = getTextRefs(
+            !detailsEvenRef.current,
+            evenRefs,
+            oddRefs,
+          );
+          resetInactiveYPositions(
+            inactiveRefs,
+            responsive.yOffset1,
+            responsive.yOffset2,
+            responsive.yOffset3,
+          );
 
           if (detailsActive) gsap.set(detailsActive, { height: "auto" });
 
@@ -365,22 +496,39 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
       rest.forEach((i, index) => {
         if (i === prv) return;
-        const xNew  = responsive.offsetLeft + index * (responsive.cardWidth + responsive.gap);
+        const xNew =
+          responsive.offsetLeft +
+          index * (responsive.cardWidth + responsive.gap);
         const delay = 0.1 * (index + 1);
 
         gsap.set(cardRefs.current[i], { zIndex: 30 });
         gsap.to(cardRefs.current[i], {
-          x: xNew, y: responsive.offsetTop,
-          width: responsive.cardWidth, height: responsive.cardHeight,
-          ease, delay, duration: 1,
+          x: xNew,
+          y: responsive.offsetTop,
+          width: responsive.cardWidth,
+          height: responsive.cardHeight,
+          ease,
+          delay,
+          duration: 1,
         });
         gsap.to(cardContentRefs.current[i], {
           x: xNew,
-          y: responsive.offsetTop + responsive.cardHeight - responsive.cardContentOffset,
-          opacity: 1, zIndex: 40, ease, delay, duration: 0.6,
+          y:
+            responsive.offsetTop +
+            responsive.cardHeight -
+            responsive.cardContentOffset,
+          opacity: 1,
+          zIndex: 40,
+          ease,
+          delay,
+          duration: 0.6,
         });
         if (slideNumberRefs.current[i]) {
-          gsap.to(slideNumberRefs.current[i], { x: (index + 1) * responsive.numberSize, ease, duration: 1 });
+          gsap.to(slideNumberRefs.current[i], {
+            x: (index + 1) * responsive.numberSize,
+            ease,
+            duration: 1,
+          });
         }
       });
     });
@@ -393,7 +541,9 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
 
     await new Promise((resolve) => {
       gsap.to(indicatorRef.current, {
-        x: 0, duration: ANIMATION_CONSTANTS.INDICATOR_DURATION, onComplete: resolve,
+        x: 0,
+        duration: ANIMATION_CONSTANTS.INDICATOR_DURATION,
+        onComplete: resolve,
       });
     });
     if (!isMountedRef.current) return;
@@ -402,7 +552,7 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
       gsap.to(indicatorRef.current, {
         x: width,
         duration: ANIMATION_CONSTANTS.INDICATOR_EXIT_DURATION,
-        delay:    ANIMATION_CONSTANTS.INDICATOR_EXIT_DELAY,
+        delay: ANIMATION_CONSTANTS.INDICATOR_EXIT_DELAY,
         onComplete: resolve,
       });
     });
@@ -428,8 +578,10 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
         ref={containerRef}
         className="hero-page relative inset-0 w-screen h-screen text-white overflow-hidden"
         style={{
-          width: "100vw", height: "100vh",
-          maxWidth: "100vw", maxHeight: "100svh",
+          width: "100vw",
+          height: "100vh",
+          maxWidth: "100vw",
+          maxHeight: "100svh",
           opacity: initialized ? 1 : 0,
           transition: "opacity 0.3s ease",
         }}
@@ -445,7 +597,9 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
         {data.map((item, index) => (
           <Fragment key={item.id ?? index}>
             <div
-              ref={(el) => { cardRefs.current[index] = el; }}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
               className="absolute inset-0 w-full h-full bg-center bg-cover"
               style={{ backgroundImage: `url(${item.image})` }}
             >
@@ -453,74 +607,79 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
             </div>
 
             <div
-              ref={(el) => { cardContentRefs.current[index] = el; }}
+              ref={(el) => {
+                cardContentRefs.current[index] = el;
+              }}
               className="absolute left-0 -top-8 lg:-top-6 text-white pl-2 md:pl-4"
             >
               <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-8 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" />
-              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">{item.place}</div>
-              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">{item.country}</div>
-              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">{item.title}</div>
-              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">{item.title2}</div>
+              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+                {item.place}
+              </div>
+              <div className="mt-1 text-xs font-medium [text-shadow:2px_2px_3px_#000000]">
+                {item.country}
+              </div>
+              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+                {item.title}
+              </div>
+              <div className="font-semibold text-[10px] sm:text-sm md:text-xl [text-shadow:2px_2px_3px_#000000]">
+                {item.title2}
+              </div>
             </div>
           </Fragment>
         ))}
 
         {/* ── Hero details EVEN ── */}
+
         <div
           ref={detailsEvenElementRef}
-          className="absolute left-0 right-0 md:right-auto md:left-15 top-[28%] sm:top-[22%] md:top-[20%] z-20 px-4 md:px-0 py-4"
+          className="absolute left-0 right-0 md:right-auto md:left-15 top-[28%] sm:top-[22%] md:top-[20%] z-[100] px-4 md:px-0 py-4"
         >
-          <span ref={placeTextEvenRef}   className="hidden" />
+          <span ref={placeTextEvenRef} className="hidden" />
           <span ref={countryTextEvenRef} className="hidden" />
-          <span ref={title1EvenRef}      className="hidden" />
-          <span ref={title2EvenRef}      className="hidden" />
-          <span ref={descEvenRef}        className="hidden" />
-          <span ref={ctaEvenRef}         className="hidden" />
+          <span ref={title1EvenRef} className="hidden" />
+          <span ref={title2EvenRef} className="hidden" />
+          <span ref={descEvenRef} className="hidden" />
+          <span ref={ctaEvenRef} className="hidden" />
 
-          <HeroSearch
-            locale={locale}
-            {...sharedSearchProps}
-          />
+          <HeroSearch locale={locale} {...sharedSearchProps} />
         </div>
 
         {/* ── Hero details ODD ── */}
         <div
           ref={detailsOddElementRef}
-          className="absolute left-0 right-0 md:right-auto md:left-15 top-[28%] sm:top-[22%] md:top-[20%] z-20 px-4 md:px-0 py-4"
+          className="absolute left-0 right-0 md:right-auto md:left-15 top-[28%] sm:top-[22%] md:top-[20%] z-[100] px-4 md:px-0 py-4"
         >
-          <span ref={placeTextOddRef}   className="hidden" />
+          <span ref={placeTextOddRef} className="hidden" />
           <span ref={countryTextOddRef} className="hidden" />
-          <span ref={title1OddRef}      className="hidden" />
-          <span ref={title2OddRef}      className="hidden" />
-          <span ref={descOddRef}        className="hidden" />
-          <span ref={ctaOddRef}         className="hidden" />
+          <span ref={title1OddRef} className="hidden" />
+          <span ref={title2OddRef} className="hidden" />
+          <span ref={descOddRef} className="hidden" />
+          <span ref={ctaOddRef} className="hidden" />
 
-          <HeroSearch
-            locale={locale}
-            {...sharedSearchProps}
-          />
+          <HeroSearch locale={locale} {...sharedSearchProps} />
         </div>
 
-    {/* ── Título imagen activa — esquina inferior izquierda ── */}
-{activeDestination && (
-  <div className="absolute bottom-10 left-4 md:left-16 z-20 text-white pointer-events-none">
-    <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-10 md:h-1 rounded-full bg-white mb-1 [box-shadow:2px_2px_3px_#000000]" />
-    <div className="text-sm font-medium [text-shadow:2px_2px_3px_#000000]">
-      {activeDestination.place}
-    </div>
-    <div className="text-sm font-medium [text-shadow:2px_2px_3px_#000000]">
-      {activeDestination.country}
-    </div>
-    <div className="font-semibold text-sm sm:text-base md:text-2xl [text-shadow:2px_2px_3px_#000000]">
-      {activeDestination.title}
-    </div>
-    {activeDestination.title2 && (
-      <div className="font-semibold text-sm sm:text-base md:text-2xl [text-shadow:2px_2px_3px_#000000]">
-        {activeDestination.title2}
-      </div>
-    )}
-  </div>
-)}
+        {/* ── Título imagen activa — esquina inferior izquierda ── */}
+        {activeDestination && (
+          <div className="absolute bottom-10 left-4 md:left-16 z-20 text-white pointer-events-none">
+            <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-10 md:h-1 rounded-full bg-white mb-1 [box-shadow:2px_2px_3px_#000000]" />
+            <div className="text-sm font-medium [text-shadow:2px_2px_3px_#000000]">
+              {activeDestination.place}
+            </div>
+            <div className="text-sm font-medium [text-shadow:2px_2px_3px_#000000]">
+              {activeDestination.country}
+            </div>
+            <div className="font-semibold text-sm sm:text-base md:text-2xl [text-shadow:2px_2px_3px_#000000]">
+              {activeDestination.title}
+            </div>
+            {activeDestination.title2 && (
+              <div className="font-semibold text-sm sm:text-base md:text-2xl [text-shadow:2px_2px_3px_#000000]">
+                {activeDestination.title2}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Hidden elements for GSAP references */}
         <nav ref={navRef} className="opacity-0" />
@@ -530,13 +689,14 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
           className="absolute top-0 left-0 w-full h-full bg-transparent z-50"
         />
       </div>
-<section className="sr-only" aria-label="Destinos de viaje">
-  {data.map((item) => (
-    <p key={item.id}>
-      Viaje a {item.place}, {item.country}. {item.title}. {item.title2}. {item.description}
-    </p>
-  ))}
-</section>
+      <section className="sr-only" aria-label="Destinos de viaje">
+        {data.map((item) => (
+          <p key={item.id}>
+            Viaje a {item.place}, {item.country}. {item.title}. {item.title2}.{" "}
+            {item.description}
+          </p>
+        ))}
+      </section>
     </>
   );
 };

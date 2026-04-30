@@ -164,48 +164,11 @@ export default function RegionDestination({
     }
   `}</style>
       </div>
-      {/* ── SEARCH BAR (sticky) ── */}
-      <div
-        id="countries-search"
-        className="bg-gradient-theme pt-16 sticky top-0 z-30 backdrop-blur-md border-b border-white/5"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative max-w-xl">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t(
-                locale,
-                "Buscar por país...",
-                "Search by country...",
-              )}
-              className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
-              >
-                <FaTimes className="text-xs" />
-              </button>
-            )}
-          </div>
-          {query && (
-            <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
-              {filtered.length}{" "}
-              {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
-            </p>
-          )}
-        </div>
-      </div>
 
       {/* ── COUNTRIES GRID ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme"  id="countries-search">
         {/* Section header */}
-        <div className="mb-10">
+        <div className="mb-4 pt-10">
           <div className="flex items-center gap-3 mb-2">
             <div
               className={`w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]`}
@@ -221,6 +184,44 @@ export default function RegionDestination({
               `Explore countries in ${region.name}`,
             )}
           </p>
+        </div>
+
+        {/* ── SEARCH BAR (sticky) ── */}
+        <div
+         
+          className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="relative max-w-xl">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(
+                  locale,
+                  "Buscar por país...",
+                  "Search by country...",
+                )}
+                className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
+                >
+                  <FaTimes className="text-xs" />
+                </button>
+              )}
+            </div>
+            {query && (
+              <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
+                {filtered.length}{" "}
+                {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Empty state */}

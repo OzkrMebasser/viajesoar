@@ -63,9 +63,49 @@ export default function ActivityDestination({
         open={galleryOpen}
         onClose={() => setGalleryOpen(false)}
       />
+      {/* ── ACTIVITY INFO ── */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
+        {activity.category && (
+          <div className="flex items-center gap-2 mb-4">
+            <Ticket className="text-[var(--accent)] w-4 h-4" />
+            <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
+              {activity.category}
+            </span>
+          </div>
+        )}
 
+        <SplitText
+          text={activity.name}
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 uppercase "
+          delay={25}
+          duration={0.5}
+          splitType="chars"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="left"
+        />
+
+        <p className="text-white/60 text-sm flex items-center gap-1.5 mt-1 mb-2">
+          <FaGlobe className="text-[var(--accent)] text-xs" />
+          {cityName}, {countryName}
+        </p>
+
+        {/* {activity.description && (
+            <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
+              {activity.description}
+            </div>
+          )} */}
+
+        {activity.price !== null && activity.price !== undefined && (
+          <p className="text-white/70 text-sm flex items-center gap-1.5 mt-4">
+            {t(locale, "Desde", "From")}
+            {/* {t(locale, "Desde", "From")} ${activity.price} */}
+            <BadgeAccent>$ {activity.price} USD</BadgeAccent>
+          </p>
+        )}
+      </div>
       {/* ── HERO ── */}
-      <section className="relative h-[70vh] sm:h-[60vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         <div className="absolute inset-0 z-0">
           {galleryImages.length > 0 ? (
             <CardsSlideShow
@@ -79,55 +119,46 @@ export default function ActivityDestination({
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
-
-        {/*Titulo de la excursion*/}
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 h-80 lg:h-full pb-16 lg:pt-28">
-          {activity.category && (
-            <div className="flex items-center gap-2 mb-4">
-              <Ticket className="text-[var(--accent)] w-4 h-4" />
-              <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
-                {activity.category}
-              </span>
-            </div>
-          )}
-
-          <SplitText
-            text={activity.name}
-            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 uppercase "
-            delay={25}
-            duration={0.5}
-            splitType="chars"
-            from={{ opacity: 0, y: 20 }}
-            to={{ opacity: 1, y: 0 }}
-            textAlign="left"
+      </div>
+      {/* Scroll indicator */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
+        onClick={() =>
+          document
+            .getElementById("activity-details")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+      >
+        <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
+          scroll
+        </span>
+        {[0, 0.2].map((delay, i) => (
+          <div
+            key={i}
+            className="w-3 h-3 border-r border-b border-white/60"
+            style={{
+              transform: "rotate(45deg)",
+              animation: "chevBounce 1.4s ease-in-out infinite",
+              animationDelay: `${delay}s`,
+            }}
           />
-
-          <p className="text-white/60 text-sm flex items-center gap-1.5 mt-1 mb-2">
-            <FaGlobe className="text-[var(--accent)] text-xs" />
-            {cityName}, {countryName}
-          </p>
-
-          {/* {activity.description && (
-            <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
-              {activity.description}
-            </div>
-          )} */}
-
-          {activity.price !== null && activity.price !== undefined && (
-            <p className="text-white/70 text-sm flex items-center gap-1.5 mt-4">
-              {t(locale, "Desde", "From")}
-              {/* {t(locale, "Desde", "From")} ${activity.price} */}
-              <BadgeAccent>$ {activity.price} USD</BadgeAccent>
-            </p>
-          )}
-        </div>
-      </section>
-
+        ))}
+        <style>{`
+    @keyframes chevBounce {
+      0%   { translate: 0 0px;  opacity: 0.3; }
+      50%  { translate: 0 5px;  opacity: 1; }
+      100% { translate: 0 0px;  opacity: 0.3; }
+    }
+  `}</style>
+      </div>
       {/* ── CONTENT ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-re">
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme "
+        id="activity-details"
+      >
         {/* Section header */}
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="mb-4 pt-10">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]/40" />
             <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
               {t(locale, "Detalles", "Details")}

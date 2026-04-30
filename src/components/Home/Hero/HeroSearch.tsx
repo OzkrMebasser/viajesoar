@@ -53,26 +53,54 @@ const HeroSearch = ({
       : "Search destinations, packages or tours";
 
   return (
-    <div className="flex flex-col items-center md:items-start gap-3 w-full">
+    <div className="flex flex-col items-center md:items-start gap-3 w-full ">
       {/* ── Título SEO ── */}
-      <div className="flex flex-col items-center md:items-start gap-1 mb-1">
+      {/* <div className="flex flex-col items-center md:items-start gap-1 mb-1">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight text-center md:text-left [text-shadow:2px_2px_12px_rgba(0,0,0,0.9)]">
           {locale === "es"
-            ? "Agencia de viajes y paquetes turísticos"
-            : "Travel agency & vacation packages"}
+            ? "Agencia de Viajes Online con Paquetes y Tours"
+            : "Your Travel agency online"}
         </h1>
-        <p className="text-base sm:text-lg md:text-xl font-medium text-white/90 text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-lg">
+        <h2 className="text-base sm:text-lg md:text-xl font-medium text-white/90 text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-lg">
           {locale === "es"
             ? "Encuentra paquetes, tours y destinos al mejor precio. Reserva fácil y viaja seguro."
             : "Find packages, tours and destinations at the best price. Book easy, travel safe."}
+        </h2>
+         <h2 className="text-base sm:text-lg md:text-xl font-medium text-white/90 text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-lg">
+          {locale === "es"
+            ? "Encuentra paquetes, tours y destinos al mejor precio. Reserva fácil y viaja seguro."
+            : "Find packages, tours and destinations at the best price. Book easy, travel safe."}
+        </h2>
+      </div> */}
+      {/* ── Título SEO ── */}
+      <div className="flex flex-col items-center md:items-start gap-2 mb-1 lg:w-[80%] ">
+        {/* Slogan / eyebrow */}
+        <p className="uppercase tracking-[0.22em] text-[11px] sm:text-xs font-semibold text-white text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)]">
+          {locale === "es"
+            ? "Tu agencia de viajes online de confianza"
+            : "Your trusted online travel agency"}
+        </p>
+
+        {/* SEO H1 */}
+        <h1 className="uppercase text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight text-center md:text-left [text-shadow:2px_2px_12px_rgba(0,0,0,0.9)] max-w-3xl">
+          {locale === "es"
+            ? "Paquetes Todo Incluido y Viajes Nacionales e Internacionales"
+            : "All-Inclusive Vacation Packages and International Travel"}
+        </h1>
+
+        {/* Supporting copy */}
+        <p className=" text-sm sm:text-md md:text-base  text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-xl">
+          {locale === "es"
+            ? "Descubre destinos seleccionados, tours y experiencias diseñadas para viajar con confianza."
+            : "Discover curated destinations, tours and travel experiences designed with confidence."}
         </p>
       </div>
 
       {/* ── Buscador ── */}
-      <div className="relative w-[88vw] sm:w-[480px] md:w-[540px]">
+      <div className="relative w-[88vw] sm:w-[480px] md:w-[500px] lg:w-[540px] isolate">
         {/* Input row */}
         <div className="flex items-center bg-white rounded-lg overflow-hidden shadow-2xl">
-          <div className="pl-5 text-gray-400 flex-shrink-0">
+          <div className="pl-2 lg:pl-5 text-gray-400 flex-shrink-0">
             {isSearching ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
@@ -84,21 +112,12 @@ const HeroSearch = ({
             value={searchQuery}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder={placeholder}
-            className="flex-1 px-4 py-3.5 text-sm md:text-base text-gray-700 outline-none bg-transparent placeholder:text-gray-400"
+            className="flex-1 px-2  md:py-0 py-3.5 text-sm md:text-base text-gray-700 outline-none bg-transparent placeholder:text-gray-400"
           />
-          {/* <button
-            onClick={() => {
-              if (!searchQuery.trim()) return;
-              const base = locale === "es" ? `/${locale}/destinos` : `/${locale}/destinations`;
-              router.push(`${base}?q=${encodeURIComponent(searchQuery)}` as any);
-            }}
-            className="bg-[#7ac143] hover:bg-[#6aad38] active:bg-[#5a9430] text-white font-bold text-sm md:text-base px-6 py-3.5 transition-colors cursor-pointer flex-shrink-0"
-          >
-            {locale === "es" ? "Buscar" : "Search"}
-          </button> */}
+
           <ButtonArrow
             title={locale === "es" ? "Buscar" : "Search"}
-            className="!rounded-md !rounded-l-none !py-3.5 !px-6 !shadow-none !hover:scale-100"
+            className="!rounded-md !rounded-l-none !py-4 md:!py-5 lg:!py-3.5  !px-4 lg:!px-6 !shadow-none !hover:scale-100"
             onClick={() => {
               if (!searchQuery.trim()) return;
               const base =
@@ -114,7 +133,7 @@ const HeroSearch = ({
 
         {/* ── Resultados inline ── */}
         {searchQuery.length >= 2 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl overflow-hidden z-50 max-h-72 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl overflow-hidden z-[200] max-h-72 overflow-y-auto">
             {isSearching && (
               <div className="p-4 text-center text-gray-400">
                 <Loader2 className="w-5 h-5 mx-auto animate-spin" />
@@ -133,7 +152,7 @@ const HeroSearch = ({
               <button
                 key={`${result.category}-${result.id}`}
                 onClick={() => handleResultClick(result)}
-                className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3 border-b border-gray-100 last:border-0"
+                className="w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors flex items-center gap-3 border-b border-gray-100 last:border-0"
               >
                 {result.image ? (
                   <img
