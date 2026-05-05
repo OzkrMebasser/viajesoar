@@ -10,7 +10,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 
 // ── Subcomponents ──
 import PackageHero from "./PackageHero";
-import PricePanel from "@/components/Packages/Detail/Quote/PricePanel"
+import PricePanel from "@/components/Packages/Detail/Quote/PricePanel";
 import ItineraryTab from "./tabs/ItineraryTab";
 import OptionalsTab from "./tabs/OptionalTab/OptionalsTab";
 import HotelsTab from "./tabs/HotelsTab";
@@ -27,6 +27,8 @@ import type {
 } from "@/types/packages";
 
 import type { OptionalActivity } from "@/types/activities";
+import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 type Locale = "es" | "en";
 const t = (locale: Locale, es: string, en: string) =>
@@ -49,7 +51,7 @@ export default function PackageInfoFull({
   pkg,
   locale,
   similarPackages = [],
-  optionals 
+  optionals,
 }: Props) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("itinerary");
@@ -126,10 +128,40 @@ export default function PackageInfoFull({
     <div className="min-h-screen bg-gradient-theme">
       {/* ── HERO + DESCRIPTION BAND ── */}
       <PackageHero pkg={pkg} locale={locale} />
-
+      <ScrollIndicator targetId="package-info" />
       {/* ── MAIN LAYOUT ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-16 py-12">
+
+
+       {/* ── DESCRIPTION BAND ── */}
+        <div className=" py-8 mb-4 w-[100%] px-4 " id="package-info">
+           {/* Section header */}
+        <div className="mb-4 mt-10  ">
+          <div className="flex items-center gap-3 mb-2 ">
+            <div
+              className={`w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]`}
+            />
+            <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
+              {t(locale, "Detalles del Paquete", "Package Details")}
+            </h2>
+          </div>
+          
+        </div>
+          <div className=" mx-auto px-4 sm:px-12 flex flex-wrap gap-4 items-center justify-between ">
+
+            <p className="text-[var(--accent)] text-sm sm:text-base leading-relaxed max-w-3xl">
+              {pkg.description}
+            </p>
+            
+            <ImageGalleryModal
+              images={pkg.home_carousel_images || []}
+              title={pkg.name}
+            />
+          </div>
+        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-16 pb-8"   >
+       
         <div className="grid grid-cols-1 gap-10">
+
           <div>
             {/* ── TAB BAR ── */}
             <div className="relative">
@@ -160,7 +192,7 @@ export default function PackageInfoFull({
 
               <div
                 ref={tabsScrollRef}
-                className="flex gap-0 border-b border-[var(--border)]/40 mb-10 pb-4 overflow-x-auto"
+                className="flex gap-0 border-b border-t border-[var(--border)]/60 mb-10 pb-4 overflow-x-auto py-6"
               >
                 {TABS.map((tab) => (
                   <button
@@ -188,7 +220,11 @@ export default function PackageInfoFull({
               />
             )}
             {activeTab === "optionals" && (
-              <OptionalsTab locale={locale} optionals={optionals} packageSlug={pkg.slug} />
+              <OptionalsTab
+                locale={locale}
+                optionals={optionals}
+                packageSlug={pkg.slug}
+              />
             )}
             {activeTab === "hotels" && (
               <HotelsTab hotels={hotels} locale={locale} />
@@ -210,7 +246,7 @@ export default function PackageInfoFull({
             <PackageNotes notes={pkg.notes} locale={locale} className="mt-12" />
 
             {/* ── SIDEBAR ── */}
-          <PricePanel pkg={pkg} locale={locale} />
+            <PricePanel pkg={pkg} locale={locale} />
 
             {/* ── BACK ── */}
             <div className="mt-4">

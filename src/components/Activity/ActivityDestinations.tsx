@@ -15,7 +15,7 @@ import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
 import SplitText from "@/components/SplitText";
 import { FaImages } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
-
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import { MapPin, Ticket, DollarSign } from "lucide-react";
 import { FaGlobe } from "react-icons/fa";
 import { useState } from "react";
@@ -121,7 +121,8 @@ export default function ActivityDestination({
         </div>
       </div>
       {/* Scroll indicator */}
-      <div
+      <ScrollIndicator targetId="activity-details" />
+      {/* <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
         onClick={() =>
           document
@@ -150,7 +151,7 @@ export default function ActivityDestination({
       100% { translate: 0 0px;  opacity: 0.3; }
     }
   `}</style>
-      </div>
+      </div> */}
       {/* ── CONTENT ── */}
       <div
         className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme "

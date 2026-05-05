@@ -31,6 +31,7 @@ import {
 import { MdTravelExplore } from "react-icons/md";
 import ParticlesCanvas from "../ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "../ui/Particles/CardParticlesCanvas";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 const iconMap: Record<string, React.ComponentType<any>> = {
   FaGlobeEurope,
@@ -61,24 +62,50 @@ export default function PackageList({
 }: Props) {
   const [query, setQuery] = useState("");
 
-const normalize = (str: string) =>
-  str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const normalize = (str: string) =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
-const filtered = useMemo(() => {
-  if (!query.trim()) return packages;
-  const q = normalize(query);
-  return packages.filter(
-    (pkg) =>
-      normalize(pkg.name).includes(q) ||
-      pkg.visited_countries?.some((c) => normalize(c.name).includes(q)) ||
-      pkg.visited_cities?.some((c) => normalize(c.name).includes(q)),
-  );
-}, [query, packages]);
+  const filtered = useMemo(() => {
+    if (!query.trim()) return packages;
+    const q = normalize(query);
+    return packages.filter(
+      (pkg) =>
+        normalize(pkg.name).includes(q) ||
+        pkg.visited_countries?.some((c) => normalize(c.name).includes(q)) ||
+        pkg.visited_cities?.some((c) => normalize(c.name).includes(q)),
+    );
+  }, [query, packages]);
 
   return (
-    <div className="min-h-screen bg-gradient-theme">
+    <section className="min-h-screen bg-gradient-theme">
+      {/* ── PACKAGES HERO INFO ── */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
+        {/* <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-24 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" /> */}
+
+        <SplitText
+          text={t(locale, "Paquetes Imperdibles", "Unmissable Travel Deals")}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold  mb-3 uppercase"
+          delay={25}
+          duration={0.5}
+          splitType="chars"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="left"
+        />
+        <div className="text-white mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
+          {t(
+            locale,
+            "Viaja a los destinos más increíbles, todo organizado para ti.",
+            "Travel to the most incredible destinations, fully organized for you.",
+          )}
+        </div>
+      </div>
+
       {/* ── HERO BAND ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         {/* Background image — uses first package image as hero */}
         <div className="absolute inset-0 z-0">
           {packages[0]?.home_carousel_images?.[0] ? (
@@ -95,67 +122,67 @@ const filtered = useMemo(() => {
         </div>
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-7xl mx-auto w-full  px-4 sm:px-6 pb-20 pt-10 ">
-          {/* <div className="w-8 h-0.5 sm:w-6 sm:h-0.5 md:w-24 md:h-1 rounded-full bg-white [box-shadow:2px_2px_3px_#000000]" /> */}
-
-          <SplitText
-            text={t(locale, "Paquetes Imperdibles", "Unmissable Travel Deals")}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold  mb-3 uppercase"
-            delay={25}
-            duration={0.5}
-            splitType="chars"
-            from={{ opacity: 0, y: 20 }}
-            to={{ opacity: 1, y: 0 }}
-            textAlign="center"
-          />
-          <div className="text-white mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
-            {t(
-              locale,
-              "Viaja a los destinos más increíbles, todo organizado para ti.",
-              "Travel to the most incredible destinations, fully organized for you.",
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SEARCH BAR ── */}
-      <div className="bg-gradient-theme  py-5 sticky top-0 z-30 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative max-w-xl">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t(
-                locale,
-                "Buscar por nombre, país o ciudad...",
-                "Search by name, country or city...",
-              )}
-              className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5   text-sm outline-none transition-colors duration-200"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
-              >
-                <FaTimes className="text-xs" />
-              </button>
-            )}
-          </div>
-          {query && (
-            <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
-              {filtered.length}{" "}
-              {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
-            </p>
-          )}
-        </div>
       </div>
 
+      <ScrollIndicator targetId="package-search" />
       {/* ── PACKAGE GRID ── */}
       {/* ── No packages found  ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 bg-gradient-theme">
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-12 bg-gradient-theme"
+        id="package-search"
+      >
+        {/* Section header */}
+        <div className="mb-4 pt-10">
+          <div className="flex items-center gap-3 mb-2">
+            <div
+              className={`w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]`}
+            />
+            <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
+              {t(locale, "Paquetes", "Packages")}
+            </h2>
+          </div>
+          <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
+            {t(
+              locale,
+              "Descubre nuestra selección global de experiencias",
+              "Discover our global selection of experiences",
+            )}
+          </p>
+        </div>
+        {/* ── SEARCH BAR ── */}
+        <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="relative max-w-xl">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(
+                  locale,
+                  "Buscar por nombre, país o ciudad...",
+                  "Search by name, country or city...",
+                )}
+                className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5   text-sm outline-none transition-colors duration-200"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
+                >
+                  <FaTimes className="text-xs" />
+                </button>
+              )}
+            </div>
+            {query && (
+              <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
+                {filtered.length}{" "}
+                {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
+              </p>
+            )}
+          </div>
+        </div>
         {filtered.length === 0 ? (
           <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4 ">
             <MdTravelExplore className="text-white/20 text-6xl" />
@@ -234,7 +261,7 @@ const filtered = useMemo(() => {
                   {/* Package Title */}
                   <SplitText
                     text={pkg.name}
-                    className=" font-bold text-lg uppercase leading-tight mb-2 text-[var(--accent)] "
+                        className="font-bold text-lg uppercase leading-tight text-theme-tittles"
                     delay={25}
                     duration={0.5}
                     splitType="chars"
@@ -395,6 +422,6 @@ const filtered = useMemo(() => {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

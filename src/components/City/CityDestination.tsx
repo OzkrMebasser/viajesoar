@@ -11,6 +11,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 import DesktopCardActivity from "@/components/Activity/DesktopCardActivity";
 import MobileCardActivity from "@/components/Activity/MobileCardActivity";
@@ -173,7 +174,8 @@ export default function CityDestination({
         </div>
       </div>
       {/* Scroll indicator */}
-      <div
+      <ScrollIndicator targetId="activities-search" />
+      {/* <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
         onClick={() =>
           document
@@ -202,7 +204,7 @@ export default function CityDestination({
       100% { translate: 0 0px;  opacity: 0.3; }
     }
   `}</style>
-      </div>
+      </div> */}
 
       {/* ── ACTIVITIES GRID ── */}
       <div

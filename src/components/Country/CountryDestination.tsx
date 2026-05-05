@@ -10,6 +10,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
 import CardsSlideShow from "@/components/CardsSlideShow";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 import { FaSearch, FaTimes, FaArrowRight } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
@@ -111,7 +112,8 @@ export default function CountryDestination({
       </div>
 
       {/* Scroll indicator */}
-      <div
+        <ScrollIndicator targetId="cities-search" />
+      {/* <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
         onClick={() =>
           document
@@ -140,7 +142,7 @@ export default function CountryDestination({
       100% { translate: 0 0px;  opacity: 0.3; }
     }
   `}</style>
-      </div>
+      </div> */}
 
       {/* ── CITIES GRID ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme"  id="cities-search">

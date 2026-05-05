@@ -588,7 +588,8 @@ const HeroSlidesSearch = ({ locale, data }: Props) => {
       >
         {/* Mapa del mundo loader */}
         {clientReady && showMap && (
-          <div className="worldmap-container fixed inset-0 z-50 pointer-events-none will-change-opacity">
+          <div className="worldmap-container fixed inset-0 z-[9999] pointer-events-none will-change-opacity">
+            {" "}
             <WorldMapLoader />
           </div>
         )}

@@ -13,6 +13,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
 import CardsSlideShow from "@/components/CardsSlideShow";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 import {
   FaGlobeEurope,
@@ -134,36 +135,37 @@ export default function RegionDestination({
       </div>
 
       {/* Scroll indicator */}
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
-        onClick={() =>
-          document
-            .getElementById("countries-search")
-            ?.scrollIntoView({ behavior: "smooth" })
-        }
-      >
-        <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
-          scroll
-        </span>
-        {[0, 0.2].map((delay, i) => (
-          <div
-            key={i}
-            className="w-3 h-3 border-r border-b border-white/60"
-            style={{
-              transform: "rotate(45deg)",
-              animation: "chevBounce 1.4s ease-in-out infinite",
-              animationDelay: `${delay}s`,
-            }}
-          />
-        ))}
-        <style>{`
-    @keyframes chevBounce {
-      0%   { translate: 0 0px;  opacity: 0.3; }
-      50%  { translate: 0 5px;  opacity: 1; }
-      100% { translate: 0 0px;  opacity: 0.3; }
-    }
-  `}</style>
-      </div>
+        <ScrollIndicator targetId="countries-search" />
+        {/* <div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
+          onClick={() =>
+            document
+              .getElementById("countries-search")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+        >
+          <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
+            scroll
+          </span>
+          {[0, 0.2].map((delay, i) => (
+            <div
+              key={i}
+              className="w-3 h-3 border-r border-b border-white/60"
+              style={{
+                transform: "rotate(45deg)",
+                animation: "chevBounce 1.4s ease-in-out infinite",
+                animationDelay: `${delay}s`,
+              }}
+            />
+          ))}
+          <style>{`
+      @keyframes chevBounce {
+        0%   { translate: 0 0px;  opacity: 0.3; }
+        50%  { translate: 0 5px;  opacity: 1; }
+        100% { translate: 0 0px;  opacity: 0.3; }
+      }
+    `}</style>
+        </div> */}
 
       {/* ── COUNTRIES GRID ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme"  id="countries-search">

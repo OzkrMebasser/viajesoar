@@ -11,6 +11,7 @@ import ButtonArrow from "@/components/ui/ButtonArrow";
 import ButtonGlower from "../ui/ButtonGlower";
 import ParticlesCanvas from "../ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "../ui/Particles/CardParticlesCanvas";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 import {
   FaGlobeEurope,
@@ -123,7 +124,8 @@ export default function AllRegions({ locale, regions }: Props) {
       </div>
 
       {/* Scroll indicator */}
-      <div
+      <ScrollIndicator targetId="region-search" />
+      {/* <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
         onClick={() =>
           document
@@ -152,7 +154,7 @@ export default function AllRegions({ locale, regions }: Props) {
       100% { translate: 0 0px;  opacity: 0.3; }
     }
   `}</style>
-      </div>
+      </div> */}
 
       {/* ── REGIONS GRID ── */}
       <div
@@ -177,7 +179,7 @@ export default function AllRegions({ locale, regions }: Props) {
             )}
           </p>
         </div>
-        {/* ── SEARCH BAR (sticky) ── */}
+        {/* ── SEARCH BAR  ── */}
         <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
           {" "}
           <div className="max-w-7xl mx-auto px-4 sm:px-6">

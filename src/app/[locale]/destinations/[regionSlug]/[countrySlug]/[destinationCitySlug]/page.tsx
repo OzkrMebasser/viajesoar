@@ -22,9 +22,10 @@ export default async function CityDestinationPage({
   if (!city || !country) notFound();
   if (city.country_id !== country.id) notFound();
 
-  const [activities, cityPackages] = await Promise.all([  // 👈
+  const [activities, cityPackages] = await Promise.all([  
     getActivitiesByDestination(city.id, locale),
     getPackagesByCity(city.id, locale),
+    console.log(city)
   ]);
 
   return (

@@ -97,7 +97,7 @@ const HeroSearch = ({
       </div>
 
       {/* ── Buscador ── */}
-      <div className="relative w-[88vw] sm:w-[480px] md:w-[500px] lg:w-[540px] isolate">
+      <div className="relative w-[88vw] sm:w-[450px] md:w-[500px] lg:w-[510px] isolate">
         {/* Input row */}
         <div className="flex items-center bg-white rounded-lg overflow-hidden shadow-2xl">
           <div className="pl-2 lg:pl-5 text-gray-400 flex-shrink-0">
@@ -112,12 +112,12 @@ const HeroSearch = ({
             value={searchQuery}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder={placeholder}
-            className="flex-1 px-2  md:py-0 py-3.5 text-sm md:text-base text-gray-700 outline-none bg-transparent placeholder:text-gray-400"
+            className="flex-1 px-2  text-sm md:text-base text-gray-700 outline-none bg-transparent placeholder:text-gray-400"
           />
 
           <ButtonArrow
             title={locale === "es" ? "Buscar" : "Search"}
-            className="!rounded-md !rounded-l-none !py-4 md:!py-5 lg:!py-3.5  !px-4 lg:!px-6 !shadow-none !hover:scale-100"
+            className="!rounded-md !rounded-l-none !py-2.5 md:!py-5 lg:!py-3  !px-4 lg:!px-5.5 !shadow-none !hover:scale-100"
             onClick={() => {
               if (!searchQuery.trim()) return;
               const base =

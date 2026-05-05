@@ -25,6 +25,7 @@ export default async function CityDestinationPage({
   const [activities, cityPackages] = await Promise.all([  // 👈
     getActivitiesByDestination(city.id, locale),
     getPackagesByCity(city.id, locale),
+    // console.log(city)
   ]);
 
   return (
