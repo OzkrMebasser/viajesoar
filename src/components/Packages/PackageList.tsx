@@ -18,6 +18,7 @@ import CardsSlideShow from "@/components/CardsSlideShow";
 import ButtonGlower from "@/components/ui/ButtonGlower";
 import ButtonArrow from "@/components/ui/ButtonArrow";
 import SplitText from "@/components/SplitText";
+import FavoriteButton from "@/components/ui/FavoriteButton";
 import {
   FaPlane,
   FaMoon,
@@ -210,6 +211,7 @@ export default function PackageList({
                 </div>
 
                 {/* ── Image slideshow ── */}
+                
                 <div className="relative h-56 overflow-hidden flex-shrink-0 ">
                   <CardsSlideShow
                     images={pkg.home_carousel_images || []}
@@ -254,6 +256,14 @@ export default function PackageList({
                       </div>
                     </div>
                   </div>
+                  <FavoriteButton
+                    entityId={pkg.id}
+                    entityType="package"
+                    variant="floating"
+                    size="md"
+                    locale={locale}
+                    className="absolute top-3 right-3 z-10"
+                  />
                 </div>
 
                 {/* ── Content ── */}
@@ -261,7 +271,7 @@ export default function PackageList({
                   {/* Package Title */}
                   <SplitText
                     text={pkg.name}
-                        className="font-bold text-lg uppercase leading-tight text-theme-tittles"
+                    className="font-bold text-lg uppercase leading-tight text-theme-tittles"
                     delay={25}
                     duration={0.5}
                     splitType="chars"

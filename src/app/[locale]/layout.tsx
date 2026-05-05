@@ -4,7 +4,8 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/app/i18n/routing";
 import AirplaneCursor from "@/components/Airplane/AirplaneCursor";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Footer from "@/components/Footer";
 import { FavoritesProvider } from "@/lib/context/FavoritesProvider";
 import { ThemeProvider } from "@/lib/context/ThemeContext";
@@ -44,6 +45,10 @@ const navRegions = await getNavRegions(locale as Locale);
           {children}
           <Footer />
           <WhatsAppChat />
+           <ToastContainer
+            position="bottom-right"
+            progressClassName="!bg-[var(--accent)]"
+          />
         </ThemeProvider>
       </FavoritesProvider>
     </NextIntlClientProvider>

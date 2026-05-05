@@ -372,18 +372,18 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                         }}
                       >
                         <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
-                          <img
-                            src={fav.destinations?.image}
-                            alt={fav.destinations?.name}
-                            className="w-full h-full object-cover"
-                          />
+                         <img
+  src={fav.entityData?.image}
+  alt={fav.entityData?.name}
+  className="w-full h-full object-cover"
+/>
                         </div>
                         <div className="flex-1 min-w-0">
                           <p
                             className="text-sm font-medium truncate"
                             style={{ color: "var(--text)" }}
                           >
-                            {fav.destinations?.name}
+                           {fav.entityData?.name}
                           </p>
                           <div className="flex items-center gap-1 mt-0.5">
                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
@@ -391,18 +391,19 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                               className="text-xs"
                               style={{ color: "var(--text)", opacity: 0.6 }}
                             >
-                              {fav.destinations?.rating}
+                              {fav.entityData?.rating}
                             </span>
                           </div>
                           <p
                             className="text-sm font-semibold mt-0.5"
                             style={{ color: "var(--accent)" }}
                           >
-                            ${fav.destinations?.price}
+                            ${fav.entityData?.price}
                           </p>
                         </div>
                         <button
-                          onClick={() => removeFavorite(fav.destination_id)}
+                          onClick={() => removeFavorite(fav.entity_type, fav.entity_id)}
+
                           title="Eliminar"
                         >
                           <HeartIcon className="w-4 h-4 fill-red-500 text-red-500" />
