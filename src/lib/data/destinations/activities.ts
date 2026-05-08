@@ -31,7 +31,7 @@ export async function getActivityBySlug(
 ): Promise<DestinationActivity | null> {
   const supabase = await createClient();
 
-  console.log("Buscando actividad:", slug, locale); // 👈
+  console.log("Buscando actividad:", slug, locale); 
 
   const { data, error } = await supabase
     .from("destinations_activities")
@@ -41,7 +41,7 @@ export async function getActivityBySlug(
     .eq("is_active", true)
     .maybeSingle();
 
-  console.log("Resultado:", data, error); // 👈
+  // console.log("Resultado:", data, error); 
 
   if (error || !data) {
     console.error("Error fetching activity:", error);
@@ -81,7 +81,7 @@ export async function hydrateOptionals(
 
   const { data, error } = await supabase
     .from("destinations_activities")
-    .select("*") // 👈 cambiado a * para incluir todos los campos
+    .select("*") 
     .in("id", ids)
     .eq("locale", locale)
     .eq("is_active", true)

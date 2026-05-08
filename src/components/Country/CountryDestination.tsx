@@ -11,6 +11,7 @@ import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
 import CardsSlideShow from "@/components/CardsSlideShow";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
+import FavoriteButton from "@/components/ui/FavoriteButton";
 
 import { FaSearch, FaTimes, FaArrowRight } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
@@ -276,6 +277,15 @@ export default function CountryDestination({
                   {/* Gradient overlays */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none" />
+               {/* Favorite button */}
+                    <FavoriteButton
+                      entityId={city.id}
+                      entityType="destination"
+                      variant="floating"
+                      size="md"
+                      locale={locale}
+                      className="absolute top-3 right-3 z-10"
+                    />
                 </div>
                 {/* ── Content ── */}
                 <div className="p-5 flex flex-col flex-1">

@@ -31,11 +31,16 @@ interface FavoritesContextType {
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-const TABLE_CONFIG: Record<string, { table: string; imageField: string }> = {
-  destination: { table: "destinations",            imageField: "cover_image" },
-  package:     { table: "packages",                imageField: "images" },
-  activity:    { table: "destinations_activities", imageField: "cover_image" },
-  blog_post:   { table: "blog_posts",              imageField: "cover_image" },
+const TABLE_CONFIG: Record<string, {
+  table: string;
+  imageField: string;
+  nameField?: string;
+  priceField?: string;
+}> = {
+  destination: { table: "destinations_countries",  imageField: "images" },
+  package:     { table: "packages",                imageField: "images",      priceField: "price_from" },
+  activity:    { table: "destinations_activities", imageField: "cover_image", priceField: "price_from" },
+  blog_post:   { table: "blog_posts",              imageField: "cover_image", nameField: "title" },
 };
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
@@ -86,9 +91,13 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           const config = TABLE_CONFIG[type];
           if (!config) return;
 
+          const nameField = config.nameField ?? "name";
+          const selectFields = ["id", nameField, config.imageField];
+          if (config.priceField) selectFields.push(config.priceField);
+
           const { data: rows, error: rowsError } = await supabase
             .from(config.table)
-            .select(`id, name, ${config.imageField}, price_from`)
+            .select(selectFields.join(", "))
             .in("id", ids);
 
           if (rowsError) {
@@ -99,10 +108,10 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           (rows || []).forEach((row: any) => {
             const imageValue = row[config.imageField];
             entityMap[`${type}:${row.id}`] = {
-              name: row.name,
+              name: row[nameField],
               image: Array.isArray(imageValue) ? imageValue[0] : imageValue,
-              price: row.price_from ?? row.price,
-              rating: row.rating,
+              price: config.priceField ? row[config.priceField] : undefined,
+              rating: undefined,
             };
           });
         })

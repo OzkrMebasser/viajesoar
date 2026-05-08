@@ -40,7 +40,7 @@ const entityConfig: Record<EntityType, {
 }> = {
   destination: {
     table: "destinations",
-    imageField: "image",
+    imageField: "images",
     nameField: "name",
     descriptionField: "description",
     subtitleField: "country",

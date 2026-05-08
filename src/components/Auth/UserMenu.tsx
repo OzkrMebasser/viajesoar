@@ -98,14 +98,22 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
   };
 
   useEffect(() => {
+    // const getUser = async () => {
+    //   const { data } = await supabase.auth.getUser();
+    //   if (data.user) {
+    //     setUser(data.user);
+    //     setProfile(await fetchUserProfile(data.user.id));
+    //   }
+    // };
+    // getUser();
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data.user) {
-        setUser(data.user);
-        setProfile(await fetchUserProfile(data.user.id));
-      }
-    };
-    getUser();
+  const { data } = await supabase.auth.getSession();
+  if (data.session?.user) {
+    setUser(data.session.user);
+    setProfile(await fetchUserProfile(data.session.user.id));
+  }
+};
+getUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_, session) => {
@@ -227,7 +235,6 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
         <>
           <div className="fixed inset-0 z-40" onClick={resetDropdown} />
           <div className="absolute top-full right-0 mt-2 w-72 rounded-xl overflow-hidden z-50 bg-gradient-theme backdrop-blur-[14px] border border-(--accent) shadow-lg">
-
             {/* Header siempre visible */}
             <div className="px-4 py-3" style={headerStyle}>
               <p
@@ -304,7 +311,8 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                   className="w-full px-4 py-[10px] text-left text-[13px] text-[var(--accent)] bg-transparent border-none flex items-center gap-[10px] cursor-pointer transition-colors duration-200 hover:bg-white/10"
                   onClick={() => setView("favorites")}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "rgba(255,255,255,0.05)")
+                    (e.currentTarget.style.background =
+                      "rgba(255,255,255,0.05)")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background = "transparent")
@@ -340,6 +348,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
               <div className="p-4 max-h-96 overflow-y-auto">
                 <div className="flex items-center gap-2 mb-4">
                   <button
+                    title="Favoritos"
                     onClick={() => setView("menu")}
                     style={{ color: "var(--accent)", opacity: 0.6 }}
                   >
@@ -372,19 +381,20 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                         }}
                       >
                         <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
-                         <img
-  src={fav.entityData?.image}
-  alt={fav.entityData?.name}
-  className="w-full h-full object-cover"
-/>
+                          <img
+                            src={fav.entityData?.image}
+                            alt={fav.entityData?.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p
                             className="text-sm font-medium truncate"
                             style={{ color: "var(--text)" }}
                           >
-                           {fav.entityData?.name}
+                            {fav.entityData?.name}
                           </p>
+                          {fav.entityData?.rating && (
                           <div className="flex items-center gap-1 mt-0.5">
                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                             <span
@@ -394,6 +404,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                               {fav.entityData?.rating}
                             </span>
                           </div>
+                          )}
                           <p
                             className="text-sm font-semibold mt-0.5"
                             style={{ color: "var(--accent)" }}
@@ -402,8 +413,9 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                           </p>
                         </div>
                         <button
-                          onClick={() => removeFavorite(fav.entity_type, fav.entity_id)}
-
+                          onClick={() =>
+                            removeFavorite(fav.entity_type, fav.entity_id)
+                          }
                           title="Eliminar"
                         >
                           <HeartIcon className="w-4 h-4 fill-red-500 text-red-500" />
@@ -433,6 +445,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <button
+                    title="cambiar avatar"
                     onClick={() => setView("menu")}
                     style={{ color: "var(--accent)", opacity: 0.6 }}
                   >
@@ -469,11 +482,15 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                       onChange={handleFileChange}
                       className="hidden"
                     />
-                    <div className="flex items-center gap-3 w-full px-3 py-2 rounded-lg
+                    <div
+                      className="flex items-center gap-3 w-full px-3 py-2 rounded-lg
                       border border-[var(--accent)]/40 bg-white/5 hover:bg-white/10
-                      transition-colors duration-200">
-                      <span className="px-3 py-1 rounded-md text-xs font-semibold uppercase
-                        tracking-wide bg-[var(--accent)] text-black shrink-0">
+                      transition-colors duration-200"
+                    >
+                      <span
+                        className="px-3 py-1 rounded-md text-xs font-semibold uppercase
+                        tracking-wide bg-[var(--accent)] text-black shrink-0"
+                      >
                         {t.changeAvatar}
                       </span>
                       <span className="text-xs text-[var(--text)] opacity-50 truncate">

@@ -12,6 +12,7 @@ import SplitText from "@/components/SplitText";
 import BadgeAccent from "@/components/ui/BadgeAccent";
 import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
+import FavoriteButton from "@/components/ui/FavoriteButton";
 import {
   FaSearch,
   FaTimes,
@@ -218,7 +219,7 @@ export default function TourList({
 
                     {/* Difficulty badge */}
                     {activity.difficulty_level && (
-                      <div className="absolute top-3 right-3 pointer-events-none">
+                      <div className="absolute top-8 left-3 pointer-events-none">
                         <span
                           className={`text-white text-[9px] tracking-widest uppercase font-bold px-2 py-0.5 rounded-sm ${
                             DIFFICULTY_COLOR[activity.difficulty_level as Difficulty] ??
@@ -248,12 +249,21 @@ export default function TourList({
 
                     {/* Featured badge */}
                     {activity.is_featured && (
-                      <div className="absolute bottom-3 right-3 pointer-events-none">
+                      <div className="absolute bottom-20 left-3 pointer-events-none">
                         <BadgeAccent>
                           {t(locale, "Destacado", "Featured")}
                         </BadgeAccent>
                       </div>
                     )}
+                    {/* Favorite button */}
+                    <FavoriteButton
+                      entityId={activity.id}
+                      entityType="activity"
+                      variant="floating"
+                      size="md"
+                      locale={locale}
+                      className="absolute top-3 right-3 z-10"
+                    />
                   </div>
 
                   {/* ── Content ── */}
