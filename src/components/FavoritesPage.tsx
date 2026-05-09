@@ -11,7 +11,15 @@ import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import ParticlesCanvas from "@/components/ui/Particles/ParticlesCanvas";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
 import CardsSlideShow from "@/components/CardsSlideShow";
-import { Heart as HeartIcon, MapPin, Package, Activity, BookOpen, ArrowLeft } from "lucide-react";
+import {
+  Heart as HeartIcon,
+  MapPin,
+  Package,
+  Activity,
+  BookOpen,
+  Globe,
+  Tag,
+} from "lucide-react";
 import { MdTravelExplore } from "react-icons/md";
 import type { Locale } from "@/types/locale";
 
@@ -23,50 +31,74 @@ interface ResolvedFavorite {
   images: string[];
   description?: string;
   subtitle?: string;
-  slug?: string;
   href: string;
   badge?: string;
 }
 
-const entityConfig: Record<EntityType, {
-  table: string;
-  imageField: string;
-  nameField: string;
-  descriptionField: string;
-  subtitleField?: string;
-  hrefFn: (locale: Locale, row: any) => string;
-  label: string;
-  icon: React.ReactNode;
-}> = {
+const entityConfig: Record<
+  EntityType,
+  {
+    table: string;
+    imageField: string;
+    imageFieldFallback?: string;
+    nameField: string;
+    descriptionField: string;
+    subtitleField?: string;
+    hrefFn: (locale: Locale, row: any) => string;
+    label: string;
+    labelEn: string;
+    icon: React.ReactNode;
+  }
+> = {
   destination: {
     table: "destinations",
     imageField: "images",
+    imageFieldFallback: "image",
     nameField: "name",
     descriptionField: "description",
     subtitleField: "country",
-    hrefFn: (locale, row) => `/${locale}/destinos/${row.id}`,
+    hrefFn: (locale, row) =>
+      `/${locale}/${locale === "es" ? "destinos" : "destinations"}/${row.slug || row.id}`,
     label: "Destino",
+    labelEn: "Destination",
     icon: <MapPin className="h-3 w-3" />,
+  },
+  destination_country: {
+    table: "destinations_countries",
+    imageField: "images",
+    imageFieldFallback: "image",
+    nameField: "name",
+    descriptionField: "description",
+    subtitleField: "country_code",
+    hrefFn: (locale, row) =>
+      `/${locale}/${locale === "es" ? "paises" : "countries"}/${row.slug}`,
+    label: "País",
+    labelEn: "Country",
+    icon: <Globe className="h-3 w-3" />,
   },
   package: {
     table: "packages",
-    imageField: "home_carousel_images",
+    imageField: "images",
     nameField: "name",
     descriptionField: "description",
-    subtitleField: "region",
+    subtitleField: "duration",
     hrefFn: (locale, row) =>
       `/${locale === "es" ? "es/paquetes" : "en/packages"}/${row.slug}`,
     label: "Paquete",
+    labelEn: "Package",
     icon: <Package className="h-3 w-3" />,
   },
   activity: {
     table: "destinations_activities",
-    imageField: "cover_image",
+    imageField: "photos",
+    imageFieldFallback: "cover_image",
     nameField: "name",
     descriptionField: "description",
     subtitleField: "category",
-    hrefFn: (locale, row) => `/${locale}/actividades/${row.slug}`,
+    hrefFn: (locale, row) =>
+      `/${locale}/${locale === "es" ? "actividades" : "activities"}/${row.slug}`,
     label: "Actividad",
+    labelEn: "Activity",
     icon: <Activity className="h-3 w-3" />,
   },
   blog_post: {
@@ -77,7 +109,20 @@ const entityConfig: Record<EntityType, {
     subtitleField: "category",
     hrefFn: (locale, row) => `/${locale}/blog/${row.slug}`,
     label: "Blog",
+    labelEn: "Blog",
     icon: <BookOpen className="h-3 w-3" />,
+  },
+  offer: {
+    table: "offers",
+    imageField: "cover_image",
+    nameField: "title",
+    descriptionField: "description",
+    subtitleField: "destination_label",
+    hrefFn: (locale, row) =>
+      `/${locale}/${locale === "es" ? "ofertas" : "offers"}/${row.id}`,
+    label: "Oferta",
+    labelEn: "Offer",
+    icon: <Tag className="h-3 w-3" />,
   },
 };
 
@@ -90,28 +135,35 @@ const t = (locale: Locale, es: string, en: string) =>
 
 export default function FavoritesPage({ locale }: Props) {
   const router = useRouter();
-  const { userId, favoritesData, removeFavorite, loading, error } = useFavorites();
+  const { userId, favoritesData, removeFavorite, loading, error } =
+    useFavorites();
   const [resolved, setResolved] = useState<ResolvedFavorite[]>([]);
   const [resolving, setResolving] = useState(false);
 
   useEffect(() => {
-    if (!favoritesData.length) { setResolved([]); return; }
+    if (!favoritesData.length) {
+      setResolved([]);
+      return;
+    }
 
     const load = async () => {
       setResolving(true);
 
-      const grouped = favoritesData.reduce<Record<EntityType, string[]>>(
+      const grouped = favoritesData.reduce<Record<string, string[]>>(
         (acc, f) => {
           if (!acc[f.entity_type]) acc[f.entity_type] = [];
           acc[f.entity_type].push(f.entity_id);
           return acc;
         },
-        {} as Record<EntityType, string[]>
+        {},
       );
 
       const results: ResolvedFavorite[] = [];
 
-      for (const [type, ids] of Object.entries(grouped) as [EntityType, string[]][]) {
+      for (const [type, ids] of Object.entries(grouped) as [
+        EntityType,
+        string[],
+      ][]) {
         const config = entityConfig[type];
         if (!config) continue;
 
@@ -124,18 +176,34 @@ export default function FavoritesPage({ locale }: Props) {
 
         for (const row of data) {
           const fav = favoritesData.find(
-            (f) => f.entity_type === type && f.entity_id === row.id
+            (f) => f.entity_type === type && f.entity_id === row.id,
           );
           if (!fav) continue;
 
-          const rawImage = row[config.imageField];
-          const images: string[] = Array.isArray(rawImage)
-            ? rawImage
-            : rawImage
-            ? [rawImage]
-            : [];
+          // Imagen con fallback
+          const rawImage =
+            row[config.imageField] ??
+            (config.imageFieldFallback
+              ? row[config.imageFieldFallback]
+              : undefined);
 
-          const subtitleRaw = config.subtitleField ? row[config.subtitleField] : undefined;
+          // Añade este parse
+          let parsedImage = rawImage;
+          if (typeof rawImage === "string" && rawImage.startsWith("[")) {
+            try {
+              parsedImage = JSON.parse(rawImage);
+            } catch {}
+          }
+
+          const images: string[] = Array.isArray(parsedImage)
+            ? parsedImage.filter(Boolean)
+            : parsedImage
+              ? [parsedImage]
+              : [];
+
+          const subtitleRaw = config.subtitleField
+            ? row[config.subtitleField]
+            : undefined;
           const subtitle =
             subtitleRaw && typeof subtitleRaw === "object"
               ? subtitleRaw?.name
@@ -150,12 +218,12 @@ export default function FavoritesPage({ locale }: Props) {
             description: row[config.descriptionField],
             subtitle,
             href: config.hrefFn(locale, row),
-            badge: row.internal_pkg_id || undefined,
+            badge: row.internal_pkg_id || row.badge_label || undefined,
           });
         }
       }
 
-      // Mantener orden original
+      // Mantener orden original de creación
       results.sort((a, b) => {
         const ai = favoritesData.findIndex((f) => f.id === a.favId);
         const bi = favoritesData.findIndex((f) => f.id === b.favId);
@@ -176,7 +244,11 @@ export default function FavoritesPage({ locale }: Props) {
         <div className="text-center">
           <HeartIcon className="w-16 h-16 text-[var(--accent)]/30 mx-auto mb-4" />
           <p className="text-lg text-theme mb-4">
-            {t(locale, "Debes iniciar sesión para ver tus favoritos", "You must log in to see your favorites")}
+            {t(
+              locale,
+              "Debes iniciar sesión para ver tus favoritos",
+              "You must log in to see your favorites",
+            )}
           </p>
           <ButtonArrow
             title={t(locale, "Iniciar sesión", "Log in")}
@@ -203,7 +275,6 @@ export default function FavoritesPage({ locale }: Props) {
 
   return (
     <section className="min-h-screen bg-gradient-theme">
-
       {/* ── HERO INFO ── */}
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white pointer-events-none">
         <SplitText
@@ -259,7 +330,11 @@ export default function FavoritesPage({ locale }: Props) {
             </h2>
           </div>
           <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
-            {t(locale, "Tu colección personal de viajes", "Your personal travel collection")}
+            {t(
+              locale,
+              "Tu colección personal de viajes",
+              "Your personal travel collection",
+            )}
           </p>
         </div>
 
@@ -286,6 +361,7 @@ export default function FavoritesPage({ locale }: Props) {
 
             {resolved.map((item) => {
               const config = entityConfig[item.entityType];
+              const label = locale === "es" ? config.label : config.labelEn;
               return (
                 <article
                   key={item.favId}
@@ -326,7 +402,7 @@ export default function FavoritesPage({ locale }: Props) {
                     <div className="absolute top-3 left-3 pointer-events-none">
                       <span className="flex items-center gap-1 text-[var(--accent)] text-[10px] tracking-[0.25em] uppercase font-semibold border border-white/40 px-2 py-0.5 rounded-sm bg-black/40 backdrop-blur-sm">
                         {config.icon}
-                        {config.label}
+                        {label}
                         {item.badge && ` · ${item.badge}`}
                       </span>
                     </div>
@@ -373,7 +449,11 @@ export default function FavoritesPage({ locale }: Props) {
                     <ButtonArrow
                       type="button"
                       href={item.href}
-                      title={t(locale, `Ver ${config.label.toLowerCase()}`, `View ${config.label.toLowerCase()}`)}
+                      title={t(
+                        locale,
+                        `Ver ${config.label.toLowerCase()}`,
+                        `View ${config.labelEn.toLowerCase()}`,
+                      )}
                     />
                   </div>
                 </article>

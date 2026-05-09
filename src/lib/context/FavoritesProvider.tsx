@@ -2,7 +2,13 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 
-export type EntityType = "destination" | "package" | "activity" | "blog_post";
+export type EntityType =
+  | "destination"
+  | "destination_country"
+  | "package"
+  | "activity"
+  | "blog_post"
+  | "offer";
 
 interface EntityData {
   name?: string;
@@ -31,16 +37,49 @@ interface FavoritesContextType {
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-const TABLE_CONFIG: Record<string, {
-  table: string;
-  imageField: string;
-  nameField?: string;
-  priceField?: string;
-}> = {
-  destination: { table: "destinations_countries",  imageField: "images" },
-  package:     { table: "packages",                imageField: "images",      priceField: "price_from" },
-  activity:    { table: "destinations_activities", imageField: "cover_image", priceField: "price_from" },
-  blog_post:   { table: "blog_posts",              imageField: "cover_image", nameField: "title" },
+const TABLE_CONFIG: Record<
+  string,
+  {
+    table: string;
+    imageField: string;
+    imageFieldFallback?: string;
+    nameField?: string;
+    priceField?: string;
+  }
+> = {
+  destination: {
+    table: "destinations",
+    imageField: "images",
+    imageFieldFallback: "image",
+    priceField: "price",
+  },
+  destination_country: {
+    table: "destinations_countries",
+    imageField: "images",
+    imageFieldFallback: "image",
+  },
+  package: {
+    table: "packages",
+    imageField: "images",
+    priceField: "price_from",
+  },
+  activity: {
+    table: "destinations_activities",
+    imageField: "photos",
+    imageFieldFallback: "cover_image",
+    priceField: "price_from",
+  },
+  blog_post: {
+    table: "blog_posts",
+    imageField: "cover_image",
+    nameField: "title",
+  },
+  offer: {
+    table: "offers",
+    imageField: "cover_image",
+    nameField: "title",
+    priceField: "offer_price",
+  },
 };
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
@@ -92,8 +131,12 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           if (!config) return;
 
           const nameField = config.nameField ?? "name";
-          const selectFields = ["id", nameField, config.imageField];
-          if (config.priceField) selectFields.push(config.priceField);
+
+          // Construir selectFields sin duplicados
+          const selectSet = new Set(["id", nameField, config.imageField]);
+          if (config.imageFieldFallback) selectSet.add(config.imageFieldFallback);
+          if (config.priceField) selectSet.add(config.priceField);
+          const selectFields = Array.from(selectSet);
 
           const { data: rows, error: rowsError } = await supabase
             .from(config.table)
@@ -105,15 +148,28 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
             return;
           }
 
-          (rows || []).forEach((row: any) => {
-            const imageValue = row[config.imageField];
-            entityMap[`${type}:${row.id}`] = {
-              name: row[nameField],
-              image: Array.isArray(imageValue) ? imageValue[0] : imageValue,
-              price: config.priceField ? row[config.priceField] : undefined,
-              rating: undefined,
-            };
-          });
+         (rows || []).forEach((row: any) => {
+  const rawImage =
+    row[config.imageField] ??
+    (config.imageFieldFallback ? row[config.imageFieldFallback] : undefined);
+
+  // ← AÑADE ESTE PARSE
+  let parsedImage = rawImage;
+  if (typeof rawImage === "string" && rawImage.startsWith("[")) {
+    try { parsedImage = JSON.parse(rawImage); } catch {}
+  }
+
+  const image = Array.isArray(parsedImage)
+    ? parsedImage.filter(Boolean)[0]
+    : parsedImage || undefined;
+
+  entityMap[`${type}:${row.id}`] = {
+    name: row[nameField],
+    image,
+    price: config.priceField ? row[config.priceField] : undefined,
+    rating: undefined,
+  };
+});
         })
       );
 
@@ -166,7 +222,9 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           return copy;
         });
         setFavoritesData((prev) =>
-          prev.filter((f) => !(f.entity_type === entityType && f.entity_id === entityId))
+          prev.filter(
+            (f) => !(f.entity_type === entityType && f.entity_id === entityId)
+          )
         );
       } catch (err: any) {
         console.error("Error removing favorite:", err.message);
@@ -209,7 +267,16 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <FavoritesContext.Provider
-      value={{ userId, favorites, favoritesData, loading, error, toggleFavorite, removeFavorite, isFavorite }}
+      value={{
+        userId,
+        favorites,
+        favoritesData,
+        loading,
+        error,
+        toggleFavorite,
+        removeFavorite,
+        isFavorite,
+      }}
     >
       {children}
     </FavoritesContext.Provider>

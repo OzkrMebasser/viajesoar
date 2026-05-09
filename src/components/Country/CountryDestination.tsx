@@ -270,9 +270,9 @@ export default function CountryDestination({
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none" />
 
                   {/* Hover arrow */}
-                  <div className="absolute top-3 right-3 p-2 bg-black/40 backdrop-blur-sm border border-white/10 rounded-sm opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300">
+                  {/* <div className="absolute top-3 right-3 p-2 bg-black/40 backdrop-blur-sm border border-white/10 rounded-sm opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300">
                     <FaArrowRight className="h-3.5 w-3.5 text-[var(--accent)]" />
-                  </div>
+                  </div> */}
 
                   {/* Gradient overlays */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 pointer-events-none" />
@@ -280,7 +280,7 @@ export default function CountryDestination({
                {/* Favorite button */}
                     <FavoriteButton
                       entityId={city.id}
-                      entityType="destination"
+                       entityType="destination_country"
                       variant="floating"
                       size="md"
                       locale={locale}
