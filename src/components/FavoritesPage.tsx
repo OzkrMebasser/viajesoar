@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { MdTravelExplore } from "react-icons/md";
 import type { Locale } from "@/types/locale";
+import { DestinationCountry, DestinationRegion } from "@/types/destinations";
 
 interface ResolvedFavorite {
   favId: string;
@@ -35,10 +36,13 @@ interface ResolvedFavorite {
   badge?: string;
 }
 
+// En FavoritesPage.tsx — solo cambia entityConfig
+
 const entityConfig: Record<
   EntityType,
   {
     table: string;
+    select: string;
     imageField: string;
     imageFieldFallback?: string;
     nameField: string;
@@ -52,32 +56,46 @@ const entityConfig: Record<
 > = {
   destination: {
     table: "destinations",
+    select:
+      "*, destinations_countries!country_id(slug, destinations_regions!region_id(slug))",
     imageField: "images",
     imageFieldFallback: "image",
     nameField: "name",
-    descriptionField: "description",
+    descriptionField: "long_description",
     subtitleField: "country",
-    hrefFn: (locale, row) =>
-      `/${locale}/${locale === "es" ? "destinos" : "destinations"}/${row.slug || row.id}`,
-    label: "Destino",
-    labelEn: "Destination",
+    hrefFn: (locale, row) => {
+      const basePath = locale === "es" ? "destinos" : "destinations";
+      const regionSlug =
+        row.destinations_countries?.destinations_regions?.slug ?? "";
+      const countrySlug = row.destinations_countries?.slug ?? "";
+      return `/${locale}/${basePath}/${regionSlug}/${countrySlug}/${row.slug}`;
+    },
+    label: "Ciudad",
+    labelEn: "City",
     icon: <MapPin className="h-3 w-3" />,
   },
+
   destination_country: {
     table: "destinations_countries",
+    select: "*, destinations_regions!region_id(slug)",
     imageField: "images",
     imageFieldFallback: "image",
     nameField: "name",
-    descriptionField: "description",
+    descriptionField: "long_description",
     subtitleField: "country_code",
-    hrefFn: (locale, row) =>
-      `/${locale}/${locale === "es" ? "paises" : "countries"}/${row.slug}`,
+    hrefFn: (locale, row) => {
+      const basePath = locale === "es" ? "destinos" : "destinations";
+      const regionSlug = row.destinations_regions?.slug ?? "";
+      return `/${locale}/${basePath}/${regionSlug}/${row.slug}`;
+    },
     label: "País",
     labelEn: "Country",
     icon: <Globe className="h-3 w-3" />,
   },
+
   package: {
     table: "packages",
+    select: "*",
     imageField: "images",
     nameField: "name",
     descriptionField: "description",
@@ -88,21 +106,33 @@ const entityConfig: Record<
     labelEn: "Package",
     icon: <Package className="h-3 w-3" />,
   },
+
   activity: {
     table: "destinations_activities",
+    select:
+      "*, destinations!destination_id(slug, country_id, destinations_countries!country_id(slug, destinations_regions!region_id(slug)))",
     imageField: "photos",
     imageFieldFallback: "cover_image",
     nameField: "name",
     descriptionField: "description",
     subtitleField: "category",
-    hrefFn: (locale, row) =>
-      `/${locale}/${locale === "es" ? "actividades" : "activities"}/${row.slug}`,
+    hrefFn: (locale, row) => {
+      const basePath = locale === "es" ? "destinos" : "destinations";
+      const regionSlug =
+        row.destinations?.destinations_countries?.destinations_regions?.slug ??
+        "";
+      const countrySlug = row.destinations?.destinations_countries?.slug ?? "";
+      const citySlug = row.destinations?.slug ?? "";
+      return `/${locale}/${basePath}/${regionSlug}/${countrySlug}/${citySlug}/${row.slug}`;
+    },
     label: "Actividad",
     labelEn: "Activity",
     icon: <Activity className="h-3 w-3" />,
   },
+
   blog_post: {
     table: "blog_posts",
+    select: "*",
     imageField: "cover_image",
     nameField: "title",
     descriptionField: "excerpt",
@@ -112,20 +142,26 @@ const entityConfig: Record<
     labelEn: "Blog",
     icon: <BookOpen className="h-3 w-3" />,
   },
+
   offer: {
     table: "offers",
+    select: "*, package:package_id(slug)",
     imageField: "cover_image",
     nameField: "title",
     descriptionField: "description",
     subtitleField: "destination_label",
-    hrefFn: (locale, row) =>
-      `/${locale}/${locale === "es" ? "ofertas" : "offers"}/${row.id}`,
+    hrefFn: (locale, row) => {
+      // Si la oferta tiene package con slug, ir al paquete; si no, a la oferta por id
+      if (row.package?.slug) {
+        return `/${locale === "es" ? "es/paquetes" : "en/packages"}/${row.package.slug}`;
+      }
+      return `/${locale}/${locale === "es" ? "ofertas" : "offers"}/${row.id}`;
+    },
     label: "Oferta",
     labelEn: "Offer",
     icon: <Tag className="h-3 w-3" />,
   },
 };
-
 interface Props {
   locale: Locale;
 }
@@ -167,11 +203,12 @@ export default function FavoritesPage({ locale }: Props) {
         const config = entityConfig[type];
         if (!config) continue;
 
-        const { data } = await supabase
+        const result = await supabase
           .from(config.table)
-          .select("*")
+          .select(config.select)
           .in("id", ids);
 
+        const data = result.data as any[] | null;
         if (!data) continue;
 
         for (const row of data) {

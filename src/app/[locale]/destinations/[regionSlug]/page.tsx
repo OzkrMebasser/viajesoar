@@ -1,4 +1,4 @@
-// app/[locale]/destinos/[regionSlug]/page.tsx
+
 import RegionDestination from "@/components/Regions/RegionDestination";
 import { getRegionBySlug, getCountriesByRegion, getAllRegions } from "@/lib/data/destinations/regions";
 

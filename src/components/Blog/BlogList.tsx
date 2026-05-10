@@ -18,6 +18,7 @@ import {
   FaBookOpen,
 } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
+import ScrollIndicator from "../ui/ScrollIndicator";
 
 interface Props {
   locale: Locale;
@@ -90,8 +91,38 @@ export default function BlogList({
 
   return (
     <div className="min-h-screen bg-gradient-theme">
-      {/* ── HERO ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+      {/* ── ALL BLOGS INFO ── */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-2 mb-4">
+          <FaBookOpen className="text-[var(--accent)] w-4 h-4" />
+          <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
+            {t(locale, "Blog de Viajes", "Travel Blog")}
+          </span>
+        </div>
+
+        <SplitText
+          text={t(locale, "Historias del Mundo", "Stories from the World")}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
+          delay={25}
+          duration={0.5}
+          splitType="chars"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="left"
+        />
+
+        <p className="text-white/70 mt-2 max-w-md text-xs sm:text-sm [text-shadow:2px_2px_3px_#000000]">
+          {t(
+            locale,
+            `${total} artículos de viaje, guías, tips y cultura para inspirar tu próxima aventura.`,
+            `${total} travel articles, guides, tips and culture to inspire your next adventure.`,
+          )}
+        </p>
+      </div>
+
+      {/* ── HERO BAND ── */}
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         <div className="absolute inset-0 z-0">
           {heroImage ? (
             <img
@@ -106,109 +137,23 @@ export default function BlogList({
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-4">
-            <FaBookOpen className="text-[var(--accent)] w-4 h-4" />
-            <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
-              {t(locale, "Blog de Viajes", "Travel Blog")}
-            </span>
-          </div>
-
-          <SplitText
-            text={t(locale, "Historias del Mundo", "Stories from the World")}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
-            delay={25}
-            duration={0.5}
-            splitType="chars"
-            from={{ opacity: 0, y: 20 }}
-            to={{ opacity: 1, y: 0 }}
-            textAlign="left"
-          />
-
-          <p className="text-white/70 mt-2 max-w-md text-xs sm:text-sm [text-shadow:2px_2px_3px_#000000]">
-            {t(
-              locale,
-              `${total} artículos de viaje, guías, tips y cultura para inspirar tu próxima aventura.`,
-              `${total} travel articles, guides, tips and culture to inspire your next adventure.`,
-            )}
-          </p>
-        </div>
-      </section>
-
-      {/* ── SEARCH + CATEGORÍAS ── */}
-      <div className="bg-gradient-theme py-5 sticky top-0 z-30 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-          {/* Search */}
-          <div className="relative max-w-xs w-full">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t(locale, "Buscar artículo...", "Search article...")}
-              className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
-            />
-            {query && (
-              <button
-                title="Clear search"
-                onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
-              >
-                <FaTimes className="text-xs" />
-              </button>
-            )}
-          </div>
-
-          {/* Category pills */}
-          {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveCategory(null)}
-                className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border transition-all duration-200 ${
-                  activeCategory === null
-                    ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
-                    : "border-white/20 text-[var(--text)]/50 hover:border-[var(--accent)]/40"
-                }`}
-              >
-                {t(locale, "Todos", "All")}
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() =>
-                    setActiveCategory(activeCategory === cat ? null : cat)
-                  }
-                  className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border transition-all duration-200 ${
-                    activeCategory === cat
-                      ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
-                      : "border-white/20 text-[var(--text)]/50 hover:border-[var(--accent)]/40"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {(query || activeCategory) && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-2">
-            <p className="text-[var(--accent)] text-xs tracking-widest uppercase">
-              {filtered.length} {t(locale, "resultado(s)", "result(s)")}
-            </p>
-          </div>
-        )}
+        {/* <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10"></div> */}
       </div>
 
+      {/* Scroll indicator */}
+      <ScrollIndicator targetId="blogs-search" />
+
       {/* ── GRID ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme "
+        id="blogs-search"
+      >
         {/* Section header */}
-        <div className="mb-10">
+        <div className="mb-4 pt-10">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]/40" />
             <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
-              {t(locale, "Artículos", "Articles")}
+              {t(locale, "Nuestro blog", "Our blog")}
             </h2>
           </div>
           <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
@@ -219,7 +164,74 @@ export default function BlogList({
             )}
           </p>
         </div>
+        {/* ── SEARCH + CATEGORÍAS ── */}
+      <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            {/* Search */}
+            <div className="relative max-w-xs w-full">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(
+                  locale,
+                  "Buscar artículo...",
+                  "Search article...",
+                )}
+                className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200 bg-transparent"
+              />
+              {query && (
+                <button
+                  title="Clear search"
+                  onClick={() => setQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
+                >
+                  <FaTimes className="text-xs" />
+                </button>
+              )}
+            </div>
 
+            {/* Category pills */}
+            {categories.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setActiveCategory(null)}
+                  className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border transition-all duration-200 ${
+                    activeCategory === null
+                      ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
+                      : "border-white/20 text-[var(--text)]/50 hover:border-[var(--accent)]/40"
+                  }`}
+                >
+                  {t(locale, "Todos", "All")}
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() =>
+                      setActiveCategory(activeCategory === cat ? null : cat)
+                    }
+                    className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border transition-all duration-200 ${
+                      activeCategory === cat
+                        ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
+                        : "border-white/20 text-[var(--text)]/50 hover:border-[var(--accent)]/40"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {(query || activeCategory) && (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-2">
+              <p className="text-[var(--accent)] text-xs tracking-widest uppercase">
+                {filtered.length} {t(locale, "resultado(s)", "result(s)")}
+              </p>
+            </div>
+          )}
+        </div>
         {filtered.length === 0 ? (
           <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4">
             <MdTravelExplore className="text-white/20 text-6xl" />

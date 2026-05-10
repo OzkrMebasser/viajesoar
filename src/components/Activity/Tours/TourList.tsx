@@ -3,7 +3,12 @@
 import { useState, useMemo } from "react";
 import type { Locale } from "@/types/locale";
 import type { DestinationActivity } from "@/types/activities";
-import { t, CategoryIcon, DIFFICULTY_COLOR, DIFFICULTY_LABEL } from "@/types/activities.utils";
+import {
+  t,
+  CategoryIcon,
+  DIFFICULTY_COLOR,
+  DIFFICULTY_LABEL,
+} from "@/types/activities.utils";
 import type { Difficulty } from "@/types/activities";
 import { Paginator } from "@/components/ui/paginator";
 import CardsSlideShow from "@/components/CardsSlideShow";
@@ -22,6 +27,7 @@ import {
 } from "react-icons/fa";
 import { MdTravelExplore } from "react-icons/md";
 import { Ticket } from "lucide-react";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 interface Props {
   locale: Locale;
@@ -64,11 +70,39 @@ export default function TourList({
     data.find((a) => a.photos?.length)?.photos?.[0] ??
     null;
 
-
   return (
-    <div className="min-h-screen bg-gradient-theme">
-      {/* ── HERO ── */}
-      <section className="relative h-[80vh] sm:h-[70vh] lg:h-[80vh] flex flex-col justify-end overflow-hidden text-white">
+    <section className="min-h-screen bg-gradient-theme">
+      {/* ── ALL TOURS/ACTIVITIES/EXCURSIONS INFO ── */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-2 mb-4">
+          <Ticket className="text-[var(--accent)] w-4 h-4" />
+          <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
+            {t(locale, "Excursiones & Actividades", "Tours & Activities")}
+          </span>
+        </div>
+
+        <SplitText
+          text={t(locale, "Experiencias Únicas", "Unique Experiences")}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
+          delay={25}
+          duration={0.5}
+          splitType="chars"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="left"
+        />
+
+        <p className="text-white/70 mt-2 max-w-md text-xs sm:text-sm [text-shadow:2px_2px_3px_#000000]">
+          {t(
+            locale,
+            `${total} tours y actividades disponibles para vivir momentos inolvidables.`,
+            `${total} tours and activities available to live unforgettable moments.`,
+          )}
+        </p>
+      </div>
+      {/* ── HERO BAND ── */}
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         <div className="absolute inset-0 z-0">
           {heroImage ? (
             <img
@@ -84,73 +118,70 @@ export default function TourList({
         </div>
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-4">
-            <Ticket className="text-[var(--accent)] w-4 h-4" />
-            <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
-              {t(locale, "Excursiones & Actividades", "Tours & Activities")}
-            </span>
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10"></div>
+      </div>
+      {/* Scroll indicator */}
+      <ScrollIndicator targetId="tour-search" />
+
+      {/* ── TOURS GRID ── */}
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme "
+        id="tour-search"
+      >
+        {/* Section header */}
+        <div className="mb-4 pt-10">
+          <div className="flex items-center gap-3 mb-2">
+            <div
+              className={`w-1 h-8 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent)]`}
+            />
+            <h2 className="text-2xl font-bold uppercase tracking-widest text-theme-tittles">
+              {t(locale, "Tours & Actividades", "Tours & Activities")}
+            </h2>
           </div>
-
-          <SplitText
-            text={t(locale, "Experiencias Únicas", "Unique Experiences")}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 uppercase"
-            delay={25}
-            duration={0.5}
-            splitType="chars"
-            from={{ opacity: 0, y: 20 }}
-            to={{ opacity: 1, y: 0 }}
-            textAlign="left"
-          />
-
-          <p className="text-white/70 mt-2 max-w-md text-xs sm:text-sm [text-shadow:2px_2px_3px_#000000]">
+          <p className="text-[var(--accent)] text-xs tracking-widest uppercase ml-7">
             {t(
               locale,
-              `${total} tours y actividades disponibles para vivir momentos inolvidables.`,
-              `${total} tours and activities available to live unforgettable moments.`,
+              "Experiencias únicas para vivir el mundo",
+              "Unique experiences to live the world",
             )}
           </p>
         </div>
-      </section>
 
-      {/* ── SEARCH BAR ── */}
-      <div className="bg-gradient-theme py-5 sticky top-0 z-30 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative max-w-xl">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t(
-                locale,
-                "Buscar por nombre, categoría, destino...",
-                "Search by name, category, destination...",
+        {/* ── SEARCH BAR ── */}
+         <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="relative max-w-xl">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(
+                  locale,
+                  "Buscar por nombre, categoría, destino...",
+                  "Search by name, category, destination...",
+                )}
+                className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
+                >
+                  <FaTimes className="text-xs" />
+                </button>
               )}
-              className="w-full text-[var(--accent)] border border-[var(--accent)] focus:border-[var(--accent)]/60 rounded-sm pl-10 pr-10 py-2.5 text-sm outline-none transition-colors duration-200"
-            />
+            </div>
             {query && (
-              <button
-                onClick={() => setQuery("")}
-                aria-label={t(locale, "Limpiar búsqueda", "Clear search")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent)] hover:text-white/60 transition-colors"
-              >
-                <FaTimes className="text-xs" />
-              </button>
+              <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
+                {filtered.length}{" "}
+                {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
+              </p>
             )}
           </div>
-          {query && (
-            <p className="text-[var(--accent)] text-xs mt-2 tracking-widest uppercase">
-              {filtered.length}{" "}
-              {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
-            </p>
-          )}
         </div>
-      </div>
 
-      {/* ── GRID ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 bg-gradient-theme">
         {filtered.length === 0 ? (
           /* ── Empty state ── */
           <div className="min-h-[30vh] flex flex-col items-center justify-center gap-4">
@@ -174,7 +205,6 @@ export default function TourList({
               ].filter(Boolean) as string[];
 
               const href = `/${locale}/tours/${activity.slug}`;
-
 
               return (
                 <article
@@ -222,30 +252,33 @@ export default function TourList({
                       <div className="absolute top-8 left-3 pointer-events-none">
                         <span
                           className={`text-white text-[9px] tracking-widest uppercase font-bold px-2 py-0.5 rounded-sm ${
-                            DIFFICULTY_COLOR[activity.difficulty_level as Difficulty] ??
-                            "bg-white/20"
+                            DIFFICULTY_COLOR[
+                              activity.difficulty_level as Difficulty
+                            ] ?? "bg-white/20"
                           }`}
                         >
-                          {DIFFICULTY_LABEL[activity.difficulty_level as Difficulty]?.[locale] ??
-                            activity.difficulty_level}
+                          {DIFFICULTY_LABEL[
+                            activity.difficulty_level as Difficulty
+                          ]?.[locale] ?? activity.difficulty_level}
                         </span>
                       </div>
                     )}
 
                     {/* Price */}
-                    {activity.price !== null && activity.price !== undefined && (
-                      <div className="absolute bottom-3 left-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-4 py-2 pointer-events-none">
-                        <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-0.5">
-                          {t(locale, "Desde", "From")}
-                        </p>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-[var(--accent)] font-bold text-xl">
-                            ${activity.price}
-                          </span>
-                          <span className="text-white/50 text-xs">USD</span>
+                    {activity.price !== null &&
+                      activity.price !== undefined && (
+                        <div className="absolute bottom-3 left-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-4 py-2 pointer-events-none">
+                          <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-0.5">
+                            {t(locale, "Desde", "From")}
+                          </p>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-[var(--accent)] font-bold text-xl">
+                              ${activity.price}
+                            </span>
+                            <span className="text-white/50 text-xs">USD</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
                     {/* Featured badge */}
                     {activity.is_featured && (
@@ -305,7 +338,9 @@ export default function TourList({
                       {activity.address && (
                         <div className="flex items-center gap-1.5 text-[var(--text)]/80 text-xs">
                           <FaMapMarkerAlt className="text-[var(--accent)]" />
-                          <span className="line-clamp-1">{activity.address}</span>
+                          <span className="line-clamp-1">
+                            {activity.address}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -351,6 +386,6 @@ export default function TourList({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

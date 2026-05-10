@@ -1,5 +1,3 @@
-
-
 import { notFound } from "next/navigation";
 import BlogArticle from "@/components/Blog/BlogArticle";
 import { getPostBySlug, getAllPostSlugs, getRelatedPosts } from "@/lib/data/blog/posts";

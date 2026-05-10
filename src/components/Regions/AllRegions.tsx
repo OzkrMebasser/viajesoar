@@ -125,36 +125,7 @@ export default function AllRegions({ locale, regions }: Props) {
 
       {/* Scroll indicator */}
       <ScrollIndicator targetId="region-search" />
-      {/* <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 cursor-pointer"
-        onClick={() =>
-          document
-            .getElementById("region-search")
-            ?.scrollIntoView({ behavior: "smooth" })
-        }
-      >
-        <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
-          scroll
-        </span>
-        {[0, 0.2].map((delay, i) => (
-          <div
-            key={i}
-            className="w-3 h-3 border-r border-b border-white/60"
-            style={{
-              transform: "rotate(45deg)",
-              animation: "chevBounce 1.4s ease-in-out infinite",
-              animationDelay: `${delay}s`,
-            }}
-          />
-        ))}
-        <style>{`
-    @keyframes chevBounce {
-      0%   { translate: 0 0px;  opacity: 0.3; }
-      50%  { translate: 0 5px;  opacity: 1; }
-      100% { translate: 0 0px;  opacity: 0.3; }
-    }
-  `}</style>
-      </div> */}
+  
 
       {/* ── REGIONS GRID ── */}
       <div
@@ -269,9 +240,9 @@ export default function AllRegions({ locale, regions }: Props) {
                     {/* Order badge */}
 
                     {/* Hover arrow */}
-                    <div className="absolute top-3 right-3 p-2 bg-black/40 backdrop-blur-sm border border-white/10 rounded-sm opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300">
+                    {/* <div className="absolute top-3 right-3 p-2 bg-black/40 backdrop-blur-sm border border-white/10 rounded-sm opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300">
                       <FaArrowRight className="h-3.5 w-3.5 text-[var(--accent)]" />
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* ── Content ── */}

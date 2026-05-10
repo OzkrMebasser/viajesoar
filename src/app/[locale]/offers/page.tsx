@@ -1,4 +1,3 @@
-// src/app/[locale]/ofertas/page.tsx
 import { getOffers } from "@/lib/data/offers/offers";
 import type { Locale } from "@/types/locale";
 import type { Metadata } from "next";
@@ -16,9 +15,23 @@ export async function generateMetadata(props: {
   };
 }
 
-export default async function Page(props: { params: Promise<{ locale: Locale }> }) {
+export default async function Page(props: {
+  params: Promise<{ locale: Locale }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { locale } = await props.params;
-  const offers = await getOffers(locale);
+  const { page } = await props.searchParams;
+  const currentPage = Number(page ?? 1);
 
-  return <OffersPage locale={locale} offers={offers} />;
+  const result = await getOffers(locale, currentPage);
+
+  return (
+    <OffersPage
+      locale={locale}
+      offers={result.data}
+      page={result.page}
+      totalPages={result.totalPages}
+      total={result.total}
+    />
+  );
 }

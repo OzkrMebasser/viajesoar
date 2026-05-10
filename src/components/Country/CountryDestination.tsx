@@ -280,7 +280,7 @@ export default function CountryDestination({
                {/* Favorite button */}
                     <FavoriteButton
                       entityId={city.id}
-                       entityType="destination_country"
+                       entityType="destination"
                       variant="floating"
                       size="md"
                       locale={locale}

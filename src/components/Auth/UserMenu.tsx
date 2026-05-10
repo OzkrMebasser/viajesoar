@@ -77,13 +77,36 @@ const translations = {
 } as const;
 
 // ── Etiqueta + icono por tipo de entidad ──────────────────────
-const entityMeta: Record<EntityType, { es: string; en: string; icon: React.ReactNode }> = {
-  destination:         { es: "Destino",   en: "Destination", icon: <MapPin    className="w-2.5 h-2.5" /> },
-  destination_country: { es: "País",      en: "Country",     icon: <Globe     className="w-2.5 h-2.5" /> },
-  package:             { es: "Paquete",   en: "Package",     icon: <Package   className="w-2.5 h-2.5" /> },
-  activity:            { es: "Actividad", en: "Activity",    icon: <Activity  className="w-2.5 h-2.5" /> },
-  blog_post:           { es: "Blog",      en: "Blog",        icon: <BookOpen  className="w-2.5 h-2.5" /> },
-  offer:               { es: "Oferta",    en: "Offer",       icon: <Tag       className="w-2.5 h-2.5" /> },
+const entityMeta: Record<
+  EntityType,
+  { es: string; en: string; icon: React.ReactNode }
+> = {
+  destination: {
+    es: "Ciudad",
+    en: "City",
+    icon: <MapPin className="w-2.5 h-2.5" />,
+  },
+  destination_country: {
+    es: "País",
+    en: "Country",
+    icon: <Globe className="w-2.5 h-2.5" />,
+  },
+  package: {
+    es: "Paquete",
+    en: "Package",
+    icon: <Package className="w-2.5 h-2.5" />,
+  },
+  activity: {
+    es: "Actividad",
+    en: "Activity",
+    icon: <Activity className="w-2.5 h-2.5" />,
+  },
+  blog_post: {
+    es: "Blog",
+    en: "Blog",
+    icon: <BookOpen className="w-2.5 h-2.5" />,
+  },
+  offer: { es: "Oferta", en: "Offer", icon: <Tag className="w-2.5 h-2.5" /> },
 };
 
 export default function UserMenu({ isMobile = false }: UserMenuProps) {
@@ -173,7 +196,9 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
         .upload(path, avatarFile, { upsert: true });
       if (upErr) throw upErr;
 
-      const { data } = supabase.storage.from("avatars-bucket").getPublicUrl(path);
+      const { data } = supabase.storage
+        .from("avatars-bucket")
+        .getPublicUrl(path);
       const { error: updErr } = await supabase
         .from("profiles")
         .update({ avatar_url: data.publicUrl })
@@ -192,13 +217,14 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
 
   if (!user) return null;
 
-  const displayName = profile?.full_name || user.user_metadata?.full_name || "Usuario";
+  const displayName =
+    profile?.full_name || user.user_metadata?.full_name || "Usuario";
   const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url;
   const email = profile?.email || user.email;
 
   // Solo favoritos con datos resueltos (sin huérfanos)
   const validFavorites = favoritesData.filter(
-    (fav) => fav.entityData?.name || fav.entityData?.image
+    (fav) => fav.entityData?.name || fav.entityData?.image,
   );
 
   const headerStyle: React.CSSProperties = {
@@ -210,14 +236,21 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
     <div className="relative cursor-pointer">
       {/* ── Trigger ── */}
       <button
-        onClick={() => { setIsOpen(!isOpen); setView("menu"); }}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setView("menu");
+        }}
         className={`flex items-center gap-2 p-2 rounded-full transition-all duration-300 ${
           isMobile ? "" : "hover:bg-var(--accent)/10"
         }`}
       >
         <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
           {avatarUrl ? (
-            <img src={avatarUrl} alt={firstWord(displayName)} className="w-full h-full object-cover p-0" />
+            <img
+              src={avatarUrl}
+              alt={firstWord(displayName)}
+              className="w-full h-full object-cover p-0"
+            />
           ) : (
             <User className="w-4 h-4 text-accent" />
           )}
@@ -233,13 +266,18 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
         <>
           <div className="fixed inset-0 z-40" onClick={resetDropdown} />
           <div className="absolute top-full right-0 mt-2 w-72 rounded-xl overflow-hidden z-50 bg-gradient-theme backdrop-blur-[14px] border border-(--accent) shadow-lg">
-
             {/* Header */}
             <div className="px-4 py-3" style={headerStyle}>
-              <p className="text-sm font-semibold" style={{ color: "var(--accent)" }}>
+              <p
+                className="text-sm font-semibold"
+                style={{ color: "var(--accent)" }}
+              >
                 {t.hello}, {firstWord(displayName)}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: "var(--text)", opacity: 0.5 }}>
+              <p
+                className="text-xs mt-0.5"
+                style={{ color: "var(--text)", opacity: 0.5 }}
+              >
                 {email}
               </p>
             </div>
@@ -251,12 +289,22 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                   <div className="relative flex-shrink-0">
                     <div
                       className="w-11 h-11 rounded-full overflow-hidden flex items-center justify-center"
-                      style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--accent)" }}
+                      style={{
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid var(--accent)",
+                      }}
                     >
                       {avatarUrl ? (
-                        <img src={avatarUrl} alt={firstWord(displayName)} className="w-full h-full object-cover" />
+                        <img
+                          src={avatarUrl}
+                          alt={firstWord(displayName)}
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        <User className="w-5 h-5" style={{ color: "var(--accent)" }} />
+                        <User
+                          className="w-5 h-5"
+                          style={{ color: "var(--accent)" }}
+                        />
                       )}
                     </div>
                     <button
@@ -265,12 +313,25 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                       style={{ background: "var(--accent)" }}
                       title={t.changeAvatar}
                     >
-                      <Camera className="w-2.5 h-2.5" style={{ color: "#000" }} />
+                      <Camera
+                        className="w-2.5 h-2.5"
+                        style={{ color: "#000" }}
+                      />
                     </button>
                   </div>
                   <div>
-                    <p className="text-sm font-medium" style={{ color: "var(--text)" }}>{t.myProfile}</p>
-                    <p className="text-xs" style={{ color: "var(--text)", opacity: 0.45 }}>{t.manageAccount}</p>
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "var(--text)" }}
+                    >
+                      {t.myProfile}
+                    </p>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text)", opacity: 0.45 }}
+                    >
+                      {t.manageAccount}
+                    </p>
                   </div>
                 </div>
 
@@ -279,10 +340,18 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                 <button
                   className="w-full px-4 py-[10px] text-left text-[13px] text-[var(--accent)] bg-transparent border-none flex items-center gap-[10px] cursor-pointer transition-colors duration-200"
                   onClick={() => setView("favorites")}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background =
+                      "rgba(255,255,255,0.05)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
                 >
-                  <HeartIcon className="w-4 h-4" style={{ color: "var(--accent)" }} />
+                  <HeartIcon
+                    className="w-4 h-4"
+                    style={{ color: "var(--accent)" }}
+                  />
                   {t.myFavorites} ({validFavorites.length})
                 </button>
 
@@ -291,8 +360,12 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                 <button
                   className="w-full px-4 py-[10px] text-left text-[13px] text-red-500 bg-transparent border-none flex items-center gap-[10px] cursor-pointer transition-colors duration-200"
                   onClick={handleLogout}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(239,68,68,0.1)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "rgba(239,68,68,0.1)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
                 >
                   <LogOut className="w-4 h-4" />
                   {t.logout}
@@ -311,13 +384,19 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                   >
                     <ArrowLeft className="w-4 h-4" />
                   </button>
-                  <h3 className="text-sm font-semibold" style={{ color: "var(--accent)" }}>
+                  <h3
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--accent)" }}
+                  >
                     {t.myFavorites} ({validFavorites.length})
                   </h3>
                 </div>
 
                 {validFavorites.length === 0 ? (
-                  <p className="text-sm text-center py-8" style={{ color: "var(--text)", opacity: 0.4 }}>
+                  <p
+                    className="text-sm text-center py-8"
+                    style={{ color: "var(--text)", opacity: 0.4 }}
+                  >
                     {t.noFavorites}
                   </p>
                 ) : (
@@ -329,11 +408,8 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                       return (
                         <div
                           key={fav.id}
-                          className="flex gap-3 p-2 rounded-lg"
-                          style={{
-                            background: "rgba(255,255,255,0.05)",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                          }}
+                          className="flex gap-3 p-2 rounded-lg hover:scale-105 transition-transform duration-200 bg-[var(--accent)]/5 border border-[var(--accent)]/20 cursor-pointer"
+                        
                         >
                           {/* Imagen */}
                           <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 flex items-center justify-center">
@@ -350,12 +426,18 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
 
                           {/* Info */}
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate" style={{ color: "var(--text)" }}>
+                            <p
+                              className="text-sm font-medium truncate"
+                              style={{ color: "var(--text)" }}
+                            >
                               {fav.entityData?.name ?? "—"}
                             </p>
 
                             {/* Entity type badge */}
-                            <div className="flex items-center gap-1 mt-1" style={{ color: "var(--accent)" }}>
+                            <div
+                              className="flex items-center gap-1 mt-1"
+                              style={{ color: "var(--accent)" }}
+                            >
                               {meta.icon}
                               <span className="text-[10px] uppercase tracking-widest font-semibold">
                                 {label}
@@ -366,7 +448,10 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                             {fav.entityData?.rating && (
                               <div className="flex items-center gap-1 mt-0.5">
                                 <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-xs" style={{ color: "var(--text)", opacity: 0.6 }}>
+                                <span
+                                  className="text-xs"
+                                  style={{ color: "var(--text)", opacity: 0.6 }}
+                                >
                                   {fav.entityData.rating}
                                 </span>
                               </div>
@@ -375,10 +460,13 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
 
                           {/* Quitar favorito */}
                           <button
-                            onClick={() => removeFavorite(fav.entity_type, fav.entity_id)}
+                            onClick={() =>
+                              removeFavorite(fav.entity_type, fav.entity_id)
+                            }
                             title="Eliminar"
+                            className="cursor-pointer "
                           >
-                            <HeartIcon className="w-4 h-4 fill-red-500 text-red-500" />
+                            <HeartIcon className="w-4 h-4 fill-red-500 text-red-500 hover:animate-pulse hover:scale-110  transition-transform duration-200" />
                           </button>
                         </div>
                       );
@@ -387,7 +475,9 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                     <button
                       onClick={() => {
                         resetDropdown();
-                        router.push(`/${locale}/${locale === "es" ? "favoritos" : "favorites"}`);
+                        router.push(
+                          `/${locale}/${locale === "es" ? "favoritos" : "favorites"}`,
+                        );
                       }}
                       className="w-full py-2 rounded-lg text-sm font-semibold tracking-wide uppercase transition-all duration-200"
                       style={{ background: "var(--accent)", color: "#000" }}
@@ -403,25 +493,44 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
             {view === "avatar" && (
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <button title="Volver" onClick={() => setView("menu")} style={{ color: "var(--accent)", opacity: 0.6 }}>
+                  <button
+                    title="Volver"
+                    onClick={() => setView("menu")}
+                    style={{ color: "var(--accent)", opacity: 0.6 }}
+                  >
                     <ArrowLeft className="w-4 h-4" />
                   </button>
-                  <h3 className="text-sm font-semibold" style={{ color: "var(--accent)" }}>
+                  <h3
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--accent)" }}
+                  >
                     {t.changeAvatar}
                   </h3>
                 </div>
 
                 <div className="flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 rounded-full overflow-hidden" style={{ border: "2px solid var(--accent)" }}>
+                  <div
+                    className="w-20 h-20 rounded-full overflow-hidden"
+                    style={{ border: "2px solid var(--accent)" }}
+                  >
                     <img
-                      src={previewUrl || avatarUrl || "https://images.pexels.com/photos/9951800/pexels-photo-9951800.jpeg"}
+                      src={
+                        previewUrl ||
+                        avatarUrl ||
+                        "https://images.pexels.com/photos/9951800/pexels-photo-9951800.jpeg"
+                      }
                       alt="Avatar"
                       className="w-full h-full object-cover"
                     />
                   </div>
 
                   <label className="w-full cursor-pointer">
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
                     <div className="flex items-center gap-3 w-full px-3 py-2 rounded-lg border border-[var(--accent)]/40 bg-white/5 hover:bg-white/10 transition-colors duration-200">
                       <span className="px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wide bg-[var(--accent)] text-black shrink-0">
                         {t.changeAvatar}
@@ -439,7 +548,9 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                         disabled={uploading}
                         className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold uppercase tracking-wide transition-all"
                         style={{
-                          background: uploading ? "rgba(255,255,255,0.1)" : "var(--accent)",
+                          background: uploading
+                            ? "rgba(255,255,255,0.1)"
+                            : "var(--accent)",
                           color: uploading ? "var(--text)" : "#000",
                           cursor: uploading ? "not-allowed" : "pointer",
                         }}

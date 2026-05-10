@@ -1,12 +1,11 @@
 "use client";
 
+import PaginatorButtonArrow from "@/components/ui/PaginatorButtonArrow";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 
 export function Paginator({
@@ -20,20 +19,24 @@ export function Paginator({
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious
+          <PaginatorButtonArrow
+            title="Prev"
             href={page > 1 ? `?page=${page - 1}` : undefined}
+            direction="prev"
           />
         </PaginationItem>
 
         <PaginationItem>
           <PaginationLink isActive>
-            {page} / {totalPages}
+            {page} <span className="text-[var(--accent)] mx-1">/</span> {totalPages}
           </PaginationLink>
         </PaginationItem>
 
         <PaginationItem>
-          <PaginationNext
+          <PaginatorButtonArrow
+            title="Next"
             href={page < totalPages ? `?page=${page + 1}` : undefined}
+            direction="next"
           />
         </PaginationItem>
       </PaginationContent>
