@@ -306,16 +306,7 @@ export default function CityDestination({
                 } as React.CSSProperties
               }
             >
-              {/* {filtered.map((activity) => (
-                <DesktopCardActivity
-                  key={activity.id}
-                  opt={activity}
-                  isActive={activeDesktop === activity.id}
-                  onClick={() => setActiveDesktop(activity.id)}
-                  onOpenGallery={() => setGalleryActivity(activity)}
-                  locale={locale}
-                />
-              ))} */}
+              
               {filtered.map((activity) => (
                 <DesktopCardActivity
                   key={activity.id}

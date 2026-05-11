@@ -256,7 +256,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
           )}
         </div>
         <ChevronDown
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 transition-transform duration-200 text-3xl ${isOpen ? "rotate-180" : ""}`}
           style={{ color: "var(--accent)" }}
         />
       </button>

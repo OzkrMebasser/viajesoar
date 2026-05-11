@@ -164,7 +164,7 @@ export default function BlogArticle({ locale, post, relatedPosts }: Props) {
               entityType="blog_post"
               locale={locale}
               size="md"
-              variant="ghost"
+              variant="floating"
             />
           </div>
         </div>

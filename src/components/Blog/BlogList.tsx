@@ -200,7 +200,7 @@ export default function BlogList({
                   className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border transition-all duration-200 ${
                     activeCategory === null
                       ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
-                      : "border-white/20 text-[var(--text)]/50 hover:border-[var(--accent)]/40"
+                      : "border-[var(--accent)]/40 text-[var(--text)]/50 hover:border-[var(--accent)]/60"
                   }`}
                 >
                   {t(locale, "Todos", "All")}
@@ -214,7 +214,7 @@ export default function BlogList({
                     className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm border transition-all duration-200 ${
                       activeCategory === cat
                         ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
-                        : "border-white/20 text-[var(--text)]/50 hover:border-[var(--accent)]/40"
+                        : "border-[var(--accent)]/40 text-[var(--text)]/50 hover:border-[var(--accent)]/60"
                     }`}
                   >
                     {cat}

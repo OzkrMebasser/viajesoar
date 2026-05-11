@@ -287,7 +287,7 @@ export default function OffersPage({
                     )}
                     {/* Descuento badge */}
                     {offer.discount_percent && (
-                      <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-sm">
+                      <div className="absolute bottom-3 right-3 bg-red-500 text-white text-lg font-bold px-2 py-1 rounded-sm">
                         -{offer.discount_percent}%
                       </div>
                     )}
@@ -298,13 +298,13 @@ export default function OffersPage({
                       variant="floating"
                       size="md"
                       locale={locale}
-                      className="absolute top-12 right-3 z-20"
+                      className="absolute top-3 right-3 z-20"
                     />
-                    Si la mayoría de offers no tienen discount_percent, puedes
+                    {/* Si la mayoría de offers no tienen discount_percent, puedes
                     ponerlo en top-3 right-3 y mover el badge de descuento a
                     otro lugar, o simplemente dejarlo en bottom-3 right-3 que
                     queda limpio junto al precio. El z-20 es importante para que
-                    quede por encima de las partículas y los gradientes.
+                    quede por encima de las partículas y los gradientes. */}
                     {/* Precio */}
                     <div className="absolute bottom-3 left-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm px-4 py-2 pointer-events-none">
                       <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-0.5">

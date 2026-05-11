@@ -12,18 +12,6 @@ import { BorderBeam } from "@/components/ui/BorderBeam";
 import { PiApproximateEqualsBold, PiWarningCircleBold } from "react-icons/pi";
 import { BsWatch } from "react-icons/bs";
 
-// import {
-//   t,
-//   DIFFICULTY_COLOR,
-//   DIFFICULTY_LABEL,
-//   CategoryIcon,
-//   ACTIVITY_MODE_ICON,
-//   ACTIVITY_MODE_LABEL,
-//   type Locale,
-//   type Difficulty,
-//   type ActivityMode,
-// } from "../OptionalsTab.utils";
-
 import {
   t,
   DIFFICULTY_COLOR,
@@ -37,6 +25,7 @@ import type {
   Difficulty,
   ActivityMode,
 } from "@/types/activities.utils";
+import FavoriteButton from "../ui/FavoriteButton";
 
 /* ─── INCLUSIONS MINI MODAL ───────────────────────────────────────────────── */
 function InclusionsModal({
@@ -223,6 +212,15 @@ export default function DesktopCardActivity({
           ${isActive ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"}
         `}
       >
+        {/* Favorite button */}
+        <FavoriteButton
+          entityId={opt.id}
+          entityType="activity"
+          variant="floating"
+          size="md"
+          locale={locale}
+          className="absolute top-3 right-3 z-10"
+        />
         {/* Badges */}
         <div className="flex flex-wrap gap-2 mb-3">
           {opt.category && (

@@ -5,6 +5,7 @@ import CardsSlideShow from "@/components/CardsSlideShow";
 import BadgeGlower from "@/components/ui/BadgeGlower";
 import BadgeAccent from "@/components/ui/BadgeAccent";
 import { TbListDetails } from "react-icons/tb";
+import FavoriteButton from "@/components/ui/FavoriteButton";
 
 import {
   FaStar,
@@ -227,8 +228,19 @@ export default function MobileCardActivity({
             aria-label={t(locale, "Cerrar", "Close")}
             className="absolute top-4 right-4 z-20 text-white/60 hover:text-white transition-colors"
           >
-            <FaAngleDown className="rotate-180 text-xl" />
+            <FaAngleDown className="rotate-180 text-3xl" />
           </button>
+
+          {/* Favorite button */}
+          <FavoriteButton
+            entityId={opt.id}
+            entityType="activity"
+            variant="floating"
+            size="md"
+            locale={locale as "es" | "en"}
+            className="absolute top-4 right-12 z-20" // 👈 right-12 para no chocar con el close
+          />
+
 
           {/* Inclusions mini modal */}
           {showInclusions && (

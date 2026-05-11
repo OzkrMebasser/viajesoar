@@ -79,8 +79,8 @@ export default function FavoriteButton({
           active && userId
             ? "fill-red-500 text-red-500 scale-110"
             : !userId
-            ? "text-slate-300"
-            : "text-slate-400 hover:text-red-400",
+            ? "text-slate-500"
+            : "text-slate-500 hover:text-red-400",
         )}
       />
     </button>
