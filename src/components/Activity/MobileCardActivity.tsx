@@ -228,7 +228,7 @@ export default function MobileCardActivity({
             aria-label={t(locale, "Cerrar", "Close")}
             className="absolute top-4 right-4 z-20 text-white/60 hover:text-white transition-colors"
           >
-            <FaAngleDown className="rotate-180 text-3xl" />
+            <FaAngleDown className="rotate-180 text-lg" />
           </button>
 
           {/* Favorite button */}

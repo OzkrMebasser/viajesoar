@@ -1,5 +1,6 @@
 "use client";
 import { Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useFavorites, type EntityType } from "@/lib/context/FavoritesProvider";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
@@ -34,22 +35,32 @@ export default function FavoriteButton({
   locale = "es",
 }: FavoriteButtonProps) {
   const { userId, isFavorite, toggleFavorite, loading } = useFavorites();
-
+const router = useRouter();
   const active = isFavorite(entityType, entityId);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
-    if (!userId) {
-      toast.info(
-        locale === "es"
-          ? "Inicia sesión para guardar favoritos 🩷"
-          : "Login to save favorites 🩷",
-        { toastId: "login-to-save" }
-      );
-      return;
-    }
+ if (!userId) {
+  toast.info(
+    locale === "es"
+      ? "Inicia sesión para guardar favoritos 🩷"
+      : "Login to save favorites 🩷",
+    { toastId: "login-to-save" }
+  );
+
+  const loginPath =
+    locale === "es"
+      ? `/${locale}/iniciar-sesion`
+      : `/${locale}/login`;
+
+  router.push(
+    `${loginPath}?redirect=${encodeURIComponent(window.location.pathname)}`
+  );
+
+  return;
+}
 
     toggleFavorite(entityType, entityId);
   };

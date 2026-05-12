@@ -23,51 +23,51 @@ import { MobileMenu } from "@/components/Navigation/MobileMenu";
 // ─── Rutas localizadas ────────────────────────────────────────────────────────
 
 const routes: Record<string, Record<SearchLocale, string>> = {
-  home:         { es: "/",         en: "/"            },
-  packages:     { es: "/paquetes", en: "/packages"    },
-  destinations: { es: "/destinos", en: "/destinations"},
-  tours:        { es: "/tours",    en: "/tours"       },
-  offers:       { es: "/ofertas",  en: "/offers"      },
-  blog:         { es: "/blog",     en: "/blog"        },
-  contact:      { es: "/contacto", en: "/contact"     },
+  home: { es: "/", en: "/" },
+  packages: { es: "/paquetes", en: "/packages" },
+  destinations: { es: "/destinos", en: "/destinations" },
+  tours: { es: "/tours", en: "/tours" },
+  offers: { es: "/ofertas", en: "/offers" },
+  blog: { es: "/blog", en: "/blog" },
+  contact: { es: "/contacto", en: "/contact" },
 };
 
 const routeMapping: Record<SearchLocale, Record<string, string>> = {
   es: {
-    "/":                "/",
-    "/iniciar-sesion":  "/login",
-    "/servicios":       "/services",
-    "/destinos":        "/destinations",
-    "/tours":           "/tours",
-    "/ofertas":         "/offers",
-    "/blog":            "/blog",
-    "/contacto":        "/contact",
+    "/": "/",
+    "/iniciar-sesion": "/login",
+    "/servicios": "/services",
+    "/destinos": "/destinations",
+    "/tours": "/tours",
+    "/ofertas": "/offers",
+    "/blog": "/blog",
+    "/contacto": "/contact",
   },
   en: {
-    "/":              "/",
-    "/login":         "/iniciar-sesion",
-    "/services":      "/servicios",
-    "/destinations":  "/destinos",
-    "/tours":         "/tours",
-    "/offers":        "/ofertas",
-    "/blog":          "/blog",
-    "/contact":       "/contacto",
+    "/": "/",
+    "/login": "/iniciar-sesion",
+    "/services": "/servicios",
+    "/destinations": "/destinos",
+    "/tours": "/tours",
+    "/offers": "/ofertas",
+    "/blog": "/blog",
+    "/contact": "/contacto",
   },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const NavMenu = ({ navRegions }: { navRegions: NavRegion[] }) => {
-  const [isScrolled, setIsScrolled]           = useState(false);
-  const [logoChange, setLogoChange]           = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [logoChange, setLogoChange] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeItem, setActiveItem]           = useState("Home");
-  const [user, setUser]                       = useState<SupabaseUser | null>(null);
+  const [activeItem, setActiveItem] = useState("Home");
+  const [user, setUser] = useState<SupabaseUser | null>(null);
 
-  const t       = useTranslations("Navigation");
+  const t = useTranslations("Navigation");
   const pathname = usePathname();
-  const router  = useRouter();
-  const locale  = useLocale() as SearchLocale;
+  const router = useRouter();
+  const locale = useLocale() as SearchLocale;
 
   // ── Search (hook) ────────────────────────────────────────────────────────────
   const {
@@ -82,13 +82,17 @@ const NavMenu = ({ navRegions }: { navRegions: NavRegion[] }) => {
   } = useSearch(locale);
 
   const navItems = [
-    { label: t("home"),         href: routes.home[locale]         },
-    { label: t("packages"),     href: routes.packages[locale]     },
-    { label: t("destinations"), href: routes.destinations[locale], isDestinations: true },
-    { label: t("tours"),        href: routes.tours[locale]        },
-    { label: t("offers"),       href: routes.offers[locale]       },
-    { label: t("blog"),         href: routes.blog[locale]         },
-    { label: t("contact"),      href: routes.contact[locale]      },
+    { label: t("home"), href: routes.home[locale] },
+    { label: t("packages"), href: routes.packages[locale] },
+    {
+      label: t("destinations"),
+      href: routes.destinations[locale],
+      isDestinations: true,
+    },
+    { label: t("tours"), href: routes.tours[locale] },
+    { label: t("offers"), href: routes.offers[locale] },
+    { label: t("blog"), href: routes.blog[locale] },
+    { label: t("contact"), href: routes.contact[locale] },
   ];
 
   // ── Scroll ──────────────────────────────────────────────────────────────────

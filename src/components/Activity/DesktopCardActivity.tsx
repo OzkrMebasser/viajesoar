@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import type { ActivityCardData } from "@/types/activities";
 import CardsSlideShow from "@/components/CardsSlideShow";
@@ -136,12 +136,29 @@ export default function DesktopCardActivity({
   locale: Locale;
 }) {
   const [showInclusions, setShowInclusions] = useState(false);
+  const [visuallyActive, setVisuallyActive] = useState(false);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!isActive) {
+    if (isActive) {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+      setVisuallyActive(true);
+    } else {
+      leaveTimer.current = setTimeout(() => {
+        setVisuallyActive(false);
+      }, 500);
+    }
+
+    return () => {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    };
+  }, [isActive]);
+
+  useEffect(() => {
+    if (!visuallyActive) {
       setShowInclusions(false);
     }
-  }, [isActive]);
+  }, [visuallyActive]);
 
   const allImages = [opt.cover_image, ...(opt.photos ?? [])].filter(
     Boolean,
@@ -156,15 +173,15 @@ export default function DesktopCardActivity({
   return (
     <div
       onClick={onClick}
-      onMouseEnter={onClick}
+      // onMouseEnter={onClick}
       className={`
         relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer
         transition-[flex-basis,transform,box-shadow] duration-500 h-[28rem]
-        ${isActive ? "[flex-basis:var(--card-open)]" : "translate-y-0 shadow-none [flex-basis:var(--card-closed)]"}
+        ${visuallyActive ? "[flex-basis:var(--card-open)]" : "translate-y-0 shadow-none [flex-basis:var(--card-closed)]"}
       `}
     >
       {/* BG image */}
-      {isActive ? (
+      {visuallyActive ? (
         allImages.length > 0 ? (
           <CardsSlideShow
             images={allImages}
@@ -193,7 +210,7 @@ export default function DesktopCardActivity({
         className={`
           absolute inset-0 z-10 flex flex-col items-center justify-center gap-2
           transition-opacity duration-200
-          ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}
+          ${visuallyActive ? "opacity-0 pointer-events-none" : "opacity-100"}
         `}
       >
         <span
@@ -209,7 +226,7 @@ export default function DesktopCardActivity({
         className={`
           absolute inset-0 z-10 flex flex-col justify-end p-7
           transition-[opacity,transform] duration-[350ms] delay-[80ms]
-          ${isActive ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"}
+          ${visuallyActive ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"}
         `}
       >
         {/* Favorite button */}
@@ -354,7 +371,7 @@ export default function DesktopCardActivity({
       )}
 
       {/* Border beam */}
-      {isActive && (
+      {visuallyActive && (
         <BorderBeam
           duration={6}
           size={400}

@@ -133,7 +133,7 @@ html[data-theme="vibrant"] {
   --text-tittles: #014e7d; /* Azul marino profundo (Orient) para títulos */
   --text-subtittles: #f97316; /* Naranja enérgico pero balanceado */
   --text-btn: #ffffff;
-  --text-nav: #014e7d;
+  --text-nav: #fffaf5;
 
   /* Acentos: El naranja ahora es un acento, no un bloque pesado */
   --accent: #ff823c; /* Naranja Atardecer (Acción principal) */

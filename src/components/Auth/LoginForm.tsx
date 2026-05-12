@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 
@@ -25,7 +25,13 @@ export default function LoginForm({ locale = "es" }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
-  const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
+
+  const loginPath =
+    locale === "es" ? `/${locale}/iniciar-sesion` : `/${locale}/login`;
 
   const t = {
     es: {
@@ -69,15 +75,27 @@ export default function LoginForm({ locale = "es" }: LoginFormProps) {
       setError(error.message);
       setLoading(false);
     } else if (data.user) {
-      router.push("/");
+      window.location.href = redirect || `/${locale}`;
     }
   };
 
+  // const handleGoogleLogin = async () => {
+  //   const { error } = await supabase.auth.signInWithOAuth({
+  //     provider: "google",
+  //     options: { redirectTo: `${window.location.origin}` },
+  //   });
+  //   if (error) setError(error.message);
+  // };
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}` },
+      options: {
+        redirectTo: `${window.location.origin}${loginPath}?redirect=${encodeURIComponent(
+          redirect || window.location.pathname,
+        )}`,
+      },
     });
+
     if (error) setError(error.message);
   };
 

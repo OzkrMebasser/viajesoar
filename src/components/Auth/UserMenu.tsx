@@ -119,7 +119,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<"menu" | "favorites" | "avatar">("menu");
-
+  const [isScrolled, setIsScrolled] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -160,6 +160,13 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
 
   const firstWord = (name: string) => name?.trim().split(" ")[0] ?? "Usuario";
 
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const resetDropdown = () => {
     setIsOpen(false);
     setView("menu");
@@ -244,20 +251,21 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
           isMobile ? "" : "hover:bg-var(--accent)/10"
         }`}
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border-2 border-[var(--accent)]">
           {avatarUrl ? (
             <img
               src={avatarUrl}
               alt={firstWord(displayName)}
-              className="w-full h-full object-cover p-0"
+              className="w-full h-full object-cover p-0 "
             />
           ) : (
             <User className="w-4 h-4 text-accent" />
           )}
         </div>
+        
         <ChevronDown
-          className={`w-4 h-4 transition-transform duration-200 text-3xl ${isOpen ? "rotate-180" : ""}`}
-          style={{ color: "var(--accent)" }}
+          className={`w-4 h-4 transition-transform duration-200 text-3xl  ${isOpen ? "rotate-180" : ""} ${isScrolled ? "text-theme " : "text-theme-nav"}`}
+          // style={{ color: "var(--accent)" }}
         />
       </button>
 
@@ -409,7 +417,6 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
                         <div
                           key={fav.id}
                           className="flex gap-3 p-2 rounded-lg hover:scale-105 transition-transform duration-200 bg-[var(--accent)]/5 border border-[var(--accent)]/20 cursor-pointer"
-                        
                         >
                           {/* Imagen */}
                           <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 flex items-center justify-center">
