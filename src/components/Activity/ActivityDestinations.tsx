@@ -257,10 +257,20 @@ export default function ActivityDestination({
               icon={FaImages}
             />
           )}{" "}
-          {/* Go back */}
+          {/* Buy this tour/activity */}
           <ButtonAccent
-            // onClick={backHref ? () => router.push(backHref) : () => router.back()}
-            className="mx-auto mt-4 mb-8 "
+            onClick={() => {
+              const phone = "5216121037422";
+              const message =
+                locale === "es"
+                  ? `Hola, me gustaría saber más detalles sobre el tour: *${activity.name}* `
+                  : `Hi, I'd like to know more details about the tour: *${activity.name}* `;
+              window.open(
+                `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+                "_blank",
+              );
+            }}
+            className="mx-auto mt-4 mb-8"
             title={t(locale, "Comprar esta actividad", "Buy this activity")}
             icon={IoTicket}
           />

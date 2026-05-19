@@ -866,3 +866,16 @@ select.input-base[data-has-value="true"] {
 .rdp-weekday {
   color: color-mix(in srgb, var(--text) 50%, transparent) !important;
 }
+
+
+@keyframes marquee {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  width: max-content;
+  animation: marquee 14s linear infinite;
+}
+

@@ -13,6 +13,9 @@ import {
   Plane,
   Clock,
 } from "lucide-react";
+import { FaPersonWalkingLuggage, FaFacebook, FaInstagram, FaTiktok, FaXTwitter } from "react-icons/fa6";
+import { IoAirplane } from "react-icons/io5";
+
 import ButtonArrow from "./ui/ButtonArrow";
 
 type Locale = "es" | "en";
@@ -45,7 +48,7 @@ const translations = {
     allRights: "Todos los derechos reservados",
     exploreWorld: "Explora el mundo con nosotros",
     bestDeals: "Las mejores ofertas en viajes",
-    support24: "Soporte disponible 24/7",
+    support24: "Haz realidad tu próxima aventura",
   },
   en: {
     quickLinks: "Quick Links",
@@ -74,7 +77,7 @@ const translations = {
     allRights: "All rights reserved",
     exploreWorld: "Explore the world with us",
     bestDeals: "The best travel deals",
-    support24: "Support available 24/7",
+    support24: "Make Your Next Adventure a Reality",
   },
 };
 
@@ -115,17 +118,17 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
 
   const features = [
     {
-      icon: Plane,
+      icon: IoAirplane,
       title: t.exploreWorld,
       description: t.bestDeals,
     },
     {
-      icon: Clock,
+      icon: FaPersonWalkingLuggage,
       title: t.support24,
       description:
         locale === "es"
-          ? "Contacta en cualquier momento"
-          : "Contact us anytime",
+          ? "Creamos experiencias memorables"
+          : "We Create Memorable Experiences",
     },
     {
       icon: MapPin,
@@ -249,12 +252,12 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 </span>
               </div>
               <p className="text-theme text-sm mb-6 leading-relaxed">
-                {locale === "es"
-                  ? "Tu agencia de viajes de confianza para descubrir los mejores destinos del mundo."
-                  : "Your trusted travel agency to discover the best destinations worldwide."}
+                { locale === "es"
+      ? "Tu agencia de viajes online de confianza"
+      : "Your trusted online travel agency"}
               </p>
               <div className="flex gap-4">
-                {[Facebook, Instagram, Twitter, Linkedin].map((Icon, idx) => (
+               {[FaFacebook, FaInstagram, FaTiktok, FaXTwitter].map((Icon, idx) => (
                   <button
                     key={idx}
                     className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"

@@ -117,7 +117,7 @@ export default function CubeEffectSlider({ tours = [] }: Props): React.ReactNode
             />
             <SplitTextVanilla
               text={locale === "es" ? "SOARprendentes" : "Adventures"}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-theme-tittles mb-3 uppercase"
+              className="text-[var(--accent)] text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold  mb-3 uppercase"
               delay={25}
               duration={0.5}
               ease="power2.out"

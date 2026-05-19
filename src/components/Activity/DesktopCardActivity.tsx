@@ -187,7 +187,7 @@ export default function DesktopCardActivity({
             images={allImages}
             interval={4000}
             className="w-full h-full"
-            maxImages={5}
+           
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-(--accent)/15 to-[#05080f]" />

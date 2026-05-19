@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import { useState, useEffect } from "react";
 import { Search, Loader2, Package, MapPin, Globe, Compass } from "lucide-react";
 import { useRouter } from "@/app/i18n/navigation";
 import type { Locale } from "@/types/locale";
 import type { SearchResult } from "@/types/search";
 import ButtonArrow from "@/components/ui/ButtonArrow";
+import SplitText from "@/components/SplitText";
 // ─── Icons por categoría ───────────────────────────────────────────────────────
 const CATEGORY_ICONS: Record<SearchResult["category"], React.ReactNode> = {
   package: <Package className="w-4 h-4" />,
@@ -41,6 +42,13 @@ const HeroSearch = ({
   onQueryChange,
 }: HeroSearchProps) => {
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const handleResultClick = (result: SearchResult) => {
     router.push(buildHref(result, locale) as any);
@@ -53,47 +61,42 @@ const HeroSearch = ({
       : "Search destinations, packages or tours";
 
   return (
-    <div className="flex flex-col items-center md:items-start gap-3 w-full ">
-      {/* ── Título SEO ── */}
-      {/* <div className="flex flex-col items-center md:items-start gap-1 mb-1">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight text-center md:text-left [text-shadow:2px_2px_12px_rgba(0,0,0,0.9)]">
+    <div className="flex flex-col items-center md:items-start gap-3  ">
+      {/* Slogan / eyebrow */}
+      <div className="absolute -top-34 lg:relative lg:top-3 backdrop-blur-sm py-1 px-4 rounded-xl inline-block bg-black/5 lg:bg-transparent w-auto">
+        <SplitText
+          text={
+            locale === "es"
+              ? `Tu agencia de viajes${isMobile ? "<br/>" : " "}online de confianza`
+              : `Your trusted online${isMobile ? "<br/>" : " "}travel agency`
+          }
+          className=" text-2xl sm:text-xl md:text-4xl lg:text-5xl font-bold  uppercase  leading-tight text-center md:text-left [text-shadow:2px_2px_12px_rgba(0,0,0,1)] "
+          delay={25}
+          duration={0.5}
+          ease="power2.out"
+          splitType="words"
+          from={{ opacity: 0, y: 20 }}
+          to={{ opacity: 1, y: 0 }}
+          textAlign="center"
+        />
+      </div>
+      <div className="mt-8 lg:mt-0 backdrop-blur-xs bg-black/5 lg:bg-transparent p-2 rounded-xl inline-block w-[80%] lg:w-auto">
+        <h1 className="uppercase text-xl sm:text-2xl md:text-2xl font-black text-white leading-tight text-center md:text-left [text-shadow:2px_2px_12px_rgba(0,0,0,0.98)] ">
           {locale === "es"
-            ? "Agencia de Viajes Online con Paquetes y Tours"
-            : "Your Travel agency online"}
+            ? "Paquetes Todo Incluido y Tours Internacionales"
+            : "All-Inclusive Packages and International Tours"}
         </h1>
-        <h2 className="text-base sm:text-lg md:text-xl font-medium text-white/90 text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-lg">
-          {locale === "es"
-            ? "Encuentra paquetes, tours y destinos al mejor precio. Reserva fácil y viaja seguro."
-            : "Find packages, tours and destinations at the best price. Book easy, travel safe."}
-        </h2>
-         <h2 className="text-base sm:text-lg md:text-xl font-medium text-white/90 text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-lg">
-          {locale === "es"
-            ? "Encuentra paquetes, tours y destinos al mejor precio. Reserva fácil y viaja seguro."
-            : "Find packages, tours and destinations at the best price. Book easy, travel safe."}
-        </h2>
-      </div> */}
+      </div>
+      {/* SEO H1 */}
+
       {/* ── Título SEO ── */}
-      <div className="flex flex-col items-center md:items-start gap-2 mb-1 lg:w-[80%] ">
-        {/* Slogan / eyebrow */}
-        <p className="uppercase tracking-[0.22em] text-[11px] sm:text-xs font-semibold text-white text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)]">
-          {locale === "es"
-            ? "Tu agencia de viajes online de confianza"
-            : "Your trusted online travel agency"}
-        </p>
-
-        {/* SEO H1 */}
-        <h1 className="uppercase text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight text-center md:text-left [text-shadow:2px_2px_12px_rgba(0,0,0,0.9)] max-w-3xl">
-          {locale === "es"
-            ? "Paquetes Todo Incluido y Viajes Nacionales e Internacionales"
-            : "All-Inclusive Vacation Packages and International Travel"}
-        </h1>
-
+      <div className="flex flex-col items-center md:items-start gap-2 mb-1 lg:w-[100%] ">
         {/* Supporting copy */}
-        <p className=" text-sm sm:text-md md:text-base  text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-xl">
+        {/* <p className=" text-sm sm:text-md md:text-base  text-center md:text-left [text-shadow:1px_1px_8px_rgba(0,0,0,0.8)] max-w-xl">
           {locale === "es"
             ? "Descubre destinos seleccionados, tours y experiencias diseñadas para viajar con confianza."
             : "Discover curated destinations, tours and travel experiences designed with confidence."}
-        </p>
+        </p> */}
       </div>
 
       {/* ── Buscador ── */}

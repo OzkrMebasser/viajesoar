@@ -148,7 +148,7 @@ export default function TourList({
         </div>
 
         {/* ── SEARCH BAR ── */}
-         <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
+        <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="relative max-w-xl">
               <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
@@ -304,7 +304,7 @@ export default function TourList({
                     {/* Title */}
                     <SplitText
                       text={activity.name}
-                      className="font-bold text-lg uppercase leading-tight mb-2 text-[var(--accent)]"
+                      className="font-bold text-lg uppercase leading-tight text-theme-tittles"
                       delay={25}
                       duration={0.5}
                       splitType="chars"
