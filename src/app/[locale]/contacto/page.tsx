@@ -1,5 +1,5 @@
 
-import ContactPage from "@/components/ContactPage";
+import ContactPage from "@/components/Contact/ContactPage";
 import type { Locale } from "@/types/locale";
 import { getLocale } from "next-intl/server";
 

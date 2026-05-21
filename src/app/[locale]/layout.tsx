@@ -13,8 +13,8 @@ import WhatsAppChat from "@/components/WhatsAppChat";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { getNavRegions } from "@/lib/data/destinations";
 // import type { NavRegion } from "@/lib/data/destinations";
-import NavMenu from "@/components/Navigation/NavMenu";
-
+import NavMenu from "@/components/Navigation/NavMenu";  
+import FloatingCalButton from "@/components/TravelConsultations/FloatingCalButton"; 
 import type { Locale } from "@/types/locale";
 
 
@@ -35,9 +35,10 @@ if (!routing.locales.includes(locale as any)) {
 const navRegions = await getNavRegions(locale as Locale);
 
   const messages = await getMessages();
-
+https://cal.com/ventas-viajesoar-qboxhs/reunion-de-asesoria
   return (
     <NextIntlClientProvider messages={messages}>
+      <FloatingCalButton locale={locale as Locale}  />
       <FavoritesProvider>
         <ThemeProvider>
           <NavMenu  navRegions={navRegions} />
