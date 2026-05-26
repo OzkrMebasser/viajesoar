@@ -18,8 +18,8 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import { MapPin, Ticket, DollarSign } from "lucide-react";
 import { FaGlobe } from "react-icons/fa";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { FaAsterisk } from "react-icons/fa";
 interface Props {
   locale: Locale;
   regionSlug: string;
@@ -45,6 +45,16 @@ export default function ActivityDestination({
 }: Props) {
   const basePath = locale === "es" ? "destinos" : "destinations";
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  // Efecto de sacudida cada 3 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShake(true);
+      setTimeout(() => setShake(false), 700);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const galleryImages = [
     activity.cover_image,
@@ -236,19 +246,28 @@ export default function ActivityDestination({
         {/* Notes */}
         {activity.notes && (
           <div className="mb-4 bg-white/5 border border-[var(--border)]/40 rounded-sm p-5 hover:border-[var(--accent)]/20 transition-colors">
-            <span className="text-amber-500 text-lg flex-shrink-0">⚠</span>
+            <p className="text-amber-500 font-bold text-sm uppercase tracking-widest">
+              {t(locale, "Notas importantes: ", "Important notes: ")}
+            </p>
             <p className="text-[var(--text)]/80 text-sm leading-relaxed">
               {activity.notes}
+            </p>
+            <p className="text-[var(--text)]/80 text-sm ">
+              {t(
+                locale,
+                "Algunas imagenes son solo para fines ilustrativos",
+                "Some images are for illustrative purposes only",
+              )}
             </p>
           </div>
         )}
 
         <div className="flex columns-3 flex-wrap">
-          {/* Gallery button */}
+          {/* Gallery button — sin cambios */}
           {galleryImages.length > 0 && (
             <ButtonAccent
               onClick={() => setGalleryOpen(true)}
-              className="mx-auto mt-4 mb-8 "
+              className="mx-auto mt-4 mb-8"
               title={t(
                 locale,
                 `Ver galería (${galleryImages.length} fotos)`,
@@ -256,24 +275,30 @@ export default function ActivityDestination({
               )}
               icon={FaImages}
             />
-          )}{" "}
-          {/* Buy this tour/activity */}
-          <ButtonAccent
-            onClick={() => {
-              const phone = "5216121037422";
-              const message =
-                locale === "es"
-                  ? `Hola, me gustaría saber más detalles sobre el tour: *${activity.name}* `
-                  : `Hi, I'd like to know more details about the tour: *${activity.name}* `;
-              window.open(
-                `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-                "_blank",
-              );
-            }}
-            className="mx-auto mt-4 mb-8"
-            title={t(locale, "Comprar esta actividad", "Buy this activity")}
-            icon={IoTicket}
-          />
+          )}
+
+          {/* Buy — solo este tiene el efecto */}
+          <div
+            className={`mx-auto mt-4 mb-8 w-fit ${shake ? "[animation:sh0_0.5s_ease-in-out_both]" : ""}`}
+          >
+            <ButtonAccent
+              onClick={() => {
+                const phone = "5216121037422";
+                const message =
+                  locale === "es"
+                    ? `Hola, me gustaría saber más detalles sobre el tour: *${activity.name}* `
+                    : `Hi, I'd like to know more details about the tour: *${activity.name}* `;
+                window.open(
+                  `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+                  "_blank",
+                );
+              }}
+              title={t(locale, "Comprar esta actividad", "Buy this activity")}
+              icon={IoTicket}
+            />
+          </div>
+
+          {/* Back button — sin cambios */}
           <ButtonAccent
             onClick={
               backHref ? () => router.push(backHref) : () => router.back()

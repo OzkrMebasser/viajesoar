@@ -192,9 +192,9 @@ export default function DesktopCardActivity({
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-(--accent)/15 to-[#05080f]" />
         )
-      ) : opt.cover_image ? (
+      ) : allImages[0] ? (
         <img
-          src={opt.cover_image}
+          src={allImages[0]}
           alt={opt.name}
           className="absolute inset-0 w-full h-full object-cover"
         />

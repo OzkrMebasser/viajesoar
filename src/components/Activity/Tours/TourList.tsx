@@ -65,10 +65,27 @@ export default function TourList({
   }, [query, data]);
 
   // Hero image: primera actividad con cover_image o foto
-  const heroImage =
-    data.find((a) => a.cover_image)?.cover_image ??
-    data.find((a) => a.photos?.length)?.photos?.[0] ??
-    null;
+  // const heroImage =
+  //   data.find((a) => a.cover_image)?.cover_image ??
+  //   data.find((a) => a.photos?.length)?.photos?.[0] ??
+  //   null;
+//   const heroImages = useMemo(() => {
+//   const imgs: string[] = [];
+//   for (const act of data) {
+//     if (act.cover_image) imgs.push(act.cover_image);
+//     if (act.photos) imgs.push(...act.photos);
+//   }
+//   // Mezcla aleatoria y toma las primeras N para no cargar demasiadas
+//   return imgs.sort(() => Math.random() - 0.5).slice(0, 10);
+// }, [data]);
+const heroImages = useMemo(() => {
+  const imgs: string[] = [];
+  for (const act of data) {
+    if (act.cover_image) imgs.push(act.cover_image);
+    if (act.photos) imgs.push(...act.photos);
+  }
+  return imgs.slice(0, 10);
+}, [data]);
 
   return (
     <section className="min-h-screen bg-gradient-theme">
@@ -104,15 +121,16 @@ export default function TourList({
       {/* ── HERO BAND ── */}
       <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         <div className="absolute inset-0 z-0">
-          {heroImage ? (
-            <img
-              src={heroImage}
-              alt="tours hero"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-white/5" />
-          )}
+         // Después:
+{heroImages.length > 0 ? (
+  <CardsSlideShow
+    images={heroImages}
+    interval={5000}
+    className="w-full h-full"
+  />
+) : (
+  <div className="w-full h-full bg-white/5" />
+)}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>

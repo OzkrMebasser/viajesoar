@@ -14,10 +14,12 @@ import {
   User,
   MessageSquare,
 } from "lucide-react";
-import { MdTravelExplore } from "react-icons/md";
-import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
-import ScrollIndicator from "@/components/ui/ScrollIndicator";
+import { FaFacebook, FaInstagram, FaTiktok, FaXTwitter } from "react-icons/fa6";
 
+import { MdTravelExplore } from "react-icons/md";
+import { FaWhatsapp } from "react-icons/fa";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
+import ButtonAccent from "@/components/ui/ButtonAccent";
 interface Props {
   locale?: Locale;
 }
@@ -26,7 +28,7 @@ const t = (locale: Locale, es: string, en: string) =>
   locale === "es" ? es : en;
 
 const HERO_IMAGE =
-  "https://images.pexels.com/photos/1051075/pexels-photo-1051075.jpeg";
+  "https://res.cloudinary.com/dtsenvmdq/image/upload/v1779772763/contacto_rffnts.png";
 
 export default function ContactPage({ locale = "es" }: Props) {
   const [form, setForm] = useState({
@@ -217,7 +219,7 @@ export default function ContactPage({ locale = "es" }: Props) {
                       type="text"
                       value={form.name}
                       onChange={handleChange}
-                      placeholder="Jane Doe"
+                      placeholder={t(locale, "Juán Pérez", "John Doe")}
                       required
                       className={inputClass}
                       style={inputStyle}
@@ -244,7 +246,11 @@ export default function ContactPage({ locale = "es" }: Props) {
                         type="email"
                         value={form.email}
                         onChange={handleChange}
-                        placeholder="you@example.com"
+                        placeholder={t(
+                          locale,
+                          "juanitoperez@example.com",
+                          "john.doe@example.com",
+                        )}
                         required
                         className={inputClass}
                         style={inputStyle}
@@ -268,7 +274,12 @@ export default function ContactPage({ locale = "es" }: Props) {
                         type="tel"
                         value={form.phone}
                         onChange={handleChange}
-                        placeholder="+52 000 000 0000"
+                        // placeholder={"+52 000 000 0000"}
+                        placeholder={t(
+                          locale,
+                          "+52 111 222 3333",
+                          "+1 612 123 4567",
+                        )}
                         className={inputClass}
                         style={inputStyle}
                       />
@@ -343,7 +354,7 @@ export default function ContactPage({ locale = "es" }: Props) {
                 )}
 
                 {/* Submit */}
-                <button
+                {/* <button
                   type="submit"
                   disabled={loading}
                   className="w-fit px-8 py-3 rounded-sm font-semibold text-sm tracking-widest uppercase transition-all duration-300 flex items-center gap-2 mt-1 hover:scale-105"
@@ -359,7 +370,19 @@ export default function ContactPage({ locale = "es" }: Props) {
                     ? t(locale, "Enviando...", "Sending...")
                     : t(locale, "Enviar mensaje", "Send message")}
                   {!loading && <Send className="w-4 h-4" />}
-                </button>
+                </button> */}
+                {/* Submit */}
+                <ButtonAccent
+                  type="submit"
+                  title={
+                    loading
+                      ? t(locale, "Enviando...", "Sending...")
+                      : t(locale, "Enviar mensaje", "Send message")
+                  }
+                  icon={loading ? Loader2 : Send}
+                  disabled={loading}
+                  className={loading ? "opacity-70 cursor-not-allowed" : ""}
+                />
               </form>
             )}
           </div>
@@ -376,8 +399,8 @@ export default function ContactPage({ locale = "es" }: Props) {
                   />
                 ),
                 label: t(locale, "Email", "Email"),
-                value: "contacto@viajesoar.com",
-                href: "mailto:contacto@viajesoar.com",
+                value: "info.viajesoar@gmail.com",
+                href: "mailto:info.viajesoar@gmail.com",
               },
               {
                 icon: (
@@ -387,8 +410,19 @@ export default function ContactPage({ locale = "es" }: Props) {
                   />
                 ),
                 label: t(locale, "Teléfono", "Phone"),
-                value: "+52 000 000 0000",
-                href: "tel:+520000000000",
+                value: "+52 (612) 402 9656",
+                href: "tel:+52 (612) 402 9656",
+              },
+              {
+                icon: (
+                  <FaWhatsapp
+                    className="w-5 h-5"
+                    style={{ color: "var(--accent)" }}
+                  />
+                ),
+                label: t(locale, "WhatsApp", "WhatsApp"),
+                value: "+52 (612) 103 7422",
+                href: "tel:+52 (612) 103 7422",
               },
               {
                 icon: (
@@ -432,46 +466,51 @@ export default function ContactPage({ locale = "es" }: Props) {
             ))}
 
             {/* Divider */}
-            <div className="border-t border-white/10" />
 
             {/* Social */}
-            <div>
+            <div className="glass-card border border-white/10 rounded-sm px-6 py-5 hover:border-[var(--accent)]/30 transition-all duration-300">
               <p
                 className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-4"
                 style={{ color: "var(--accent)", opacity: 0.7 }}
               >
                 {t(locale, "Síguenos", "Follow us")}
               </p>
-              <div className="flex gap-3">
-                {[
-                  {
-                    icon: <FaWhatsapp className="w-4 h-4" />,
-                    href: "https://wa.me/520000000000",
-                    label: "WhatsApp",
-                  },
-                  {
-                    icon: <FaInstagram className="w-4 h-4" />,
-                    href: "https://instagram.com/viajesoar",
-                    label: "Instagram",
-                  },
-                  {
-                    icon: <FaFacebook className="w-4 h-4" />,
-                    href: "https://facebook.com/viajesoar",
-                    label: "Facebook",
-                  },
-                ].map((s, i) => (
-                  <a
-                    key={i}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.label}
-                    className="flex items-center justify-center w-10 h-10 rounded-sm border border-white/10 hover:border-[var(--accent)]/50 hover:scale-110 transition-all duration-200"
-                    style={{ color: "var(--accent)" }}
-                  >
-                    {s.icon}
-                  </a>
-                ))}
+              <div className="">
+                <div className="flex gap-3">
+                  {[
+                    {
+                      Icon: FaFacebook,
+                      href: "https://facebook.com/viajesoar",
+                      label: "Facebook",
+                    },
+                    {
+                      Icon: FaInstagram,
+                      href: "https://instagram.com/viajesoar",
+                      label: "Instagram",
+                    },
+                    {
+                      Icon: FaTiktok,
+                      href: "https://tiktok.com/@viajesoar",
+                      label: "TikTok",
+                    },
+                    {
+                      Icon: FaXTwitter,
+                      href: "https://x.com/viajesoar",
+                      label: "X / Twitter",
+                    },
+                  ].map((s, i) => (
+                    <a
+                      key={i}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.label}
+                      className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                    >
+                      <s.Icon className="w-4 h-4" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -486,11 +525,11 @@ export default function ContactPage({ locale = "es" }: Props) {
               {[
                 {
                   day: t(locale, "Lun – Vie", "Mon – Fri"),
-                  hours: "9:00 – 18:00",
+                  hours: "9:00 A.M. – 5:00 P.M.",
                 },
                 {
                   day: t(locale, "Sábado", "Saturday"),
-                  hours: "10:00 – 14:00",
+                  hours: "9:00 A.M. – 1:00 P.M.",
                 },
                 {
                   day: t(locale, "Domingo", "Sunday"),

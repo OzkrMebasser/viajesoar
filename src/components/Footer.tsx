@@ -13,7 +13,14 @@ import {
   Plane,
   Clock,
 } from "lucide-react";
-import { FaPersonWalkingLuggage, FaFacebook, FaInstagram, FaTiktok, FaXTwitter } from "react-icons/fa6";
+import {
+  FaPersonWalkingLuggage,
+  FaFacebook,
+  FaInstagram,
+  FaTiktok,
+  FaXTwitter,
+  FaWhatsapp,
+} from "react-icons/fa6";
 import { IoAirplane } from "react-icons/io5";
 
 import ButtonArrow from "./ui/ButtonArrow";
@@ -23,18 +30,20 @@ type Locale = "es" | "en";
 const translations = {
   es: {
     quickLinks: "Enlaces Rápidos",
-    services: "Servicios",
+    packages: "Paquetes",
     destinations: "Destinos",
-    flights: "Vuelos",
-    offers: "Ofertas",
     tours: "Tours",
+    offers: "Ofertas",
+    blog: "Blog",
     contact: "Contacto",
+    aboutUs: "Nosotros",
     company: "Empresa",
     about: "Acerca de",
     careers: "Carreras",
     press: "Prensa",
     partners: "Socios",
-    support: "Soporte",
+    contactinfo: "Contáctanos",
+    legal: "Legal",
     faq: "Preguntas Frecuentes",
     privacy: "Política de Privacidad",
     terms: "Términos y Condiciones",
@@ -43,7 +52,6 @@ const translations = {
     emailPlaceholder: "Tu correo electrónico",
     subscribe: "Suscribirse",
     followUs: "Síguenos",
-    contactInfo: "Información de Contacto",
     madeWith: "Hecho con",
     allRights: "Todos los derechos reservados",
     exploreWorld: "Explora el mundo con nosotros",
@@ -52,18 +60,20 @@ const translations = {
   },
   en: {
     quickLinks: "Quick Links",
-    services: "Services",
+    packages: "Packages",
     destinations: "Destinations",
-    flights: "Flights",
-    offers: "Offers",
     tours: "Tours",
+    offers: "Offers",
+    blog: "Blog",
     contact: "Contact",
+    aboutUs: "About Us",
     company: "Company",
     about: "About",
     careers: "Careers",
     press: "Press",
     partners: "Partners",
-    support: "Support",
+    contactinfo: "Contact Us",
+    legal: "Legal",
     faq: "FAQ",
     privacy: "Privacy Policy",
     terms: "Terms & Conditions",
@@ -72,7 +82,6 @@ const translations = {
     emailPlaceholder: "Your email address",
     subscribe: "Subscribe",
     followUs: "Follow Us",
-    contactInfo: "Contact Information",
     madeWith: "Made with",
     allRights: "All rights reserved",
     exploreWorld: "Explore the world with us",
@@ -96,17 +105,18 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
   };
 
   const quickLinks = [
-    { label: t.services, href: "#" },
+    { label: t.packages, href: "#" },
     { label: t.destinations, href: "#" },
     { label: t.tours, href: "#" },
     { label: t.offers, href: "#" },
-    { label: t.contact, href: "#" },
+    { label: t.blog, href: "#" },
   ];
 
   const companyLinks = [
     { label: t.about, href: "#" },
+    { label: t.contact, href: "#" },
+    { label: t.contactinfo, href: "#" },
     { label: t.careers, href: "#" },
-    { label: t.press, href: "#" },
     { label: t.partners, href: "#" },
   ];
 
@@ -238,7 +248,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
         </div>
         {/* Main Content */}
         <div className="px-4 py-16 sm:py-20 ">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
             {/* Logo Section */}
             <div className="lg:col-span-1">
               <div className="flex items-center gap-2 mb-6">
@@ -252,20 +262,27 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 </span>
               </div>
               <p className="text-theme text-sm mb-6 leading-relaxed">
-                { locale === "es"
-      ? "Tu agencia de viajes online de confianza"
-      : "Your trusted online travel agency"}
+                {locale === "es"
+                  ? "Tu agencia de viajes online de confianza"
+                  : "Your trusted online travel agency"}
               </p>
+              <h4 className="font-semibold text-theme mb-4 flex items-center gap-2">
+                <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
+                {t.followUs}
+              </h4>
               <div className="flex gap-4">
-               {[FaFacebook, FaInstagram, FaTiktok, FaXTwitter].map((Icon, idx) => (
-                  <button
-                    key={idx}
-                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
-                    aria-label="Social media"
-                  >
-                    <Icon className="w-4 h-4" />
-                  </button>
-                ))}
+                
+                {[FaFacebook, FaInstagram, FaTiktok, FaXTwitter].map(
+                  (Icon, idx) => (
+                    <button
+                      key={idx}
+                      className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                      aria-label="Social media"
+                    >
+                      <Icon className="w-4 h-4" />
+                    </button>
+                  ),
+                )}
               </div>
             </div>
 
@@ -310,12 +327,11 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 ))}
               </ul>
             </div>
-
-            {/* Support & Contact */}
+            {/* Legal */}
             <div>
               <h4 className="font-semibold text-theme mb-4 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
-                {t.support}
+                {t.legal}
               </h4>
               <ul className="space-y-3 mb-6">
                 {supportLinks.map((link, idx) => (
@@ -330,11 +346,18 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                   </li>
                 ))}
               </ul>
+            </div>
+            {/* Contact info */}
+            <div>
+              <h4 className="font-semibold text-theme mb-4 flex items-center gap-2">
+                <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
+                {t.contactinfo}
+              </h4>
 
+           
               {/* Contact Info */}
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-theme">
-                  {/* <Phone className="w-4 h-4 text-[var(--accent)] flex-shrink-0" /> */}
                   <button
                     className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                     aria-label="Telephone number"
@@ -342,11 +365,21 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                     <Phone className="w-4 h-4" />
                   </button>
                   <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
-                    +1 234 567 890
+                    +52 (612) 402 9656
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-theme">
-                  {/* <Mail className="w-4 h-4 text-[var(--accent)] flex-shrink-0" /> */}
+                  <button
+                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                    aria-label="WhatsApp"
+                  >
+                    <FaWhatsapp className="w-4 h-4" />
+                  </button>
+                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
+                    +52 (612) 103 7422
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-theme">
                   <button
                     className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                     aria-label="Email address"
@@ -354,11 +387,10 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                     <Mail className="w-4 h-4" />
                   </button>
                   <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
-                    info@viagesoar.com
+                    info.viajesoar@gmail.com
                   </span>
                 </div>
                 <div className="flex items-start gap-3 text-theme">
-                  {/* <MapPin className="w-4 h-4 text-[var(--accent)] flex-shrink-0 mt-0.5" /> */}
                   <button
                     className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                     aria-label="Location"

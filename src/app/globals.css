@@ -879,3 +879,11 @@ select.input-base[data-has-value="true"] {
   animation: marquee 14s linear infinite;
 }
 
+/*Efecto sacudida*/
+@keyframes sh0 {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(7deg); }
+  50%  { transform: rotate(-7deg); }
+  75%  { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}

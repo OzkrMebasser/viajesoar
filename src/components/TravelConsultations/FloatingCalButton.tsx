@@ -39,7 +39,7 @@ export default function FloatingCalButton({ locale }: Props) {
     <>
       {/* ── Floating Button ── */}
       <div
-        className={`fixed bottom-20 left-6 z-50 transition-all duration-500 ${
+        className={`fixed bottom-4 left-4 z-50 transition-all duration-500 ${
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >

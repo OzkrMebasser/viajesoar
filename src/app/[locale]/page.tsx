@@ -9,7 +9,7 @@ import RegionsHomeSlideGSAP from "@/components/Home/RegionsSlide/RegionsHomeSlid
 import PackagesSlideGSAP from "@/components/Packages/PackagesSlideGSAP";
 import CubeEffectSlider from "@/components/CubeEffectSlider";
 import HeroSlidesSearch from "@/components/Home/Hero/HeroSlidesSearch";
-// ... Generate metadata based on locale
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params; 
   

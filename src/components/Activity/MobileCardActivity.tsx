@@ -171,10 +171,10 @@ export default function MobileCardActivity({
       {/* ── COLLAPSED ── */}
       {!isActive && (
         <div className="relative flex items-center gap-3.5 px-4 py-3.5 min-h-[4rem] overflow-hidden">
-          {opt.cover_image && (
+          {allImages[0] && (
             <>
               <img
-                src={opt.cover_image}
+                src={allImages[0]}
                 alt={opt.name}
                 className="absolute inset-0 w-full h-full object-cover"
               />

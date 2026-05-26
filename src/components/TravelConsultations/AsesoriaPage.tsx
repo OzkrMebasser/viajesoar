@@ -18,6 +18,11 @@ const t = (locale: Locale, es: string, en: string) =>
 
 const CAL_URL = "https://cal.com/ventas-viajesoar-qboxhs/reunion-de-asesoria?embed=true&theme=dark";
 
+
+const HERO_IMAGE =
+  "https://res.cloudinary.com/dtsenvmdq/image/upload/v1779772998/asesoria-de-viajes-agente-de-viajes_zsivme.png";
+
+
 const benefits = (locale: Locale) => [
   {
     icon: <FaCheckCircle className="text-[var(--accent)]" />,
@@ -93,11 +98,11 @@ export default function AsesoriaPage({ locale }: Props) {
       <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.pexels.com/photos/7412094/pexels-photo-7412094.jpeg"
+            src={HERO_IMAGE}
             alt="asesoria hero"
-            className="w-full h-full object-cover"
+            className="object-cover object-top mb-12 md:object-center w-full h-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 pb-20 pt-10" />
