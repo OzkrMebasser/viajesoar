@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCube, Autoplay } from "swiper/modules";
 import { Star, StarHalf } from "lucide-react";
 import { useLocale } from "next-intl";
-
+import BadgeAccent from "@/components/ui/BadgeAccent";
 import SplitTextVanilla from "./SplitTextVanilla";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -157,8 +157,8 @@ export default function CubeEffectSlider({ tours = [] }: Props): React.ReactNode
               style={{ width: "320px", height: "420px" } as React.CSSProperties}
             >
               {tours.map((tour) => {
-                const image = tour.cover_image ?? tour.photos?.[0] ?? null;
-
+                const image =  tour.photos?.[0] ?? tour.cover_image ?? null;
+                // console.log("Tour:", tour.name, "Image:", image);
                 return (
                   <SwiperSlide
                     key={tour.id}
@@ -180,19 +180,21 @@ export default function CubeEffectSlider({ tours = [] }: Props): React.ReactNode
 
                       {/* Price badge */}
                       {tour.price != null && (
-                        <div className="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-md bg-white/30 border border-white/20 text-white">
-                          {locale === "es" ? "Desde" : "From"} ${Number(tour.price).toLocaleString()}{" "}
-                          {tour.currency ?? "USD"}
+                   
+                        <div className="absolute top-3 right-3 ">
+                        
+                              <BadgeAccent>   {locale === "es" ? "Desde" : "From"} ${Number(tour.price).toLocaleString()}{" "}
+                          {tour.currency ?? "USD"}</BadgeAccent>
                         </div>
                       )}
 
                       {/* Bottom info */}
-                      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-blue-900/40 to-transparent backdrop-blur-lg rounded-b-2xl border-t border-white/30 p-5 flex flex-col justify-center">
-                        <h2 className="text-lg sm:text-xl font-semibold text-white mb-2 leading-snug line-clamp-2">
+                      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-900/40 to-transparent backdrop-blur-2xl rounded-b-2xl border-t border-white/30 p-5 flex flex-col justify-center">
+                        <h2 className="text-md sm:text-xl font-semibold text-(--accent) mb-2 leading-snug line-clamp-1">
                           {tour.name}
                         </h2>
                         {tour.description && (
-                          <p className="text-xs sm:text-sm text-gray-100 mb-3 line-clamp-2">
+                          <p className="text-xs sm:text-sm text-gray-100 mb-3 line-clamp-1">
                             {tour.description}
                           </p>
                         )}
