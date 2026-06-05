@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "eyebrow": {
+      "es": "ViajeSoar — Agencia de Viajes Digital",
+      "en": "ViajeSoar — Digital Travel Agency"
+    },
+    "heroTitle": {
+      "es": "Términos y Condiciones",
+      "en": "Terms & Conditions"
+    },
+    "heroSubtitle": {
+      "es": "Lee con atención antes de contratar cualquier servicio.",
+      "en": "Please read carefully before contracting any service."
+    },
+    "sectionTitle": {
+      "es": "Términos y Condiciones de Servicio",
+      "en": "Terms and Conditions of Service"
+    },
+    "sectionSubtitle": {
+      "es": "ViajeSoar — Agencia de Viajes Digital",
+      "en": "ViajeSoar — Digital Travel Agency"
+    }
+  },
+  "sections": [
+    {
+      "number": "1",
+      "title": {
+        "es": "Naturaleza del Servicio e Intermediación",
+        "en": "Nature of the Service and Intermediation"
+      },
+      "content": {
+        "es": [
+          "ViajeSoar, en adelante \u201cla Agencia\u201d, actúa exclusivamente como intermediaria entre el cliente y los proveedores de servicios turísticos (aerolíneas, hoteles, operadores turísticos, transportistas, aseguradoras y demás prestadores), por lo que no es responsable directa de la ejecución, calidad, puntualidad o disponibilidad de dichos servicios.",
+          "La Agencia gestiona reservaciones, emite documentación de viaje y coordina los servicios contratados en nombre del cliente, pero la relación contractual respecto a la prestación final del servicio se establece directamente entre el cliente y cada proveedor.",
+          "Al contratar los servicios de ViajeSoar, el cliente reconoce y acepta expresamente esta figura de intermediación y sus implicaciones."
+        ],
+        "en": [
+          "ViajeSoar, hereinafter \u201cthe Agency\u201d, acts exclusively as an intermediary between the client and tourism service providers (airlines, hotels, tour operators, carriers, insurers and other providers), and is therefore not directly responsible for the execution, quality, punctuality or availability of such services.",
+          "The Agency manages reservations, issues travel documentation and coordinates contracted services on behalf of the client, but the contractual relationship regarding the final provision of the service is established directly between the client and each provider.",
+          "By contracting ViajeSoar's services, the client expressly acknowledges and accepts this intermediation role and its implications."
+        ]
+      }
+    },
+    {
+      "number": "2",
+      "title": {
+        "es": "Cotizaciones y Vigencia de Tarifas",
+        "en": "Quotes and Fare Validity"
+      },
+      "content": {
+        "es": [
+          "Toda cotización emitida por la Agencia tiene carácter informativo y referencial. Las tarifas, disponibilidad y condiciones están sujetas a variaciones en cualquier momento hasta el momento en que se realice el pago y se confirme la reservación.",
+          "Los factores que pueden modificar una cotización incluyen, de manera enunciativa más no limitativa: cambios en el tipo de cambio peso-dólar u otras divisas; variaciones de tarifa por parte del proveedor (aerolíneas, hoteles, operadores); disponibilidad de espacios al momento del pago; cambios en impuestos, tasas aeroportuarias o cargos gubernamentales.",
+          "La Agencia no garantiza que la tarifa cotizada estará disponible al momento del pago si ha transcurrido tiempo entre la cotización y la confirmación. En dicho caso, se informará al cliente sobre la nueva tarifa antes de proceder."
+        ],
+        "en": [
+          "All quotes issued by the Agency are informational and referential. Rates, availability and conditions are subject to change at any time until payment is made and the reservation is confirmed.",
+          "Factors that may modify a quote include, but are not limited to: changes in the peso-dollar exchange rate or other currencies; rate variations by the provider (airlines, hotels, operators); availability of spaces at the time of payment; changes in taxes, airport fees or government charges.",
+          "The Agency does not guarantee that the quoted rate will be available at the time of payment if time has passed between the quote and confirmation. In such case, the client will be informed of the new rate before proceeding."
+        ]
+      }
+    },
+    {
+      "number": "3",
+      "title": {
+        "es": "Confirmación de Servicios",
+        "en": "Service Confirmation"
+      },
+      "content": {
+        "es": [
+          "Un servicio se considerará confirmado únicamente cuando se cumplan de forma simultánea las siguientes condiciones: se haya recibido el pago correspondiente (anticipo o pago total, según aplique); la Agencia haya enviado la confirmación expresa por escrito al cliente, a través de correo electrónico o WhatsApp.",
+          "La Agencia no garantiza disponibilidad ni precios hasta la emisión de la confirmación. No se considerará confirmado ningún servicio con base únicamente en una cotización, conversación verbal o acuse de recibo de pago sin confirmación expresa."
+        ],
+        "en": [
+          "A service will be considered confirmed only when the following conditions are simultaneously met: the corresponding payment has been received (deposit or full payment, as applicable); the Agency has sent express written confirmation to the client via email or WhatsApp.",
+          "The Agency does not guarantee availability or prices until confirmation is issued. No service will be considered confirmed based solely on a quote, verbal conversation or payment acknowledgment without express confirmation."
+        ]
+      }
+    },
+    {
+      "number": "4",
+      "title": {
+        "es": "Esquema de Pagos",
+        "en": "Payment Structure"
+      },
+      "content": {
+        "es": [
+          "4.1 Anticipo: Al momento de iniciar la reservación, el cliente deberá cubrir un anticipo cuyo monto será indicado en la cotización correspondiente. El anticipo tiene como finalidad asegurar la disponibilidad de los servicios solicitados y no es reembolsable.",
+          "4.2 Saldo restante y esquema de pagos: Para comodidad del cliente, la Agencia presentará un esquema de pagos en parcialidades; la cantidad de pagos dependerá de la antelación con la que se haya adquirido el servicio. En todo caso, el saldo restante deberá ser liquidado en su totalidad a más tardar 60 (sesenta) días antes de la fecha de salida del viaje o servicio contratado. El incumplimiento de dicha fecha puede ocasionar la cancelación automática de la reservación, con pérdida del anticipo y sin responsabilidad para la Agencia.",
+          "4.3 Servicios contratados con menos de 75 días de anticipación: Si el servicio se contrata dentro de los 75 (setenta y cinco) días anteriores a la fecha de salida, incluso el mismo día de la salida, no aplica anticipo alguno. En estos casos se requiere invariablemente el pago total en firme y en una sola exhibición de la totalidad de los servicios cotizados. La confirmación de los servicios contratados quedará siempre y en todo momento sujeta a disponibilidad.",
+          "4.4 Medios de pago aceptados: Transferencia bancaria y tarjeta de crédito o débito. Los datos bancarios o liga de pago serán proporcionados por la Agencia al momento de confirmar la reservación.",
+          "4.5 Comprobante de pago: El cliente deberá enviar el comprobante de pago al correo ventas.viajesoar@gmail.com o por WhatsApp al 612-103-7422 a más tardar dentro de las 24 horas siguientes al pago para que la Agencia pueda procesar la reservación. La Agencia no se hace responsable por cancelaciones o pérdida de disponibilidad derivadas de pagos realizados fuera de los plazos establecidos."
+        ],
+        "en": [
+          "4.1 Deposit: At the time of initiating the reservation, the client must pay a deposit whose amount will be indicated in the corresponding quote. The deposit is intended to secure the availability of the requested services and is non-refundable.",
+          "4.2 Remaining balance and payment schedule: For the client's convenience, the Agency will present an installment payment schedule; the number of payments will depend on how far in advance the service was purchased. In any case, the remaining balance must be paid in full no later than 60 (sixty) days before the departure date of the trip or contracted service. Failure to meet this date may result in automatic cancellation of the reservation, with loss of the deposit and without liability for the Agency.",
+          "4.3 Services contracted less than 75 days in advance: If the service is contracted within 75 (seventy-five) days prior to the departure date, even on the same day of departure, no deposit applies. In these cases, full payment in a single installment for all quoted services is invariably required. Confirmation of contracted services will always and at all times be subject to availability.",
+          "4.4 Accepted payment methods: Bank transfer and credit or debit card. Banking details or payment link will be provided by the Agency at the time of confirming the reservation.",
+          "4.5 Proof of payment: The client must send proof of payment to ventas.viajesoar@gmail.com or via WhatsApp to 612-103-7422 no later than 24 hours after payment so that the Agency can process the reservation. The Agency is not responsible for cancellations or loss of availability resulting from payments made outside the established deadlines."
+        ]
+      }
+    },
+    {
+      "number": "5",
+      "title": {
+        "es": "Cambios y Cancelaciones",
+        "en": "Changes and Cancellations"
+      },
+      "content": {
+        "es": [
+          "5.1 Condiciones especiales de boletos de avión. Los boletos de avión de cualquier categoría ofrecidos por la Agencia tienen las siguientes condiciones, independientemente de la aerolínea o tarifa: No reembolsables. No endosables. No transferibles (no se aceptan cambios de nombre de pasajero bajo ninguna circunstancia).",
+          "Todas las aerolíneas se reservan el derecho de sobrevender vuelos (overbooking), cambiar horarios, e incluso cancelar o realizar modificaciones que consideren pertinentes sin previo aviso y sin responsabilidad para ViajeSoar; dichas prácticas están autorizadas gubernamentalmente. En estos casos, la Agencia realizará las gestiones necesarias para apoyar al cliente, sin que ello implique responsabilidad económica alguna de su parte.",
+          "5.2 Cambios y cancelaciones generales. Toda solicitud de cambio o cancelación por parte del cliente estará sujeta a las políticas específicas de cada proveedor involucrado en la reservación (aerolínea, hotel, operador, etc.). La Agencia gestionará dichas solicitudes en nombre del cliente, pero no tiene control sobre su aprobación o resultado.",
+          "Las penalizaciones por cambios o cancelaciones pueden incluir: cargos administrativos de la Agencia por gestión; penalidades parciales o totales establecidas por el proveedor; no devolución del importe total pagado, dependiendo del tiempo transcurrido y las condiciones del servicio.",
+          "El cliente reconoce que las tarifas promocionales, de grupo o de temporada alta suelen tener condiciones de no reembolso y no cambio. La Agencia informará al cliente sobre dichas restricciones al momento de la cotización, pero es responsabilidad del cliente confirmar que ha comprendido las condiciones antes de autorizar el pago.",
+          "Toda solicitud de cambio o cancelación deberá realizarse por escrito (correo electrónico o WhatsApp) y se tomará como fecha oficial la de recepción del mensaje por parte de la Agencia."
+        ],
+        "en": [
+          "5.1 Special conditions for airline tickets. Airline tickets of any category offered by the Agency have the following conditions, regardless of the airline or fare: Non-refundable. Non-endorsable. Non-transferable (passenger name changes are not accepted under any circumstances).",
+          "All airlines reserve the right to oversell flights (overbooking), change schedules, and even cancel or make modifications they deem pertinent without prior notice and without liability for ViajeSoar; such practices are government-authorized. In these cases, the Agency will take the necessary steps to support the client, without implying any financial liability on its part.",
+          "5.2 General changes and cancellations. All change or cancellation requests by the client will be subject to the specific policies of each provider involved in the reservation (airline, hotel, operator, etc.). The Agency will manage such requests on behalf of the client but has no control over their approval or outcome.",
+          "Penalties for changes or cancellations may include: administrative charges from the Agency for management; partial or total penalties established by the provider; non-refund of the total amount paid, depending on the time elapsed and the conditions of the service.",
+          "The client acknowledges that promotional, group or high-season rates usually have non-refundable and non-changeable conditions. The Agency will inform the client about such restrictions at the time of the quote, but it is the client's responsibility to confirm that they have understood the conditions before authorizing payment.",
+          "All change or cancellation requests must be made in writing (email or WhatsApp) and the official date will be the date of receipt of the message by the Agency."
+        ]
+      }
+    },
+    {
+      "number": "6",
+      "title": {
+        "es": "Reembolsos",
+        "en": "Refunds"
+      },
+      "content": {
+        "es": [
+          "Los reembolsos, cuando procedan conforme a las políticas del proveedor, serán gestionados por la Agencia en nombre del cliente. Los tiempos y montos de reembolso dependen exclusivamente de las políticas de cada proveedor y escapan al control de la Agencia.",
+          "El anticipo pagado a la Agencia en concepto de gestión y aseguramiento de disponibilidad no es reembolsable. Toda reservación de hotel, paquetes, vuelos, expedición de boletos, traslados, guías y demás servicios turísticos son no reembolsables. Para reservar los paquetes, en su mayoría se requiere de un depósito que puede variar de acuerdo con el operador, destino o temporada en que se desea viajar. Los depósitos no son reembolsables en caso de cualquier cancelación, según las políticas del operador responsable."
+        ],
+        "en": [
+          "Refunds, when applicable according to provider policies, will be managed by the Agency on behalf of the client. Refund timelines and amounts depend exclusively on each provider's policies and are beyond the Agency's control.",
+          "The deposit paid to the Agency for management and availability assurance is non-refundable. All hotel reservations, packages, flights, ticket issuance, transfers, guides and other tourism services are non-refundable. To reserve packages, a deposit is mostly required, which may vary according to the operator, destination or season of travel. Deposits are non-refundable in case of any cancellation, according to the policies of the responsible operator."
+        ]
+      }
+    },
+    {
+      "number": "7",
+      "title": {
+        "es": "Limitación de Responsabilidad",
+        "en": "Limitation of Liability"
+      },
+      "content": {
+        "es": [
+          "La Agencia no asume responsabilidad por situaciones ajenas a su control directo. De manera enunciativa más no limitativa, la Agencia no se hace responsable por: cambios operativos, retrasos, cancelaciones o modificaciones de itinerario por parte de aerolíneas u otros transportistas; sobreventa (overbooking) de vuelos o alojamientos; calidad, condiciones o estándares de los servicios prestados por los proveedores; pérdida o daño de equipaje; fenómenos naturales, desastres, epidemias o pandemias; situaciones de fuerza mayor o caso fortuito; decisiones gubernamentales, restricciones migratorias o cierres de fronteras; huelgas, paros o conflictos laborales de terceros; problemas técnicos de los sistemas de los proveedores.",
+          "En todos los casos anteriores, la Agencia realizará las gestiones razonablemente posibles para apoyar al cliente en la búsqueda de alternativas, sin que ello implique asumir responsabilidad económica por los perjuicios ocasionados."
+        ],
+        "en": [
+          "The Agency assumes no responsibility for situations beyond its direct control. In a non-exhaustive manner, the Agency is not responsible for: operational changes, delays, cancellations or itinerary modifications by airlines or other carriers; overbooking of flights or accommodations; quality, conditions or standards of services provided by providers; loss or damage of luggage; natural phenomena, disasters, epidemics or pandemics; force majeure or acts of God; government decisions, immigration restrictions or border closures; strikes, work stoppages or labor disputes of third parties; technical problems in providers' systems.",
+          "In all of the above cases, the Agency will take all reasonably possible steps to assist the client in finding alternatives, without implying any financial liability for the damages caused."
+        ]
+      }
+    },
+    {
+      "number": "8",
+      "title": {
+        "es": "Documentación del Pasajero",
+        "en": "Passenger Documentation"
+      },
+      "content": {
+        "es": [
+          "Es responsabilidad exclusiva del cliente verificar y contar con la documentación vigente y completa requerida para realizar el viaje. La Agencia podrá orientar al cliente sobre los requisitos generales, pero dicha orientación es de carácter informativo y no exime al cliente de su responsabilidad.",
+          "La documentación incluye, de manera enunciativa más no limitativa: pasaporte vigente con la anticipación mínima requerida por el país de destino; visas o permisos de entrada al país o países de tránsito y destino; certificados de vacunación o requisitos sanitarios vigentes; permisos migratorios o autorizaciones especiales (menores de edad viajando sin ambos padres, etc.); seguro de viaje cuando sea obligatorio en el destino.",
+          "La Agencia no se hace responsable por la negativa de embarque, deportación, retención migratoria o cualquier perjuicio derivado de documentación incompleta, vencida o incorrecta."
+        ],
+        "en": [
+          "It is the client's exclusive responsibility to verify and have the valid and complete documentation required for the trip. The Agency may guide the client on general requirements, but such guidance is informational and does not relieve the client of their responsibility.",
+          "Documentation includes, but is not limited to: valid passport with the minimum advance period required by the destination country; visas or entry permits for transit and destination countries; vaccination certificates or current health requirements; immigration permits or special authorizations (minors traveling without both parents, etc.); travel insurance when mandatory at the destination.",
+          "The Agency is not responsible for denied boarding, deportation, immigration detention or any damages resulting from incomplete, expired or incorrect documentation."
+        ]
+      }
+    },
+    {
+      "number": "9",
+      "title": {
+        "es": "Viajeros Menores de Edad",
+        "en": "Minor Travelers"
+      },
+      "content": {
+        "es": [
+          "Cuando el viaje incluya a uno o más menores de edad, el cliente (padre, madre o tutor legal) declara contar con todos los permisos legales requeridos para que el menor viaje, incluyendo las autorizaciones notariales que sean exigidas por las autoridades migratorias de México o del país de destino.",
+          "La Agencia no asume responsabilidad por situaciones derivadas de la falta de permisos o documentación de menores de edad."
+        ],
+        "en": [
+          "When the trip includes one or more minors, the client (father, mother or legal guardian) declares having all required legal permissions for the minor to travel, including notarized authorizations required by Mexican immigration authorities or those of the destination country.",
+          "The Agency assumes no responsibility for situations arising from the lack of permits or documentation for minors."
+        ]
+      }
+    },
+    {
+      "number": "10",
+      "title": {
+        "es": "Seguros de Viaje",
+        "en": "Travel Insurance"
+      },
+      "content": {
+        "es": [
+          "La Agencia recomienda ampliamente la contratación de un seguro de viaje que cubra eventualidades tales como cancelaciones, gastos médicos en el extranjero, pérdida de equipaje e interrupciones de viaje.",
+          "En caso de que el cliente decida no contratar un seguro de viaje, lo hace bajo su propio riesgo y la Agencia queda exenta de cualquier responsabilidad por gastos o perjuicios que pudieran haberse cubierto con dicho seguro."
+        ],
+        "en": [
+          "The Agency strongly recommends purchasing travel insurance covering contingencies such as cancellations, medical expenses abroad, luggage loss and trip interruptions.",
+          "If the client decides not to purchase travel insurance, they do so at their own risk and the Agency is exempt from any liability for expenses or damages that could have been covered by such insurance."
+        ]
+      }
+    },
+    {
+      "number": "11",
+      "title": {
+        "es": "Confidencialidad de Cotizaciones",
+        "en": "Quote Confidentiality"
+      },
+      "content": {
+        "es": "Las cotizaciones, itinerarios y propuestas de viaje elaboradas por la Agencia son de uso exclusivo del cliente receptor y no podrán ser compartidas con terceros ni utilizadas para solicitar contraoferta a otros proveedores o agencias, sin previa autorización escrita de ViajeSoar.",
+        "en": "Quotes, itineraries and travel proposals prepared by the Agency are for the exclusive use of the receiving client and may not be shared with third parties or used to request counter-offers from other providers or agencies, without prior written authorization from ViajeSoar."
+      }
+    },
+    {
+      "number": "12",
+      "title": {
+        "es": "Comunicaciones y Notificaciones",
+        "en": "Communications and Notifications"
+      },
+      "content": {
+        "es": [
+          "Las comunicaciones entre la Agencia y el cliente se realizarán a través de los medios electrónicos acordados: correo electrónico y/o WhatsApp. El cliente acepta que dichos medios son válidos para efectos de notificación, confirmación y aceptación de condiciones.",
+          "Es responsabilidad del cliente mantener actualizados sus datos de contacto y revisar los mensajes recibidos. La Agencia no se hace responsable por omisiones o perjuicios derivados de datos de contacto incorrectos o desatención a las comunicaciones enviadas."
+        ],
+        "en": [
+          "Communications between the Agency and the client will be conducted through agreed electronic means: email and/or WhatsApp. The client accepts that such means are valid for notification, confirmation and acceptance of conditions.",
+          "It is the client's responsibility to keep their contact information up to date and to review received messages. The Agency is not responsible for omissions or damages arising from incorrect contact information or failure to attend to sent communications."
+        ]
+      }
+    },
+    {
+      "number": "13",
+      "title": {
+        "es": "Modificaciones a los Términos y Condiciones",
+        "en": "Modifications to Terms and Conditions"
+      },
+      "content": {
+        "es": "La Agencia se reserva el derecho de modificar los presentes Términos y Condiciones en cualquier momento. Las modificaciones entrarán en vigor a partir de su publicación en www.viajesoar.com o de su notificación al cliente por cualquier medio electrónico. El uso continuado de los servicios implica la aceptación de los términos vigentes.",
+        "en": "The Agency reserves the right to modify these Terms and Conditions at any time. Modifications will take effect upon publication at www.viajesoar.com or upon notification to the client by any electronic means. Continued use of services implies acceptance of the current terms."
+      }
+    },
+    {
+      "number": "14",
+      "title": {
+        "es": "Legislación Aplicable y Jurisdicción",
+        "en": "Applicable Law and Jurisdiction"
+      },
+      "content": {
+        "es": "Los presentes Términos y Condiciones se rigen por las leyes vigentes en los Estados Unidos Mexicanos, incluyendo la Ley Federal de Protección al Consumidor (LFPC) y la normatividad aplicable en materia de servicios turísticos. Para cualquier controversia derivada de la interpretación o cumplimiento del presente documento, las partes se someten a la jurisdicción de los tribunales competentes de la ciudad de La Paz, Baja California Sur, México, renunciando expresamente a cualquier otro fuero que pudiera corresponderles por razón de su domicilio presente o futuro.",
+        "en": "These Terms and Conditions are governed by the laws in force in the United Mexican States, including the Federal Consumer Protection Law (LFPC) and applicable regulations regarding tourism services. For any dispute arising from the interpretation or fulfillment of this document, the parties submit to the jurisdiction of the competent courts of the city of La Paz, Baja California Sur, Mexico, expressly waiving any other jurisdiction that may correspond to them by reason of their current or future domicile."
+      }
+    },
+    {
+      "number": "15",
+      "title": {
+        "es": "Aceptación de los Términos y Condiciones",
+        "en": "Acceptance of Terms and Conditions"
+      },
+      "content": {
+        "es": [
+          "Al realizar el pago del anticipo o del importe total del servicio, o al enviar confirmación escrita por medios electrónicos (correo electrónico, WhatsApp u otro medio digital), el cliente declara: haber leído y comprendido íntegramente los presentes Términos y Condiciones; aceptar de forma expresa todas las cláusulas aquí contenidas; haber recibido información clara sobre los servicios contratados, tarifas, condiciones de cancelación y responsabilidades.",
+          "La aceptación es personal e intransferible y aplica también en nombre de todos los pasajeros incluidos en la reservación, de quienes el cliente declara tener la representación o autorización correspondiente."
+        ],
+        "en": [
+          "By making the deposit payment or total service payment, or by sending written confirmation via electronic means (email, WhatsApp or other digital medium), the client declares: having fully read and understood these Terms and Conditions; expressly accepting all clauses contained herein; having received clear information about the contracted services, rates, cancellation conditions and responsibilities.",
+          "Acceptance is personal and non-transferable and also applies on behalf of all passengers included in the reservation, for whom the client declares having the corresponding representation or authorization."
+        ]
+      }
+    }
+  ],
+  "contact": {
+    "name": "ViajeSoar — Agencia de Viajes Digital",
+    "address": "Guama 881, Colonia Bella California, C.P. 23088, La Paz, B.C.S., México",
+    "email": "viajesoar@gmail.com",
+    "phone": "612-402-9656",
+    "whatsapp": "612-103-7422",
+    "whatsappHref": "https://wa.me/526121037422",
+    "website": "www.viajesoar.com",
+    "websiteHref": "https://www.viajesoar.com"
+  }
+}

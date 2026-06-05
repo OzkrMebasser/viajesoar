@@ -1,0 +1,258 @@
+{
+  "meta": {
+    "eyebrow": {
+      "es": "ViajeSoar — Agencia de Viajes Digital",
+      "en": "ViajeSoar — Digital Travel Agency"
+    },
+    "heroTitle": {
+      "es": "Aviso de Privacidad",
+      "en": "Privacy Notice"
+    },
+    "heroSubtitle": {
+      "es": "Conoce cómo protegemos y tratamos tus datos personales.",
+      "en": "Learn how we protect and handle your personal data."
+    },
+    "sectionTitle": {
+      "es": "Política de Privacidad",
+      "en": "Privacy Policy"
+    },
+    "sectionSubtitle": {
+      "es": "ViajeSoar — Agencia de Viajes Digital",
+      "en": "ViajeSoar — Digital Travel Agency"
+    }
+  },
+  "sections": [
+    {
+      "id": "intro",
+      "title": {
+        "es": "Aviso de Privacidad",
+        "en": "Privacy Notice"
+      },
+      "content": {
+        "es": [
+          "A través del presente AVISO DE PRIVACIDAD, ViajeSoar, representada por la persona física Oscar Antonio Moreno Martínez, en adelante \u201cla Agencia\u201d, con domicilio en Guama 881, Colonia Bella California, C.P. 23088, La Paz, Baja California Sur, México, informa que será la responsable del tratamiento de sus datos personales, por lo que se informa a las personas físicas a quienes correspondan los datos personales, en adelante \u201cel titular\u201d, que el presente aviso de privacidad es aplicable a cualquier relación ya sea comercial o de prestación de servicios turísticos con la Agencia, por lo que se entenderá que al existir cualquiera de dichas relaciones, el titular lo acepta y acuerda obligarse a su cumplimiento.",
+          "Para cualquier duda relacionada con la protección de sus datos personales, el titular podrá contactar a la Agencia en: correo electrónico: viajesoar@gmail.com | Teléfono: 612-402-9656 | WhatsApp: 612-103-7422 | Sitio web: www.viajesoar.com"
+        ],
+        "en": [
+          "Through this PRIVACY NOTICE, ViajeSoar, represented by the individual Oscar Antonio Moreno Martínez, hereinafter \u201cthe Agency\u201d, with address at Guama 881, Colonia Bella California, C.P. 23088, La Paz, Baja California Sur, Mexico, informs that it will be responsible for the processing of your personal data. This privacy notice applies to any commercial or tourism service relationship with the Agency, and by entering into any such relationship, the data subject accepts and agrees to comply with its terms.",
+          "For any questions regarding the protection of your personal data, the data subject may contact the Agency at: email: viajesoar@gmail.com | Phone: 612-402-9656 | WhatsApp: 612-103-7422 | Website: www.viajesoar.com"
+        ]
+      }
+    },
+    {
+      "id": "responsible",
+      "title": {
+        "es": "Responsable del Tratamiento de sus Datos Personales",
+        "en": "Responsible Party for the Processing of Your Personal Data"
+      },
+      "content": {
+        "es": "Para ViajeSoar la seguridad del titular es nuestra prioridad, por lo que protegemos sus datos personales mediante el uso, aplicación y mantenimiento de altas medidas de seguridad técnicas, físicas y administrativas, teniendo el titular la certeza de que sus datos personales estarán protegidos y serán tratados de manera confidencial. Se informa que el RESPONSABLE de recabar, dar tratamiento y/o utilizar los datos personales que el titular proporcione es la Agencia, a través de su representante legal.",
+        "en": "At ViajeSoar, the security of the data subject is our priority. We protect personal data through the use, application and maintenance of high technical, physical and administrative security measures, ensuring that personal data will be protected and treated confidentially. The RESPONSIBLE party for collecting, processing and/or using the personal data provided by the data subject is the Agency, through its legal representative."
+      }
+    },
+    {
+      "id": "address",
+      "title": {
+        "es": "Domicilio del Responsable",
+        "en": "Address of the Responsible Party"
+      },
+      "content": {
+        "es": "Para efectos del presente aviso de privacidad, la Agencia señala como su domicilio el ubicado en: Guama 881, Colonia Bella California, C.P. 23088, La Paz, Baja California Sur, México.",
+        "en": "For purposes of this privacy notice, the Agency designates its address as: Guama 881, Colonia Bella California, C.P. 23088, La Paz, Baja California Sur, Mexico."
+      }
+    },
+    {
+      "id": "data-collected",
+      "title": {
+        "es": "Datos Personales que Pueden ser Recolectados",
+        "en": "Personal Data That May Be Collected"
+      },
+      "content": {
+        "es": [
+          "Los datos personales que la Agencia puede recopilar del titular al momento de celebrar cualquier relación comercial o de prestación de servicios turísticos son, de manera enunciativa más no limitativa:",
+          "Datos de identificación; datos de contacto; datos de ubicación relacionados con el viaje; datos financieros necesarios para pagos y reservaciones; datos fiscales para facturación; información necesaria para la prestación de servicios turísticos."
+        ],
+        "en": [
+          "The personal data that the Agency may collect from the data subject when entering into any commercial or tourism service relationship include, but are not limited to:",
+          "Identification data; contact data; travel-related location data; financial data necessary for payments and reservations; tax data for invoicing; information necessary for the provision of tourism services."
+        ]
+      }
+    },
+    {
+      "id": "third-party-data",
+      "title": {
+        "es": "Datos de Terceros",
+        "en": "Third-Party Data"
+      },
+      "content": {
+        "es": "En caso de que el titular proporcione información de terceros (por ejemplo, acompañantes de viaje), el titular acepta haber obtenido de forma previa el consentimiento de dichos terceros para que la Agencia pueda dar tratamiento a sus datos para los fines informados en el presente Aviso de Privacidad.",
+        "en": "If the data subject provides information about third parties (e.g., travel companions), the data subject accepts having previously obtained the consent of said third parties for the Agency to process their data for the purposes described in this Privacy Notice."
+      }
+    },
+    {
+      "id": "minors",
+      "title": {
+        "es": "Datos Recabados de Menores de Edad",
+        "en": "Data Collected from Minors"
+      },
+      "content": {
+        "es": "La Agencia no recaba intencionalmente datos personales de menores de edad, ni de personas que no cuenten con la capacidad física o legal para contratar de conformidad con la normatividad aplicable. En caso de que el titular proporcione datos personales de dichos titulares, el titular declara que ha leído el presente aviso de privacidad, que cuenta con la capacidad legal necesaria y, en su caso, con la autorización de quien ejerza la patria potestad o tutela, para otorgar el consentimiento requerido en términos de la normatividad aplicable.",
+        "en": "The Agency does not intentionally collect personal data from minors or from persons who lack the physical or legal capacity to contract under applicable regulations. If the data subject provides personal data of such individuals, the data subject declares having read this privacy notice, having the necessary legal capacity and, where applicable, having the authorization of the person exercising parental authority or guardianship to grant the required consent under applicable regulations."
+      }
+    },
+    {
+      "id": "sensitive-data",
+      "title": {
+        "es": "Datos Personales Sensibles",
+        "en": "Sensitive Personal Data"
+      },
+      "content": {
+        "es": [
+          "Serán considerados como datos personales sensibles aquellos así dispuestos por la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, que de forma enunciativa más no limitativa, son los datos que forman parte de la intimidad del titular y cuya divulgación pone en riesgo o da origen a discriminación por aspectos de origen racial o étnico, estado de salud, información genética, creencias religiosas, filosóficas o morales, afiliación sindical, opiniones políticas y preferencias sexuales.",
+          "ViajeSoar manifiesta que no recaba datos personales sensibles de manera ordinaria. En caso de que por la naturaleza específica del servicio contratado llegaran a solicitarse, se recabará el consentimiento expreso correspondiente del titular."
+        ],
+        "en": [
+          "Sensitive personal data are those defined as such by the Federal Law on Protection of Personal Data Held by Private Parties, which include, but are not limited to, data that form part of the data subject's privacy and whose disclosure may give rise to discrimination based on racial or ethnic origin, health status, genetic information, religious, philosophical or moral beliefs, union membership, political opinions and sexual preferences.",
+          "ViajeSoar states that it does not ordinarily collect sensitive personal data. Should such data be required due to the specific nature of a contracted service, the corresponding express consent of the data subject will be obtained."
+        ]
+      }
+    },
+    {
+      "id": "purposes",
+      "title": {
+        "es": "Finalidades del Tratamiento de sus Datos Personales",
+        "en": "Purposes of Processing Your Personal Data"
+      },
+      "content": {
+        "es": [
+          "Los datos personales que la Agencia recabe serán utilizados para atender las siguientes finalidades:",
+          "a) La personalización de los documentos respecto de los servicios adquiridos, para el debido registro como prospecto o cliente de la Agencia, con el objetivo de identificarlo y establecer contacto con el titular.",
+          "b) Para integrar expedientes, bases de datos y sistemas necesarios para llevar a cabo cualquier relación comercial o de prestación de servicios con la Agencia, de los cuales se mencionan de forma enunciativa mas no limitativa, los siguientes: envío de cotizaciones sobre los servicios solicitados; proveer información de los servicios que se comercializan; realizar reservas de viajes, boletos de avión, medios de transporte, hoteles y hospedaje en general, a nombre del titular y de los terceros que éste indique; realizar trámites de visa, permisos y autorizaciones a nombre del titular, según se requiera; gestionar y dar seguimiento a cotizaciones, reservaciones y/o compra de viajes; informar acerca de los cambios respecto de los servicios proporcionados; dar seguimiento en caso de cualquier duda, aclaración o rectificación; mantener actualizados los registros; emitir boletos, vouchers y documentación de viaje; gestionar cualquier cambio, cancelación o reembolso que resulte procedente; procesar pagos y, en su caso, aclaraciones sobre los mismos; realizar gestiones de facturación en términos de la normatividad aplicable; dar atención a solicitudes de información, quejas o reclamaciones; dar cumplimiento a las obligaciones derivadas de la relación jurídica con el titular; y dar cumplimiento a los requerimientos de autoridades competentes en los casos legalmente previstos.",
+          "c) De manera adicional, se podrán utilizar sus datos personales para las siguientes finalidades secundarias: mercadotecnia, publicidad y prospección comercial; envío de promociones y ofertas de servicios propios de la Agencia; encuestas de satisfacción. El titular podrá oponerse a estas finalidades secundarias enviando su solicitud al correo viajesoar@gmail.com."
+        ],
+        "en": [
+          "The personal data collected by the Agency will be used for the following purposes:",
+          "a) Personalization of documents regarding contracted services, for proper registration as a prospect or client of the Agency, with the objective of identifying and establishing contact with the data subject.",
+          "b) To compile files, databases and systems necessary to carry out any commercial or service relationship with the Agency, including but not limited to: sending quotes for requested services; providing information about marketed services; making travel reservations, airline tickets, transportation, hotels and accommodations on behalf of the data subject and indicated third parties; processing visa applications, permits and authorizations on behalf of the data subject as required; managing and following up on quotes, reservations and/or travel purchases; informing about changes to provided services; following up on any questions, clarifications or rectifications; keeping records up to date; issuing tickets, vouchers and travel documentation; managing any applicable changes, cancellations or refunds; processing payments and related clarifications; handling billing procedures under applicable regulations; attending to information requests, complaints or claims; fulfilling obligations arising from the legal relationship with the data subject; and complying with requirements from competent authorities in legally foreseen cases.",
+          "c) Additionally, personal data may be used for the following secondary purposes: marketing, advertising and commercial prospecting; sending promotions and service offers from the Agency; satisfaction surveys. The data subject may object to these secondary purposes by sending a request to viajesoar@gmail.com."
+        ]
+      }
+    },
+    {
+      "id": "limit-use",
+      "title": {
+        "es": "Opciones y Medios para Limitar el Uso o Divulgación de los Datos",
+        "en": "Options and Means to Limit the Use or Disclosure of Data"
+      },
+      "content": {
+        "es": [
+          "La Agencia tiene implementadas medidas de seguridad administrativas, técnicas y físicas para proteger los datos personales del titular, mismas que igualmente se exige sean cumplidas por los proveedores de servicios contratados.",
+          "El titular podrá limitar el uso o divulgación de sus datos personales enviando un correo electrónico a viajesoar@gmail.com, indicando en el cuerpo del correo su nombre completo, medio de contacto y la solicitud expresa de limitación. De proceder su solicitud, será inscrito en el listado de exclusión de la Agencia."
+        ],
+        "en": [
+          "The Agency has implemented administrative, technical and physical security measures to protect the personal data of the data subject, which are also required to be observed by contracted service providers.",
+          "The data subject may limit the use or disclosure of their personal data by sending an email to viajesoar@gmail.com, indicating their full name, contact method and an express limitation request in the body of the email. If the request is approved, the data subject will be added to the Agency's exclusion list."
+        ]
+      }
+    },
+    {
+      "id": "transfer",
+      "title": {
+        "es": "Transferencia de Datos del Titular",
+        "en": "Transfer of the Data Subject's Data"
+      },
+      "content": {
+        "es": [
+          "La Agencia podrá transferir datos personales del titular, a entidades nacionales o extranjeras, sin requerir de su consentimiento adicional cuando sea necesario para la prestación del servicio contratado, a:",
+          "Terceros prestadores de servicios y socios comerciales con los que la Agencia tenga celebrados acuerdos comerciales, con el objeto de que estos le presten determinados servicios, así como para dar cumplimiento a las obligaciones derivadas de la relación jurídica con el titular (aerolíneas, hoteles, operadores turísticos, transportistas, entre otros); aseguradoras o personas morales con las que la Agencia tenga celebrados acuerdos con el propósito de que estas le proporcionen servicios de asistencia en viaje o cobertura de seguros, en caso de que el titular así lo requiera; autoridades competentes en los casos previstos por la normatividad aplicable.",
+          "Todo lo anterior se realiza conforme a lo señalado en los artículos 36 y 37 de la LFPDPPP. Si el titular no manifiesta su oposición, se entenderá que ha otorgado su consentimiento para dichas transferencias."
+        ],
+        "en": [
+          "The Agency may transfer the data subject's personal data to national or foreign entities, without requiring additional consent when necessary for the provision of the contracted service, to:",
+          "Third-party service providers and business partners with whom the Agency has commercial agreements, in order for them to provide certain services and to fulfill obligations arising from the legal relationship with the data subject (airlines, hotels, tour operators, carriers, among others); insurers or legal entities with whom the Agency has agreements to provide travel assistance or insurance coverage services, if required by the data subject; competent authorities in cases provided by applicable regulations.",
+          "All of the above is carried out in accordance with articles 36 and 37 of the LFPDPPP. If the data subject does not express opposition, it will be understood that consent has been granted for such transfers."
+        ]
+      }
+    },
+    {
+      "id": "arco",
+      "title": {
+        "es": "Medios para Ejercer los Derechos ARCO y Revocación del Consentimiento",
+        "en": "Means to Exercise ARCO Rights and Revoke Consent"
+      },
+      "content": {
+        "es": [
+          "Si los titulares desean que sus datos personales ya no sean usados por la Agencia, o bien, desean ejercer cualquiera de sus Derechos ARCO (Acceso, Rectificación, Cancelación u Oposición) o revocar su consentimiento, podrán enviar un correo electrónico a viajesoar@gmail.com en cualquier momento, o bien solicitarlo por escrito al domicilio indicado en el presente aviso, donde se les brindará la atención correspondiente.",
+          "Para ejercer los Derechos ARCO, de conformidad con el artículo 28 de la Ley Federal de Protección de Datos Personales en Posesión de Particulares (LFPDPPP), el titular (o su representante legal) deberá presentar solicitud con la siguiente documentación: nombre del titular; domicilio del titular u otro medio para comunicarle la respuesta a su solicitud; documentos emitidos por alguna autoridad federal o nacional (INE o pasaporte) que acrediten su personalidad y, en su caso, los documentos que acrediten la representación legal del solicitante; una descripción clara de los datos sobre los que está tratando de ejercer sus Derechos ARCO y los derechos que le gustaría ejercer.",
+          "Si uno o más de los documentos señalados no están incluidos y/o presentan errores u omisiones, la Agencia notificará al titular dentro de los 3 días hábiles siguientes a la recepción de la solicitud para que subsane la información. El titular contará con 5 días hábiles para atender el requerimiento; de lo contrario, la solicitud se tendrá por no presentada.",
+          "Una vez que la solicitud del titular se encuentre debidamente integrada, la Agencia tendrá la obligación de notificar la determinación correspondiente en un plazo máximo de 20 días hábiles contados desde la recepción de la solicitud completa. En caso de resultar procedente, la Agencia hará efectiva la resolución dentro de los 15 días hábiles siguientes a la fecha en que se comunique la respuesta."
+        ],
+        "en": [
+          "If data subjects wish their personal data to no longer be used by the Agency, or wish to exercise any of their ARCO Rights (Access, Rectification, Cancellation or Opposition) or revoke their consent, they may send an email to viajesoar@gmail.com at any time, or submit a written request to the address indicated in this notice.",
+          "To exercise ARCO Rights, in accordance with article 28 of the Federal Law on Protection of Personal Data Held by Private Parties (LFPDPPP), the data subject (or their legal representative) must submit a request with the following documentation: name of the data subject; address of the data subject or another means to communicate the response; documents issued by a federal or national authority (INE or passport) proving their identity and, where applicable, documents proving legal representation; a clear description of the data over which they seek to exercise their ARCO Rights and the specific rights they wish to exercise.",
+          "If one or more of the indicated documents are missing and/or contain errors or omissions, the Agency will notify the data subject within 3 business days of receiving the request to correct the information. The data subject will have 5 business days to address the requirement; otherwise, the request will be considered not submitted.",
+          "Once the data subject's request is duly completed, the Agency will be obligated to notify the corresponding determination within a maximum of 20 business days from receipt of the complete request. If applicable, the Agency will implement the resolution within 15 business days following the date on which the response is communicated."
+        ]
+      }
+    },
+    {
+      "id": "cookies",
+      "title": {
+        "es": "Uso de Tecnologías (Cookies, Web Beacons y Similares)",
+        "en": "Use of Technologies (Cookies, Web Beacons and Similar)"
+      },
+      "content": {
+        "es": [
+          "La Agencia utiliza diversas tecnologías para mejorar la eficiencia de los servicios prestados. Entre estas tecnologías se incluye el uso de cookies, que son pequeñas cantidades de información que se almacenan en el navegador utilizado por cada usuario para que el servidor recuerde cierta información que posteriormente pueda utilizar. Esta información permite identificar al titular y guardar sus preferencias personales para brindarle una mejor experiencia de navegación.",
+          "En el sitio web www.viajesoar.com y demás medios electrónicos de la Agencia, se puede hacer uso de cookies, web beacons y otras tecnologías de rastreo, propias y de terceros, que permiten cumplir con las finalidades informadas en el presente Aviso de Privacidad. Los tipos de cookies que pueden utilizarse son:",
+          "Cookies esenciales: permiten el funcionamiento correcto del sitio web y no pueden deshabilitarse al ser necesarias para el uso de sus funcionalidades; cookies de rendimiento y análisis: permiten obtener datos de carácter técnico y estadístico que permiten identificar la forma en que el titular utiliza los servicios, con la finalidad de mejorar su rendimiento y futuros desarrollos; cookies publicitarias propias y de terceros: permiten obtener información relativa a las preferencias de navegación y consumo para enviar publicidad que la Agencia considera relevante.",
+          "El titular puede deshabilitar o ajustar el uso de cookies siguiendo los procedimientos del navegador de internet que utilice para acceder a cualquiera de los medios electrónicos de la Agencia."
+        ],
+        "en": [
+          "The Agency uses various technologies to improve the efficiency of its services. These include the use of cookies, which are small amounts of information stored in the user's browser so that the server can remember certain information for later use. This information allows the data subject to be identified and their personal preferences to be saved for a better browsing experience.",
+          "On the website www.viajesoar.com and other electronic media of the Agency, cookies, web beacons and other tracking technologies, both own and third-party, may be used to fulfill the purposes described in this Privacy Notice. The types of cookies that may be used are:",
+          "Essential cookies: allow the website to function correctly and cannot be disabled as they are necessary for the use of its functionalities; performance and analytics cookies: allow technical and statistical data to be obtained to identify how the data subject uses the services, in order to improve performance and future developments; own and third-party advertising cookies: allow information relating to browsing and consumption preferences to be obtained in order to send advertising that the Agency considers relevant.",
+          "The data subject may disable or adjust the use of cookies by following the procedures of the internet browser used to access any of the Agency's electronic media."
+        ]
+      }
+    },
+    {
+      "id": "modifications",
+      "title": {
+        "es": "Modificaciones al Aviso de Privacidad",
+        "en": "Modifications to the Privacy Notice"
+      },
+      "content": {
+        "es": [
+          "El presente aviso de privacidad puede sufrir modificaciones, cambios o actualizaciones derivadas, entre otras causas, de nuevos requerimientos legales; necesidades propias de la relación comercial con la Agencia; cambios en las prácticas de privacidad; cambios en el modelo de negocio; o por otras causas.",
+          "Cualquier modificación al presente aviso de privacidad será notificada al titular a través de cualquiera de los siguientes medios: un comunicado por escrito enviado a su domicilio; por el correo electrónico que señale; un mensaje a su teléfono móvil; o mediante publicación en el sitio web www.viajesoar.com, indicando la fecha de última actualización."
+        ],
+        "en": [
+          "This privacy notice may undergo modifications, changes or updates arising from, among other causes, new legal requirements; needs arising from the commercial relationship with the Agency; changes in privacy practices; changes in the business model; or other causes.",
+          "Any modification to this privacy notice will be notified to the data subject through any of the following means: a written communication sent to their address; by the email they have provided; a message to their mobile phone; or through publication on the website www.viajesoar.com, indicating the date of the last update."
+        ]
+      }
+    },
+    {
+      "id": "consent",
+      "title": {
+        "es": "Consentimiento del Titular",
+        "en": "Consent of the Data Subject"
+      },
+      "content": {
+        "es": "Al proporcionar sus datos personales, solicitar cotizaciones, realizar reservaciones, efectuar pagos o continuar utilizando los servicios de ViajeSoar por cualquier medio físico o electrónico, el titular reconoce que ha leído, entendido y aceptado el presente Aviso de Privacidad, y que ha otorgado su consentimiento para el tratamiento de sus datos personales conforme a los términos aquí descritos.",
+        "en": "By providing personal data, requesting quotes, making reservations, processing payments or continuing to use ViajeSoar's services through any physical or electronic means, the data subject acknowledges having read, understood and accepted this Privacy Notice, and having granted consent for the processing of their personal data in accordance with the terms described herein."
+      }
+    }
+  ],
+  "contact": {
+    "name": "ViajeSoar — Agencia de Viajes Digital",
+    "address": "Guama 881, Colonia Bella California, C.P. 23088, La Paz, B.C.S., México",
+    "email": "viajesoar@gmail.com",
+    "phone": "612-402-9656",
+    "whatsapp": "612-103-7422",
+    "whatsappHref": "https://wa.me/526121037422",
+    "website": "www.viajesoar.com",
+    "websiteHref": "https://www.viajesoar.com"
+  }
+}
