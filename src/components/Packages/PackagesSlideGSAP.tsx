@@ -223,8 +223,8 @@ export default function PackagesSlideGSAP({ locale, packages }: Props) {
             />
             <p className="text-[var(--accent)] text-sm md:text-lg px-6">
               {locale === "es"
-                ? "Explora destinos increíbles alrededor del planeta"
-                : "Explore amazing destinations around the world"}
+                ? "Encuentra el paquete perfecto para tu próximo viaje"
+                : "Find the perfect package for your next trip"}
             </p>
           </div>
 

@@ -6,7 +6,7 @@ import { routing } from "@/app/i18n/routing";
 import AirplaneCursor from "@/components/Airplane/AirplaneCursor";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Footer from "@/components/Footer";
+import Footer from "@/components/Footer/Footer";
 import { FavoritesProvider } from "@/lib/context/FavoritesProvider";
 import { ThemeProvider } from "@/lib/context/ThemeContext";
 import WhatsAppChat from "@/components/WhatsAppChat";
@@ -44,7 +44,7 @@ https://cal.com/ventas-viajesoar-qboxhs/reunion-de-asesoria
           <NavMenu  navRegions={navRegions} />
           <AirplaneCursor />
           {children}
-          <Footer />
+          <Footer  locale={locale as Locale} />
           <WhatsAppChat />
            <ToastContainer
             position="bottom-right"

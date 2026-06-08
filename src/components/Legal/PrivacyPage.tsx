@@ -9,6 +9,9 @@ interface Props {
   locale: Locale;
 }
 
+const HERO_IMAGE =
+  "https://res.cloudinary.com/dtsenvmdq/image/upload/v1780873840/aviso-de-privacidad_gxhjna.png";
+
 export default function PrivacyPage({ locale }: Props) {
   const { meta, sections, contact } = privacyData;
 
@@ -41,8 +44,12 @@ export default function PrivacyPage({ locale }: Props) {
 
       {/* ── HERO BAND ── */}
       <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white">
-        <div className="absolute inset-0 z-0">
-          <div className="w-full h-full bg-white/5" />
+           <div className="absolute inset-0 z-0">
+          <img
+            src={HERO_IMAGE}
+            alt="payment hero"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>

@@ -22,10 +22,10 @@ import {
   FaWhatsapp,
 } from "react-icons/fa6";
 import { IoAirplane } from "react-icons/io5";
-
-import ButtonArrow from "./ui/ButtonArrow";
-
-type Locale = "es" | "en";
+import Link from "next/link";
+import ButtonArrow from "../ui/ButtonArrow";
+import { Locale } from "@/types/locale";
+import NewsletterSection from "./NewsletterSection";
 
 const translations = {
   es: {
@@ -47,6 +47,7 @@ const translations = {
     faq: "Preguntas Frecuentes",
     privacy: "Política de Privacidad",
     terms: "Términos y Condiciones",
+    payment: "Formas de Pago",
     newsletter: "Boletín",
     subscribeText: "Suscribirse a nuestras ofertas exclusivas",
     emailPlaceholder: "Tu correo electrónico",
@@ -76,6 +77,7 @@ const translations = {
     legal: "Legal",
     faq: "FAQ",
     privacy: "Privacy Policy",
+    payment: "Payment Methods",
     terms: "Terms & Conditions",
     newsletter: "Newsletter",
     subscribeText: "Subscribe to our exclusive travel deals",
@@ -104,14 +106,24 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
     }
   };
 
-  const quickLinks = [
-    { label: t.packages, href: "#" },
-    { label: t.destinations, href: "#" },
-    { label: t.tours, href: "#" },
-    { label: t.offers, href: "#" },
-    { label: t.blog, href: "#" },
-  ];
+  const routes: Record<string, Record<string, string>> = {
+    home: { es: "/", en: "/" },
+    packages: { es: "/paquetes", en: "/packages" },
+    destinations: { es: "/destinos", en: "/destinations" },
+    tours: { es: "/tours", en: "/tours" },
+    offers: { es: "/ofertas", en: "/offers" },
+    blog: { es: "/blog", en: "/blog" },
+    contact: { es: "/contacto", en: "/contact" },
+  };
 
+  const quickLinks = [
+    { label: t.packages, href: `/${locale}${routes.packages[locale]}` },
+    { label: t.destinations, href: `/${locale}${routes.destinations[locale]}` },
+    { label: t.tours, href: `/${locale}${routes.tours[locale]}` },
+    { label: t.offers, href: `/${locale}${routes.offers[locale]}` },
+    { label: t.blog, href: `/${locale}${routes.blog[locale]}` },
+    { label: t.contact, href: `/${locale}${routes.contact[locale]}` },
+  ];
   const companyLinks = [
     { label: t.about, href: "#" },
     { label: t.contact, href: "#" },
@@ -120,10 +132,26 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
     { label: t.partners, href: "#" },
   ];
 
-  const supportLinks = [
-    { label: t.faq, href: "#" },
-    { label: t.privacy, href: "#" },
-    { label: t.terms, href: "#" },
+  const legalLinks = [
+    {
+      label: t.faq,
+      href: locale === "es" ? "/es/preguntas-frecuentes" : "/en/faq",
+    },
+    {
+      label: t.privacy,
+      href: locale === "es" ? "/es/aviso-de-privacidad" : "/en/privacy-policy",
+    },
+    {
+      label: t.terms,
+      href:
+        locale === "es"
+          ? "/es/terminos-y-condiciones"
+          : "/en/terms-and-conditions",
+    },
+    {
+      label: t.payment,
+      href: locale === "es" ? "/es/formas-de-pago" : "/en/payment-methods",
+    },
   ];
 
   const features = [
@@ -188,64 +216,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
           </div>
         </div>
         {/* Newsletter Section */}
-        <div className="border-b border-theme  py-8">
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold mb-2 text-center text-theme">
-              {t.newsletter}
-            </h3>
-            <p className="text-[var(--accent)] text-base md:text-xl text-center mb-6">
-              {t.subscribeText}
-            </p>
-
-            <div
-              onSubmit={handleSubscribe}
-              className="flex flex-col sm:flex-row gap-3"
-            >
-              <div className="flex-1 relative">
-                <input
-                  type="email"
-                  placeholder={t.emailPlaceholder}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input-base p-5"
-                  required
-                />
-              </div>
-              {/* <button
-                  onClick={() => {
-                    if (email) {
-                      setSubscribed(true);
-                      setEmail("");
-                      setTimeout(() => setSubscribed(false), 3000);
-                    }
-                  }}
-                  className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-black font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 group whitespace-nowrap"
-                >
-                  {t.subscribe}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button> */}
-              <ButtonArrow
-                title={t.subscribe}
-                onClick={() => {
-                  if (email) {
-                    setSubscribed(true);
-                    setEmail("");
-                    setTimeout(() => setSubscribed(false), 3000);
-                  }
-                }}
-              />
-            </div>
-
-            {subscribed && (
-              <p className="text-center text-[var(--accent)] text-base mt-3 animate-pulse">
-                ✓{" "}
-                {locale === "es"
-                  ? "¡Gracias por suscribirse!"
-                  : "Thank you for subscribing!"}
-              </p>
-            )}
-          </div>
-        </div>
+     <NewsletterSection locale={locale} />
         {/* Main Content */}
         <div className="px-4 py-16 sm:py-20 ">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
@@ -271,7 +242,6 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 {t.followUs}
               </h4>
               <div className="flex gap-4">
-                
                 {[FaFacebook, FaInstagram, FaTiktok, FaXTwitter].map(
                   (Icon, idx) => (
                     <button
@@ -334,74 +304,76 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 {t.legal}
               </h4>
               <ul className="space-y-3 mb-6">
-                {supportLinks.map((link, idx) => (
+                {legalLinks.map((link, idx) => (
                   <li key={idx}>
-                    <a
+                    <Link
                       href={link.href}
                       className="hover:text-[var(--accent)] transition-colors duration-300 flex items-center gap-2 group text-sm"
                     >
                       <span className="w-0 group-hover:w-2 h-0.5 bg-[var(--accent)] transition-all duration-300" />
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
-            {/* Contact info */}
-            <div>
-              <h4 className="font-semibold text-theme mb-4 flex items-center gap-2">
-                <div className="w-1 h-5 bg-[var(--accent)] rounded-full" />
-                {t.contactinfo}
-              </h4>
+            {/* Contact Info */}
+            <div className="space-y-3">
+              {/* Teléfono */}
+              <a
+                href="tel:+526124029656"
+                className="flex items-center gap-3 text-theme group"
+              >
+                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
+                  +52 (612) 402 9656
+                </span>
+              </a>
 
-           
-              {/* Contact Info */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-theme">
-                  <button
-                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
-                    aria-label="Telephone number"
-                  >
-                    <Phone className="w-4 h-4" />
-                  </button>
-                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
-                    +52 (612) 402 9656
-                  </span>
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/526121037422"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-theme group"
+              >
+                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <FaWhatsapp className="w-4 h-4" />
                 </div>
-                <div className="flex items-center gap-3 text-theme">
-                  <button
-                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
-                    aria-label="WhatsApp"
-                  >
-                    <FaWhatsapp className="w-4 h-4" />
-                  </button>
-                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
-                    +52 (612) 103 7422
-                  </span>
+                <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
+                  +52 (612) 103 7422
+                </span>
+              </a>
+
+              {/* Email */}
+              <a
+                href="mailto:info.viajesoar@gmail.com"
+                className="flex items-center gap-3 text-theme group"
+              >
+                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <Mail className="w-4 h-4" />
                 </div>
-                <div className="flex items-center gap-3 text-theme">
-                  <button
-                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
-                    aria-label="Email address"
-                  >
-                    <Mail className="w-4 h-4" />
-                  </button>
-                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
-                    info.viajesoar@gmail.com
-                  </span>
+                <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
+                  info.viajesoar@gmail.com
+                </span>
+              </a>
+
+              {/* Ubicación */}
+              <a
+                href="https://maps.google.com/?q=La+Paz,+Baja+California+Sur,+Mexico"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 text-theme group"
+              >
+                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <MapPin className="w-4 h-4" />
                 </div>
-                <div className="flex items-start gap-3 text-theme">
-                  <button
-                    className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
-                    aria-label="Location"
-                  >
-                    <MapPin className="w-4 h-4" />
-                  </button>
-                  <span className="text-sm hover:ml-[5px] hover:text-[var(--accent)] transition-colors duration-300">
-                    La Paz, Baja California Sur, MX
-                  </span>
-                </div>
-              </div>
+                <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
+                  La Paz, Baja California Sur, MX
+                </span>
+              </a>
             </div>
           </div>
         </div>

@@ -1,7 +1,8 @@
 
 
 
-import TermsPage from "@/components/Legal/TermsPage";
+import PaymentPage from "@/components/Legal/PaymentPage";
+
 import type { Locale } from "@/types/locale";
 
 interface Props {
@@ -10,5 +11,5 @@ interface Props {
 
 export default async function Page({ params }: Props) {
   const { locale } = await params;
-  return <TermsPage locale={locale} />;
+  return <PaymentPage locale={locale} />;
 }

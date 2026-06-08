@@ -10,8 +10,6 @@ import {
 import { GiEarthAmerica, GiPalmTree, GiAztecCalendarSun } from "react-icons/gi";
 import { MdTravelExplore } from "react-icons/md";
 
-
-
 // types
 import type { RegionHome } from "@/types/destinations";
 import type { Locale } from "@/types/locale";
@@ -243,8 +241,8 @@ export default function RegionsHomeSlideGSAP({ locale, regions }: Props) {
             />
             <p className="text-[var(--accent)] text-sm md:text-lg px-6">
               {locale === "es"
-                ? "Explora destinos increíbles alrededor del planeta"
-                : "Explore amazing destinations around the world"}
+                ? "Inspírate con destinos únicos para tu próxima aventura"
+                : "Get inspired by unique destinations for your next adventure"}
             </p>
           </div>
 
