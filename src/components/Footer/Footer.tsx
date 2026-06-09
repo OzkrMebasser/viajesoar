@@ -26,6 +26,7 @@ import Link from "next/link";
 import ButtonArrow from "../ui/ButtonArrow";
 import { Locale } from "@/types/locale";
 import NewsletterSection from "./NewsletterSection";
+import { abort } from "process";
 
 const translations = {
   es: {
@@ -114,6 +115,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
     offers: { es: "/ofertas", en: "/offers" },
     blog: { es: "/blog", en: "/blog" },
     contact: { es: "/contacto", en: "/contact" },
+    about: { es: "/nosotros", en: "/about-us" },
   };
 
   const quickLinks = [
@@ -122,12 +124,11 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
     { label: t.tours, href: `/${locale}${routes.tours[locale]}` },
     { label: t.offers, href: `/${locale}${routes.offers[locale]}` },
     { label: t.blog, href: `/${locale}${routes.blog[locale]}` },
-    { label: t.contact, href: `/${locale}${routes.contact[locale]}` },
+    // { label: t.contact, href: `/${locale}${routes.contact[locale]}` },
   ];
   const companyLinks = [
-    { label: t.about, href: "#" },
-    { label: t.contact, href: "#" },
-    { label: t.contactinfo, href: "#" },
+    { label: t.about, href: `/${locale}${routes.about[locale]}` },
+    { label: t.contactinfo, href: `/${locale}${routes.contact[locale]}` },
     { label: t.careers, href: "#" },
     { label: t.partners, href: "#" },
   ];
@@ -216,7 +217,7 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
           </div>
         </div>
         {/* Newsletter Section */}
-     <NewsletterSection locale={locale} />
+        <NewsletterSection locale={locale} />
         {/* Main Content */}
         <div className="px-4 py-16 sm:py-20 ">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">

@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle2, Tag, Map, Bell, Shield } from "lucide-react";
 import { Locale } from "@/types/locale";
 import { createClient } from "@supabase/supabase-js";
 import SplitText from "@/components/SplitText";
-
+import ButtonArrow from "@/components/ui/ButtonArrow";
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -13,33 +13,58 @@ const supabase = createClient(
 const t = (locale: Locale, es: string, en: string) =>
   locale === "es" ? es : en;
 
+// const getPerks = (locale: Locale) => [
+//   {
+//     icon: Tag,
+//     label: t(
+//       locale,
+//       "Ofertas exclusivas antes de hacerse públicas",
+//       "Exclusive deals before they go public",
+//     ),
+//   },
+//   {
+//     icon: Map,
+//     label: t(
+//       locale,
+//       "Itinerarios secretos de nuestros expertos",
+//       "Secret itineraries from our travel experts",
+//     ),
+//   },
+//   {
+//     icon: Bell,
+//     label: t(
+//       locale,
+//       "Alertas de precio en tiempo real",
+//       "Real-time price drop alerts",
+//     ),
+//   },
+// ];
 const getPerks = (locale: Locale) => [
   {
     icon: Tag,
     label: t(
       locale,
-      "Ofertas exclusivas antes de hacerse públicas",
-      "Exclusive deals before they go public",
+      "Ofertas exclusivas y promociones por tiempo limitado",
+      "Exclusive offers and limited-time deals",
     ),
   },
   {
     icon: Map,
     label: t(
       locale,
-      "Itinerarios secretos de nuestros expertos",
-      "Secret itineraries from our travel experts",
+      "Destinos seleccionados por nuestros expertos",
+      "Curated destinations from our travel experts",
     ),
   },
   {
     icon: Bell,
     label: t(
       locale,
-      "Alertas de precio en tiempo real",
-      "Real-time price drop alerts",
+      "Consejos de viaje e inspiración para tu próxima aventura",
+      "Travel tips and destination inspiration",
     ),
   },
 ];
-
 const NewsletterSection = ({ locale = "es" }: { locale?: Locale }) => {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -162,8 +187,8 @@ const NewsletterSection = ({ locale = "es" }: { locale?: Locale }) => {
           <p className="text-[var(--accent)] text-sm md:text-lg px-6">
             {t(
               locale,
-              "Recibe promociones exclusivas y ofertas antes que nadie",
-              "Receive exclusive promotions and offers before anyone else",
+              "Accede a ofertas exclusivas y oportunidades de viaje reservadas para nuestros suscriptores.",
+              "Unlock exclusive offers and travel opportunities reserved for subscribers.",
             )}
           </p>
         </div>
@@ -173,8 +198,8 @@ const NewsletterSection = ({ locale = "es" }: { locale?: Locale }) => {
             <p className="text-theme-tittles text-base mb-8 leading-relaxed">
               {t(
                 locale,
-                "Recibe ofertas anticipadas, itinerarios secretos y alertas de precios antes que nadie.",
-                "Get early deals, secret itineraries, and price alerts before anyone else.",
+                "Inspírate con destinos seleccionados, recomendaciones de expertos y promociones especiales.",
+                "Stay inspired with handpicked destinations, expert recommendations, and special promotions.",
               )}
             </p>
 
@@ -185,10 +210,10 @@ const NewsletterSection = ({ locale = "es" }: { locale?: Locale }) => {
                 return (
                   <li
                     key={idx}
-                    className="flex items-center gap-3 text-sm text-theme"
+                    className="flex items-center gap-3 text-sm text-theme hover:scale-105 transition-all duration-300"
                   >
-                    <div className="flex-shrink-0 p-1.5 rounded-md bg-[var(--accent)]/10">
-                      <Icon className="w-4 h-4 accent" />
+                    <div className="p-3 rounded-lg bg-[var(--accent)]/10 group-hover:bg-[var(--accent)]/20 transition-colors">
+                      <Icon className="w-6 h-6 accent" />
                     </div>
                     {perk.label}
                   </li>
@@ -197,14 +222,14 @@ const NewsletterSection = ({ locale = "es" }: { locale?: Locale }) => {
             </ul>
 
             {/* Social proof */}
-            <p className="mt-6 text-xs text-theme-tittles flex items-center gap-1.5">
+            {/* <p className="mt-6 text-xs text-theme-tittles flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 accent" />
               {t(
                 locale,
                 "+2,800 viajeros ya se suscribieron",
                 "+2,800 travelers already subscribed",
               )}
-            </p>
+            </p> */}
           </div>
 
           {/* ── Columna derecha: formulario ── */}
@@ -383,47 +408,18 @@ const NewsletterSection = ({ locale = "es" }: { locale?: Locale }) => {
                 )}
 
                 {/* Botón de suscripción */}
-                <button
+                <ButtonArrow
+                  title={
+                    status === "loading"
+                      ? t(locale, "Registrando...", "Registering...")
+                      : t(locale, "Quiero viajar", "Let's Travel")
+                  }
                   onClick={handleSubscribe}
                   disabled={status === "loading"}
-                  className={`w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300
-                    ${
-                      status === "loading"
-                        ? "opacity-60 cursor-not-allowed"
-                        : "hover:scale-[1.02] active:scale-[0.98]"
-                    }
-                    bg-[var(--accent)] text-white`}
-                >
-                  {status === "loading" ? (
-                    <span className="flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4 animate-spin"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                        />
-                      </svg>
-                      {t(locale, "Registrando...", "Registering...")}
-                    </span>
-                  ) : (
-                    <>
-                      {t(locale, "Quiero viajar", "Let's Travel")}
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </button>
+                  className={`w-full justify-center ${
+                    status === "loading" ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
+                />
 
                 {/* Nota de spam */}
                 <p className="text-center text-[10px] text-theme-tittles opacity-60 mt-3">

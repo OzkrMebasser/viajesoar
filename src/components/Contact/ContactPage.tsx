@@ -381,7 +381,11 @@ export default function ContactPage({ locale = "es" }: Props) {
                   }
                   icon={loading ? Loader2 : Send}
                   disabled={loading}
-                  className={loading ? "opacity-70 cursor-not-allowed" : ""}
+                  className={
+                    loading
+                      ? "opacity-70 cursor-not-allowed"
+                      : "w-full justify-center "
+                  }
                 />
               </form>
             )}
@@ -438,9 +442,11 @@ export default function ContactPage({ locale = "es" }: Props) {
             ].map((item, i) => (
               <div
                 key={i}
-                className="glass-card border border-white/10 rounded-sm px-6 py-5 flex items-start gap-4 hover:border-[var(--accent)]/30 transition-all duration-300"
+                className="glass-card border border-white/10 rounded-sm px-6 py-5 flex items-center gap-4 hover:border-[var(--accent)]/30 transition-all duration-300 "
               >
-                <div className="mt-0.5 flex-shrink-0">{item.icon}</div>
+                <div className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 transition-all duration-300 flex-shrink-0 hover:rotate-5 transform">
+                  {item.icon}
+                </div>
                 <div>
                   <p
                     className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-1"

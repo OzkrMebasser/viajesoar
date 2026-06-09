@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import { MdFlightTakeoff } from "react-icons/md";
 import { Compass, Target } from "lucide-react";
+import ButtonArrow from "../ui/ButtonArrow";
 
 interface Props {
   locale: Locale;
@@ -167,15 +168,15 @@ export default function AboutPage({ locale }: Props) {
       description: t(l, "Moderna y accesible", "Modern and accessible"),
     },
     {
-  target: 1000,
-  suffix: "+",
-  label: t(l, "Destinos", "Destinations"),
-  description: t(
-    l,
-    "Hoteles, tours y experiencias alrededor del mundo",
-    "Hotels, tours, and experiences around the world",
-  ),
-},
+      target: 1000,
+      suffix: "+",
+      label: t(l, "Destinos", "Destinations"),
+      description: t(
+        l,
+        "Hoteles, tours y experiencias alrededor del mundo",
+        "Hotels, tours, and experiences around the world",
+      ),
+    },
     // {
     //   target: 98,
     //   suffix: "%",
@@ -185,7 +186,7 @@ export default function AboutPage({ locale }: Props) {
   ];
 
   return (
-    <section className="min-h-screen bg-gradient-theme">
+    <section className="min-h-screen  bg-gradient-theme">
       {/* ── HERO OVERLAY TEXT ── */}
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
         <div className="flex items-center gap-2 mb-4">
@@ -216,7 +217,7 @@ export default function AboutPage({ locale }: Props) {
       </div>
 
       {/* ── HERO BAND ── */}
-      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white">
+      <div className="relative h-[100dvh] flex flex-col justify-end overflow-hidden text-white ">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.pexels.com/photos/13987300/pexels-photo-13987300.jpeg"
@@ -234,7 +235,7 @@ export default function AboutPage({ locale }: Props) {
 
       {/* ── MAIN CONTENT ── */}
       <div
-        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme"
+        className="max-w-5xl mx-auto px-4 sm:px-6 py-8 bg-gradient-theme"
         id="about-content"
       >
         {/* Section header */}
@@ -256,16 +257,19 @@ export default function AboutPage({ locale }: Props) {
 
         {/* ── INTRO CARD ── */}
         <div className="glass-card border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 relative mb-8 p-8 sm:p-12">
-          <div className="relative z-10 max-w-3xl">
-            <BadgeAccent>VIAJESOAR</BadgeAccent>
-            <p className="text-[var(--text)]/90 text-base sm:text-lg leading-relaxed mt-6">
+          <div className="relative z-10 text-justify ">
+            <p className="text-[var(--text)]/90 text-base sm:text-lg leading-relaxed ">
+              {t(locale, "En ", "At ")}
+              <span className="text-[1rem] font-bold tracking-wider">
+                VIAJE<span className="accent">SOAR</span>
+              </span>
               {t(
                 locale,
-                "En VIAJESOAR creemos que viajar es mucho más que visitar un destino; es descubrir nuevas culturas, crear recuerdos inolvidables y vivir experiencias que marcan cada etapa de la vida.",
-                "At VIAJESOAR we believe that traveling is much more than visiting a destination; it's discovering new cultures, creating unforgettable memories and living experiences that mark every stage of life.",
+                " creemos que viajar es mucho más que visitar un destino; es descubrir nuevas culturas, crear recuerdos inolvidables y vivir experiencias que marcan cada etapa de la vida.",
+                " we believe that traveling is much more than visiting a destination; it's discovering new cultures, creating unforgettable memories and living experiences that mark every stage of life.",
               )}
             </p>
-            <p className="text-[var(--text)]/70 text-sm leading-relaxed mt-4">
+            <p className="text-[var(--text)]/70 text-sm leading-relaxed mt-4 text-justify">
               {t(
                 locale,
                 "Somos una agencia de viajes online especializada en viajes nacionales e internacionales, ofreciendo paquetes, tours y experiencias diseñadas para viajeros que buscan confianza, calidad y atención personalizada. Desde las playas de México hasta los rincones más fascinantes de Europa, Asia, Medio Oriente, África y Sudamérica, ayudamos a nuestros clientes a explorar el mundo de manera segura y memorable.",
@@ -282,7 +286,9 @@ export default function AboutPage({ locale }: Props) {
         <div className="glass-card border border-white/10 rounded-sm overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-300 relative mb-8 p-8 sm:p-12">
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-4">
-              <FaUserTie className="text-[var(--accent)]" />
+              <div className="p-3 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5 transition-colors">
+                <FaUserTie className="text-[var(--accent)]  " />
+              </div>
               <span className="text-[var(--accent)] text-[11px] tracking-[0.3em] uppercase font-semibold">
                 {t(locale, "Nuestra experiencia", "Our experience")}
               </span>
@@ -322,9 +328,9 @@ export default function AboutPage({ locale }: Props) {
             {reasons(locale).map((reason, i) => (
               <div
                 key={i}
-                className="glass-card border border-white/10 rounded-sm p-5 hover:border-[var(--accent)]/30 transition-all duration-300 relative overflow-hidden flex gap-4 items-start"
+                className="hover:scale-105 transition-all duration-300 glass-card border border-white/10 rounded-sm p-5 hover:border-[var(--accent)]/30 transition-all duration-300 relative overflow-hidden flex gap-4 items-start"
               >
-                <div className="relative z-10 flex-shrink-0 mt-0.5">
+                <div className="p-3 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5 transition-colors">
                   {reason.icon}
                 </div>
                 <p className="relative z-10 text-[var(--text)]/80 text-sm leading-relaxed">
@@ -400,7 +406,7 @@ export default function AboutPage({ locale }: Props) {
                 "¿Listo para explorar el mundo?",
                 "Ready to explore the world?",
               )}
-              className="text-2xl sm:text-3xl tracking-widest font-bold mb-3 uppercase text-theme-tittles"
+              className="text-2xl sm:text-3xl tracking-widest font-bold mb-3 uppercase text-white"
               delay={25}
               duration={0.5}
               splitType="chars"
@@ -408,20 +414,25 @@ export default function AboutPage({ locale }: Props) {
               to={{ opacity: 1, y: 0 }}
               textAlign="center"
             />
-            <p className="text-[var(--text)]/60 text-sm max-w-md mx-auto mb-6">
+            <p className="text-white/70 text-sm max-w-md mx-auto mb-6">
               {t(
                 locale,
                 "Contáctanos y déjanos ayudarte a planear tu próxima aventura.",
                 "Contact us and let us help you plan your next adventure.",
               )}
             </p>
-            <a
+            {/* <a
               href={`/${locale}/contact`}
               className="inline-flex items-center gap-2 bg-[var(--accent)] text-black font-bold text-xs tracking-[0.2em] uppercase px-8 py-3 rounded-sm hover:opacity-90 transition-opacity duration-200"
             >
               <FaCheckCircle className="text-sm" />
               {t(locale, "Contáctanos", "Contact us")}
-            </a>
+            </a> */}
+            <ButtonArrow
+              className="inline-flex items-center gap-2  "
+              title={t(locale, "Contáctanos", "Contact us")}
+              href={`/${locale}/contact`}
+            />
           </div>
         </div>
 
