@@ -95,12 +95,13 @@ export default function ActivityDestination({
           textAlign="left"
         />
 
-        <p className="text-white/60 text-sm flex items-center gap-1.5 mt-1 mb-2">
+        {/* <p className="text-white/60 text-sm flex items-center gap-1.5 mt-1 mb-2">
           <FaGlobe className="text-[var(--accent)] text-xs" />
           {cityName}, {countryName}
-        </p>
+        </p> */}
 
         {/* {activity.description && (
+        
             <div className="text-white/80 mt-2 w-full sm:w-80 md:w-140 text-xs sm:text-sm md:text-base md:text-justify [text-shadow:2px_2px_3px_#000000]">
               {activity.description}
             </div>

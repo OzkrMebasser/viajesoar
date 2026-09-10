@@ -215,6 +215,7 @@ export default function RegionsHomeSlideGSAP({ locale, regions }: Props) {
     <section
       ref={sectionRef}
       className="relative pt-8 lg:pt-4 bg-gradient-theme"
+      id="regions-section"
     >
       <div
         ref={scrollContainerRef}

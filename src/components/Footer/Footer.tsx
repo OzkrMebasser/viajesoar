@@ -179,6 +179,12 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
     },
   ];
 
+  const social = [
+    { icon: FaFacebook, href: "https://www.facebook.com/ViajeSoar/" },
+    { icon: FaInstagram, href: "https://www.instagram.com/viajesoar/" },
+    { icon: FaTiktok, href: "https://www.tiktok.com/@viajesoar" },
+    { icon: FaXTwitter, href: "https://twitter.com/viajesoar" },
+  ]
   return (
     <footer className="bg-gradient-theme text-theme  relative overflow-hidden">
       {/* Elementos decorativos de fondo */}
@@ -243,15 +249,16 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 {t.followUs}
               </h4>
               <div className="flex gap-4">
-                {[FaFacebook, FaInstagram, FaTiktok, FaXTwitter].map(
-                  (Icon, idx) => (
-                    <button
+                {social.map(
+                  (socialMedia, idx) => (
+                    <a
+                      href={socialMedia.href}
                       key={idx}
-                      className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
+                      className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 accent hover:accent transition-all duration-300 transform hover:scale-110 hover:rotate-5"
                       aria-label="Social media"
                     >
-                      <Icon className="w-4 h-4" />
-                    </button>
+                      <socialMedia.icon className="w-5 h-5 accent" />
+                    </a>
                   ),
                 )}
               </div>
@@ -325,8 +332,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 href="tel:+526124029656"
                 className="flex items-center gap-3 text-theme group"
               >
-                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
-                  <Phone className="w-4 h-4" />
+                <div className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <Phone className="w-5 h-5 accent" />
                 </div>
                 <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
                   +52 (612) 402 9656
@@ -340,8 +347,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-theme group"
               >
-                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
-                  <FaWhatsapp className="w-4 h-4" />
+                <div className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <FaWhatsapp className="w-5 h-5 accent" />
                 </div>
                 <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
                   +52 (612) 103 7422
@@ -353,8 +360,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 href="mailto:info.viajesoar@gmail.com"
                 className="flex items-center gap-3 text-theme group"
               >
-                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
-                  <Mail className="w-4 h-4" />
+                <div className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <Mail className="w-5 h-5 accent" />
                 </div>
                 <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
                   info.viajesoar@gmail.com
@@ -368,8 +375,8 @@ const Footer = ({ locale = "es" }: { locale?: Locale }) => {
                 rel="noopener noreferrer"
                 className="flex items-start gap-3 text-theme group"
               >
-                <div className="p-2 rounded-lg bg-[var(--accent)]/5 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
-                  <MapPin className="w-4 h-4" />
+                <div className="p-2 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 accent transition-all duration-300 transform hover:scale-110">
+                  <MapPin className="w-5 h-5 accent" />
                 </div>
                 <span className="text-sm group-hover:ml-[5px] group-hover:text-[var(--accent)] transition-all duration-300">
                   La Paz, Baja California Sur, MX

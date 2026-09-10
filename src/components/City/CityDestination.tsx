@@ -12,7 +12,8 @@ import CardsSlideShow from "@/components/CardsSlideShow";
 import ImageGalleryModal from "@/components/ui/Modals/ImageGalleryModal";
 import CardParticlesCanvas from "@/components/ui/Particles/CardParticlesCanvas";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
-
+import { FaImages } from "react-icons/fa";
+import ButtonAccent from "@/components/ui/ButtonAccent";
 import DesktopCardActivity from "@/components/Activity/DesktopCardActivity";
 import MobileCardActivity from "@/components/Activity/MobileCardActivity";
 import { t, type Locale } from "@/types/activities.utils";
@@ -71,6 +72,11 @@ export default function CityDestination({
   const [galleryActivity, setGalleryActivity] =
     useState<DestinationActivity | null>(null);
 
+  const [cityGalleryOpen, setCityGalleryOpen] = useState(false);
+  const cityGalleryImages = (
+    city.images?.length ? city.images : city.image ? [city.image] : []
+  ).filter(Boolean) as string[];
+
   const basePath = locale === "es" ? "destinos" : "destinations";
   const filtered = useMemo(() => {
     if (!query.trim()) return activities;
@@ -105,6 +111,14 @@ export default function CityDestination({
         open={!!galleryActivity}
         onClose={() => setGalleryActivity(null)}
       />
+      <ImageGalleryModal
+        headless
+        images={cityGalleryImages}
+        title={city.name}
+        open={cityGalleryOpen}
+        onClose={() => setCityGalleryOpen(false)}
+      />
+
       {/* ── CITY INFO ── */}
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-4 sm:px-6 pb-0 lg:pb-8 text-white">
         {" "}
@@ -172,6 +186,18 @@ export default function CityDestination({
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
         </div>
+         {cityGalleryImages.length > 0 && (
+              <ButtonAccent
+                onClick={() => setCityGalleryOpen(true)}
+                className="mt-4 absolute bottom-36 left-4 lg:bottom-8 lg:left-8 z-10"
+                title={t(
+                  locale,
+                  `Ver fotos de ${city.name} `,
+                  `View photos of ${city.name} `,
+                )}
+                icon={FaImages}
+              />
+            )}
       </div>
       {/* Scroll indicator */}
       <ScrollIndicator targetId="activities-search" />
@@ -229,7 +255,7 @@ export default function CityDestination({
         </div>
         {/* ── SEARCH BAR (sticky) ── */}
         <div className="bg-gradient-theme pb-8 z-30 backdrop-blur-md border-b border-white/5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 ">
             <div className="relative max-w-xl">
               <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent)] text-sm pointer-events-none" />
               <input
@@ -259,6 +285,7 @@ export default function CityDestination({
                 {t(locale, "resultado(s) encontrado(s)", "result(s) found")}
               </p>
             )}
+           
           </div>
         </div>
 
@@ -306,7 +333,6 @@ export default function CityDestination({
                 } as React.CSSProperties
               }
             >
-              
               {filtered.map((activity) => (
                 <DesktopCardActivity
                   key={activity.id}

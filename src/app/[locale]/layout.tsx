@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "@/components/Footer/Footer";
 import { FavoritesProvider } from "@/lib/context/FavoritesProvider";
 import { ThemeProvider } from "@/lib/context/ThemeContext";
-import WhatsAppChat from "@/components/WhatsAppChat";
+import WhatsAppChat from "@/components/Contact/WhatsAppChat";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { getNavRegions } from "@/lib/data/destinations";
 // import type { NavRegion } from "@/lib/data/destinations";

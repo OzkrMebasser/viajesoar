@@ -531,7 +531,8 @@ export default function ContactPage({ locale = "es" }: Props) {
               {[
                 {
                   day: t(locale, "Lun – Vie", "Mon – Fri"),
-                  hours: "9:00 A.M. – 5:00 P.M.",
+                  hours:
+                    "9:00 A.M. – 1:00 P.M.     | – | 2:00 P.M. – 6:00 P.M.",
                 },
                 {
                   day: t(locale, "Sábado", "Saturday"),

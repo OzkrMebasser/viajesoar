@@ -17,19 +17,19 @@ export default function FloatingContactBot() {
       id: "email",
       icon: <Mail size={20} />,
 
-      href: "mailto:contacto@ejemplo.com",
+      href: "mailto:info.viajesoar@gmail.com",
     },
     {
       id: "messenger",
       icon: <MessageCircleMore size={20} />,
 
-      href: "https://m.me/tu-pagina",
+      href: "https://m.me/ViajeSoar/",
     },
     {
       id: "whatsapp",
       icon: <Send size={20} />,
 
-      href: "https://wa.me/+5491234567890",
+      href: "https://wa.me/526121037422",
     },
   ];
 

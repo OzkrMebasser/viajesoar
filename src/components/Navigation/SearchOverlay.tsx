@@ -82,7 +82,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 transition-all duration-300 text-theme ${
+      className={`fixed inset-0 z-[10050] transition-all duration-300 text-theme ${
         isSearchOpen
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
